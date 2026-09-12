@@ -1,0 +1,1509 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "reactframe",
+  "homepage": "https://reactframe.com",
+  "items": [
+    {
+      "name": "countdown-timer",
+      "type": "registry:component",
+      "title": "Countdown Timer",
+      "description": "A countdown timer that counts down to a duration or an absolute end date, with flip-cell digit transitions, a compact text mode, and an optional loop.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/countdown-timer/countdown-timer.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "cosmic-background",
+      "type": "registry:component",
+      "title": "Cosmic Background",
+      "description": "A canvas-powered animated night-sky background — rotating star rings, a drifting star field, a breathing cone light and spotlight, with mouse parallax and film grain.",
+      "files": [
+        {
+          "path": "registry/new-york/cosmic-background/cosmic-background.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "toggle-pro",
+      "type": "registry:component",
+      "title": "Toggle Pro",
+      "description": "An accessible switch with a springy squish animation on the thumb, an optional label + helper text, and a focus ring.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/toggle-pro/toggle-pro.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "badges-kit",
+      "type": "registry:component",
+      "title": "Badges Kit",
+      "description": "A status badge with 8 tone presets, light/dark variants, 3 sizes, 6 icon styles (check, cross, minus, dot, spinner, custom), and an optional dismiss button.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/badges-kit/badges-kit.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "rating-stars",
+      "type": "registry:component",
+      "title": "Rating Stars",
+      "description": "An animated star rating input with half-star precision, keyboard support, a dynamic low/mid/high color range, glow effect, and an optional progress bar.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/rating-stars/rating-stars.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "image-deck-3d",
+      "type": "registry:component",
+      "title": "Image Deck 3D",
+      "description": "A single image split into a stacked deck of shape-clipped layers (rectangle, circle, hexagon, star, blob and more) that fans out on hover, with optional 3D cursor tilt, parallax, grayscale grading, and ambient idle rotation.",
+      "files": [
+        {
+          "path": "registry/new-york/image-deck-3d/image-deck-3d.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "glare-card",
+      "type": "registry:component",
+      "title": "Glare Card",
+      "description": "A 3D tilt card that reacts to the cursor with animated conic-gradient reflections — diamond, holographic or aurora reflex styles.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/glare-card/glare-card.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "linear-progress",
+      "type": "registry:component",
+      "title": "Linear Progress",
+      "description": "A labeled progress bar with a gradient fill, shimmer sweep, milestone ticks, and glow/dot/line cap styles. Animates in on scroll by default.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/linear-progress/linear-progress.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "infinite-marquee",
+      "type": "registry:component",
+      "title": "Infinite Marquee",
+      "description": "A seamless scrolling text marquee with solid/gradient/outline text styles, a separator, double-row mode, edge fade, and pause-on-hover.",
+      "files": [
+        {
+          "path": "registry/new-york/infinite-marquee/infinite-marquee.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "discord-chat-widget",
+      "type": "registry:component",
+      "title": "Discord Chat Widget",
+      "description": "A Discord-style chat bubble widget with a typing simulation, quick replies, a notification popup, member/online counts, and a launch-invite send flow.",
+      "files": [
+        {
+          "path": "registry/new-york/discord-chat-widget/discord-chat-widget.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "telegram-widget",
+      "type": "registry:component",
+      "title": "Telegram Widget",
+      "description": "A Telegram-style chat bubble widget with a typing simulation, quick replies, a notification popup, availability status, and a launch-in-Telegram send flow.",
+      "files": [
+        {
+          "path": "registry/new-york/telegram-widget/telegram-widget.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "messenger-widget",
+      "type": "registry:component",
+      "title": "Messenger Widget",
+      "description": "A Facebook Messenger-style chat bubble widget with a typing simulation, quick replies, a notification popup, availability status, and a launch-in-Messenger send flow.",
+      "files": [
+        {
+          "path": "registry/new-york/messenger-widget/messenger-widget.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "x-twitter-widget",
+      "type": "registry:component",
+      "title": "X (Twitter) Widget",
+      "description": "An X (Twitter)-style DM chat bubble widget with a typing simulation, quick replies, a follows-you badge, availability status, and a notification popup.",
+      "files": [
+        {
+          "path": "registry/new-york/x-twitter-widget/x-twitter-widget.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "footer-premium",
+      "type": "registry:component",
+      "title": "Footer Premium",
+      "description": "A responsive site footer with a logo, description, social links, multi-column link groups, and a copyright line.",
+      "files": [
+        {
+          "path": "registry/new-york/footer-premium/footer-premium.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "footer-section",
+      "type": "registry:component",
+      "title": "Footer Section",
+      "description": "A minimal site footer with up to 4 link columns, a hover-underline link style, paper/glass/custom theming, and a copyright bar.",
+      "files": [
+        {
+          "path": "registry/new-york/footer-section/footer-section.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "compare-slider",
+      "type": "registry:component",
+      "title": "Compare Slider",
+      "description": "A theme-aware before/after image comparison slider with horizontal or vertical drag direction, keyboard support, and before/after labels.",
+      "files": [
+        {
+          "path": "registry/new-york/compare-slider/compare-slider.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "glow-card",
+      "type": "registry:component",
+      "title": "Glow Card",
+      "description": "A card with an animated rotating conic-gradient glow border, customizable colors, text position, and an optional background image.",
+      "files": [
+        {
+          "path": "registry/new-york/glow-card/glow-card.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "image-showcase",
+      "type": "registry:component",
+      "title": "Image Showcase",
+      "description": "A product-style image viewer — a large main frame with prev/next arrows and an image counter, backed by a click-to-jump thumbnail strip and a reset-to-first button.",
+      "files": [
+        {
+          "path": "registry/new-york/image-showcase/image-showcase.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "eternal-glow-card",
+      "type": "registry:component",
+      "title": "Eternal Glow Card",
+      "description": "A hover-reveal product card with a blurred gradient overlay, staggered title/price/description reveal, a badge, and 5 color themes.",
+      "files": [
+        {
+          "path": "registry/new-york/eternal-glow-card/eternal-glow-card.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "card-stack",
+      "type": "registry:component",
+      "title": "Card Stack",
+      "description": "A scroll-driven feature card stack — cards fly away one by one as the user scrolls, revealing the next, with progress dots and a card counter.",
+      "files": [
+        {
+          "path": "registry/new-york/card-stack/card-stack.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "glass-navigation",
+      "type": "registry:component",
+      "title": "Glass Navigation",
+      "description": "A glassmorphic pill navbar that expands into a full panel of large nav links, a tagline, and social links — with a CTA button, badges, active-page highlight, and auto/light/dark theming.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/glass-navigation/glass-navigation.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "header-simple",
+      "type": "registry:component",
+      "title": "Header Simple",
+      "description": "A responsive site header — centered nav links on desktop, a tablet CTA-only view, and a mobile hamburger dropdown panel — with active-page highlighting and optional sticky positioning.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/header-simple/header-simple.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "hover-scan-card",
+      "type": "registry:component",
+      "title": "Hover Scan Card",
+      "description": "A product card that renders as a halftone dot pattern until a laser-sweep animation reveals the real photo and content on hover.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/hover-scan-card/hover-scan-card.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "testimonial-spotlight",
+      "type": "registry:component",
+      "title": "Testimonial Spotlight",
+      "description": "A full-bleed photo testimonial slider with crossfade, slide or iris transitions, a thumbnail strip, progress lines, star ratings, and autoplay.",
+      "files": [
+        {
+          "path": "registry/new-york/testimonial-spotlight/testimonial-spotlight.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "testimonial-pills",
+      "type": "registry:component",
+      "title": "Testimonial Pills",
+      "description": "Avatar-and-pill testimonial marquee rows with dual-direction scrolling, a depth effect, cursor spotlight glow, and scroll-in reveal.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/testimonial-pills/testimonial-pills.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "testimonial-video-wall",
+      "type": "registry:component",
+      "title": "Testimonial Video Wall",
+      "description": "A masonry wall mixing text and video testimonial cards, with a full custom video player (play/pause, seek, mute, replay, loading state) supporting native, YouTube and Vimeo sources.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/testimonial-video-wall/testimonial-video-wall.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "profile-flip-card",
+      "type": "registry:component",
+      "title": "Profile Flip Card",
+      "description": "A profile card that flips from a photo front to a bio back on click or hover, with flip Y, flip X, spring, or fade transitions.",
+      "files": [
+        {
+          "path": "registry/new-york/profile-flip-card/profile-flip-card.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "phone-mockup",
+      "type": "registry:component",
+      "title": "Phone Mockup",
+      "description": "A realistic iPhone frame with 3D cursor tilt, a screen glare that tracks the tilt, ambient glow, and a story-style video/image player with swipe navigation and a progress bar.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/phone-mockup/phone-mockup.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "laptop-mockup",
+      "type": "registry:component",
+      "title": "Laptop Mockup",
+      "description": "A realistic MacBook Pro frame (silver or space black) that auto-fits its container, with 3D cursor tilt, ambient glow, and a video/image player with slide or fade transitions.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/laptop-mockup/laptop-mockup.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "browser-mockup",
+      "type": "registry:component",
+      "title": "Browser Mockup",
+      "description": "A realistic browser chrome frame in macOS, Windows, or mobile Safari style, with tabs, a URL bar, and a content area for an image, video, or arbitrary React children.",
+      "files": [
+        {
+          "path": "registry/new-york/browser-mockup/browser-mockup.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "instagram-post-mockup",
+      "type": "registry:component",
+      "title": "Instagram Post Mockup",
+      "description": "A realistic Instagram post — avatar ring, swipeable multi-photo carousel, double-tap-to-like heart burst, like/comment/repost/share/save actions, and light/dark theme.",
+      "files": [
+        {
+          "path": "registry/new-york/instagram-post-mockup/instagram-post-mockup.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "x-post-mockup",
+      "type": "registry:component",
+      "title": "X Post Mockup",
+      "description": "A realistic X (Twitter) post with a verified badge, media image, and interactive like/retweet/bookmark actions with live counts, in light or dark theme.",
+      "files": [
+        {
+          "path": "registry/new-york/x-post-mockup/x-post-mockup.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "tiktok-post-mockup",
+      "type": "registry:component",
+      "title": "TikTok Post Mockup",
+      "description": "A full-bleed 9:16 TikTok feed mockup with a Following/For You tab bar, a side action rail (like/comment/save/share), caption overlay, sound pill, and bottom navigation.",
+      "files": [
+        {
+          "path": "registry/new-york/tiktok-post-mockup/tiktok-post-mockup.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "linkedin-post-mockup",
+      "type": "registry:component",
+      "title": "LinkedIn Post Mockup",
+      "description": "A realistic LinkedIn post with a headline, media image, a reaction summary, and interactive like/repost actions with live counts, in light or dark theme.",
+      "files": [
+        {
+          "path": "registry/new-york/linkedin-post-mockup/linkedin-post-mockup.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "cylinder-gallery",
+      "type": "registry:component",
+      "title": "Cylinder Gallery",
+      "description": "A 3D image gallery arranged around an auto-rotating cylinder, with configurable rows/columns, tilt angle, rotation speed, and edge fade opacity.",
+      "files": [
+        {
+          "path": "registry/new-york/cylinder-gallery/cylinder-gallery.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "gallery-flow",
+      "type": "registry:component",
+      "title": "Gallery Flow",
+      "description": "A gallery of scattered, gently drifting image cards with random rotation, cursor repel/attract mode, pause-on-hover, and a click-to-open lightbox.",
+      "files": [
+        {
+          "path": "registry/new-york/gallery-flow/gallery-flow.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "progress-circle-bars",
+      "type": "registry:component",
+      "title": "Progress Circle Bars",
+      "description": "A circular progress indicator with ring, gauge, and dashes arc styles, scroll-triggered count-up animation, color thresholds, a comparison target marker, and a completion pulse.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/progress-circle-bars/progress-circle-bars.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "linear-progress-bars",
+      "type": "registry:component",
+      "title": "Linear Progress Bars",
+      "description": "A card of linear progress rows — plain ratio bars, file-upload rows with icons/subtitles/shimmer, milestone ticks, and an inline variant — with scroll-triggered fill animation.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/linear-progress-bars/linear-progress-bars.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "noise-background",
+      "type": "registry:component",
+      "title": "Noise Background",
+      "description": "A canvas background with animated film-grain noise, soft color blob gradients, 7 built-in themes (or fully custom colors), drifting blob animation, and a vignette.",
+      "files": [
+        {
+          "path": "registry/new-york/noise-background/noise-background.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "ai-agent-wave",
+      "type": "registry:component",
+      "title": "AI Agent Wave",
+      "description": "A Siri-style glowing multi-strand waveform line for voice/AI assistant UIs — cursor-reactive boost, idle/listening/speaking state levels, and optional floating avatar bubbles.",
+      "files": [
+        {
+          "path": "registry/new-york/ai-agent-wave/ai-agent-wave.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "logo-grid",
+      "type": "registry:component",
+      "title": "Logo Grid",
+      "description": "A wrapping grid of client/partner logos with scroll-triggered stagger reveal, magnetic cursor-follow hover, grayscale-to-color reveal, and optional name tooltips.",
+      "files": [
+        {
+          "path": "registry/new-york/logo-grid/logo-grid.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "dot-image-slider",
+      "type": "registry:component",
+      "title": "Dot Image Slider",
+      "description": "A before/after image reveal — a luminance-mapped halftone dot rendering on one side, the real photo on the other, dragged apart by a glowing lightsaber-style divider handle.",
+      "files": [
+        {
+          "path": "registry/new-york/dot-image-slider/dot-image-slider.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "animated-loader",
+      "type": "registry:component",
+      "title": "Animated Loader",
+      "description": "A loading spinner kit with 4 variants — rotating lines, ring, dual counter-rotating ring, and bouncing dots — sharing a common color/size/speed API.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/animated-loader/animated-loader.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "animated-checkbox",
+      "type": "registry:component",
+      "title": "Animated Checkbox",
+      "description": "An accessible checkbox with an animated draw-in checkmark, focus ring, and optional label, helper text, required marker, and info tooltip.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/animated-checkbox/animated-checkbox.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "sales-ticket-popup",
+      "type": "registry:component",
+      "title": "Sales Ticket Popup",
+      "description": "A corner-anchored promo popup shaped like a torn event ticket, with 5 themes, a zigzag badge stub, immediate/delay/scroll triggers, auto-hide, and dismiss-memory.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/sales-ticket-popup/sales-ticket-popup.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "expand-card-grid",
+      "type": "registry:component",
+      "title": "Expand Card Grid",
+      "description": "A 2x2 grid of image cards that expand to fill the frame on click, revealing title/description/CTA — with keyboard arrow navigation between cards and swipe-to-close on touch.",
+      "files": [
+        {
+          "path": "registry/new-york/expand-card-grid/expand-card-grid.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "kanban-board",
+      "type": "registry:component",
+      "title": "Kanban Board",
+      "description": "A drag-and-drop task board with a hand-rolled pointer-based drag engine — velocity tilt, edge autoscroll, ghost drop-position indicator, priority badges, avatar stacks, and light/dark theming.",
+      "files": [
+        {
+          "path": "registry/new-york/kanban-board/kanban-board.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "data-table",
+      "type": "registry:component",
+      "title": "Data Table",
+      "description": "An admin data table with sortable/filterable columns, global search, status tabs, row selection, badge/avatar/actions cell types, pagination, and light/dark/custom theming.",
+      "files": [
+        {
+          "path": "registry/new-york/data-table/data-table.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "line-chart",
+      "type": "registry:component",
+      "title": "Line Chart",
+      "description": "A multi-series line/area chart — smooth Catmull-Rom curves, a highlighted zone band, a reference line, endpoint value badges, and a hover crosshair with per-series tooltips.",
+      "files": [
+        {
+          "path": "registry/new-york/line-chart/line-chart.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "bar-chart",
+      "type": "registry:component",
+      "title": "Bar Chart",
+      "description": "A stacked bar chart — up to 5 series per bar, a reference line, a peak-value annotation, and a hover tooltip breaking down each bar's segments with a running total.",
+      "files": [
+        {
+          "path": "registry/new-york/bar-chart/bar-chart.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "tearable-reveal",
+      "type": "registry:component",
+      "title": "Tearable Reveal",
+      "description": "A physically-simulated cloth intro reveal — drag to tear open a torn-paper layer covering an image, with breakable constraints, particle debris, frayed jagged/rounded edges, and optional surface text or logo. Includes Auto Tear and Reset controls.",
+      "files": [
+        {
+          "path": "registry/new-york/tearable-reveal/tearable-reveal.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "rotating-gallery",
+      "type": "registry:component",
+      "title": "Rotating Gallery",
+      "description": "An ambient, continuously auto-rotating 3D carousel of image cards arranged in a circle, with a front-facing title label — no interaction required, driven purely by CSS 3D transforms.",
+      "files": [
+        {
+          "path": "registry/new-york/rotating-gallery/rotating-gallery.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "range-area-chart",
+      "type": "registry:component",
+      "title": "Range Area Chart",
+      "description": "A min/max envelope chart with a nested core-range band, an actual-to-forecast line split, annotated risk zones, a reference line, and a live endpoint badge.",
+      "files": [
+        {
+          "path": "registry/new-york/range-area-chart/range-area-chart.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "radar-chart",
+      "type": "registry:component",
+      "title": "Radar Chart",
+      "description": "A multi-series radar/spider chart with ring gridlines, per-series solid or dashed strokes, optional point markers, and a hover tooltip comparing every series at the highlighted axis.",
+      "files": [
+        {
+          "path": "registry/new-york/radar-chart/radar-chart.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "pie-chart",
+      "type": "registry:component",
+      "title": "Pie Chart",
+      "description": "A donut-style pie chart with a live center total, click-to-toggle legend, percentage callouts around the ring, and a hover tooltip with ARR, account count, and average contract size.",
+      "files": [
+        {
+          "path": "registry/new-york/pie-chart/pie-chart.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "alert-toast",
+      "type": "registry:component",
+      "title": "Alert Toast",
+      "description": "A polished toast/alert notification — 5 tones, stacked or inline layout, icons, primary/secondary actions, dismiss and auto-dismiss, light/dark theme, plus a showcase mode rendering every variant side by side.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/alert-toast/alert-toast.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "dot-image-loader",
+      "type": "registry:component",
+      "title": "Dot Image Loader",
+      "description": "An auto-animating loading screen — a halftone dot rendering of your image is scanned into existence by a glowing lightsaber-style sweep, then oscillates in a loop while a 'Preparing...' label and spinner play below.",
+      "files": [
+        {
+          "path": "registry/new-york/dot-image-loader/dot-image-loader.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "product-grid-section",
+      "type": "registry:component",
+      "title": "Product Grid Section",
+      "description": "A responsive product/portfolio grid section — heading, per-card image with hover zoom and reveal overlay, category/price meta row, optional badge, and a centered CTA button below the grid.",
+      "files": [
+        {
+          "path": "registry/new-york/product-grid-section/product-grid-section.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "feature-card-illustrated",
+      "type": "registry:component",
+      "title": "Feature Card Illustrated",
+      "description": "A self-contained feature card with a live mini-illustration (list, code editor, bar chart, chart node, or dashboard node) animating in the background, a title/description, and a solid or outline CTA button.",
+      "files": [
+        {
+          "path": "registry/new-york/feature-card-illustrated/feature-card-illustrated.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "video-glow-lightbox",
+      "type": "registry:component",
+      "title": "Video Glow Lightbox",
+      "description": "A single video card with a pulsing glow-blob frame that morphs into a fullscreen lightbox on click — supports direct URL, YouTube, Vimeo, or uploaded files, a cursor-following watch label, hover preview loop, and a Web Audio sound-reactive glow.",
+      "files": [
+        {
+          "path": "registry/new-york/video-glow-lightbox/video-glow-lightbox.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "testimonial-logos",
+      "type": "registry:component",
+      "title": "Testimonial Logos",
+      "description": "A compact trust bar — a star rating with a helped-N-teams label above an infinite, edge-masked logo marquee.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/testimonial-logos/testimonial-logos.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "motion-gallery-grid",
+      "type": "registry:component",
+      "title": "Motion Gallery Grid",
+      "description": "A perfectly aligned image grid with a centered glassmorphism overlay card — heading, subtitle and CTA button, with a staggered blur/slide/fade/scale entrance triggered on scroll into view.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/motion-gallery-grid/motion-gallery-grid.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "qr-code-widget",
+      "type": "registry:component",
+      "title": "QR Code Widget",
+      "description": "A QR-code card — title, description, code image, hint text and an open-link button, inline or as a corner-widget popup with a focus-trapped modal dialog.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/qr-code-widget/qr-code-widget.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "airbnb-reviews",
+      "type": "registry:component",
+      "title": "Airbnb Reviews",
+      "description": "A guest-review carousel with the Airbnb Bélo mark, aggregate rating header and CTA, above a draggable autoplaying grid of review cards.",
+      "files": [
+        {
+          "path": "registry/new-york/airbnb-reviews/airbnb-reviews.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "ebay-reviews",
+      "type": "registry:component",
+      "title": "eBay Reviews",
+      "description": "A seller-feedback carousel with the eBay wordmark, aggregate rating header and CTA, above a draggable autoplaying grid of review cards.",
+      "files": [
+        {
+          "path": "registry/new-york/ebay-reviews/ebay-reviews.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "etsy-reviews",
+      "type": "registry:component",
+      "title": "Etsy Reviews",
+      "description": "A shop-review carousel with the Etsy wordmark, aggregate rating header and CTA, above a draggable autoplaying grid of review cards.",
+      "files": [
+        {
+          "path": "registry/new-york/etsy-reviews/etsy-reviews.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "coin-flip-game",
+      "type": "registry:component",
+      "title": "Coin Flip Game",
+      "description": "A real 3D CSS coin — click or tap to flip with a physical spin animation, a yes/no question field, flip history dots, and a heads/tails ratio readout.",
+      "files": [
+        {
+          "path": "registry/new-york/coin-flip-game/coin-flip-game.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "tic-tac-toe-game",
+      "type": "registry:component",
+      "title": "Tic Tac Toe Game",
+      "description": "A playable Tic Tac Toe board with a built-in AI opponent, animated piece placement, a drawn winning-line reveal, score tracking, and a confetti burst on a win.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/tic-tac-toe-game/tic-tac-toe-game.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "2048-game",
+      "type": "registry:component",
+      "title": "2048 Game",
+      "description": "A fully playable 2048 — arrow-key and swipe controls, spring-animated tile merges, score and best-score tracking, and win/game-over overlays.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/2048-game/2048-game.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "snake-game",
+      "type": "registry:component",
+      "title": "Snake Game",
+      "description": "A canvas-rendered Snake game with three difficulty speeds, keyboard and swipe controls, a directional-eyes snake head, high-score tracking, and ready/game-over overlays.",
+      "files": [
+        {
+          "path": "registry/new-york/snake-game/snake-game.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "minesweeper-game",
+      "type": "registry:component",
+      "title": "Minesweeper Game",
+      "description": "A classic Minesweeper with three board sizes, flood-fill reveal, right-click flagging, a live mine counter and timer, and a confetti burst on a win.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/minesweeper-game/minesweeper-game.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "memory-match-game",
+      "type": "registry:component",
+      "title": "Memory Match Game",
+      "description": "A flip-card memory matching game with animal emoji, three difficulty levels, a 3D flip animation, move/score tracking, and a win overlay.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/memory-match-game/memory-match-game.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "pong-game",
+      "type": "registry:component",
+      "title": "Pong Game",
+      "description": "A canvas Pong against a bot opponent — three difficulty levels, multi-round progression with a color shift and speed increase each round, keyboard and touch-drag paddle control.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/pong-game/pong-game.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "dino-runner-game",
+      "type": "registry:component",
+      "title": "Dino Runner Game",
+      "description": "A canvas endless-runner in the style of the offline dino game — pixel-drawn running dino, procedurally spawned cactus obstacles, three difficulty speeds, tap/space/arrow-up to jump, and a high-score tracker.",
+      "files": [
+        {
+          "path": "registry/new-york/dino-runner-game/dino-runner-game.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "space-invaders-game",
+      "type": "registry:component",
+      "title": "Space Invaders Game",
+      "description": "A canvas Space Invaders — a descending grid of pixel-drawn invaders that shoot back, three difficulty levels, keyboard controls on desktop and on-screen move/fire buttons on mobile, with a win/lose end screen.",
+      "files": [
+        {
+          "path": "registry/new-york/space-invaders-game/space-invaders-game.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "tower-blocks-game",
+      "type": "registry:component",
+      "title": "Tower Blocks Game",
+      "description": "A dependency-free stack-the-block game rendered on a single canvas with a hand-rolled isometric projection — perfect stacks keep the tower's width, misaligned drops chop the overhang off and it falls away.",
+      "files": [
+        {
+          "path": "registry/new-york/tower-blocks-game/tower-blocks-game.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "maze-runner-game",
+      "type": "registry:component",
+      "title": "Maze Runner Game",
+      "description": "A procedurally generated recursive-backtracker maze across 10 difficulty levels, with keyboard, swipe, mouse-wheel, device-tilt, and gamepad controls, a live timer, and a speed-based score.",
+      "files": [
+        {
+          "path": "registry/new-york/maze-runner-game/maze-runner-game.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "glow-jump-widget",
+      "type": "registry:component",
+      "title": "Glow Jump Widget",
+      "description": "A floating-action-button popup that opens a glowing 4-level platformer — jump between walls, dodge moving lava, and collect coins to finish each level, keyboard and on-screen touch controls included.",
+      "files": [
+        {
+          "path": "registry/new-york/glow-jump-widget/glow-jump-widget.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "balloon-popper-game",
+      "type": "registry:component",
+      "title": "Balloon Popper Game",
+      "description": "A mouse-aimed bow-and-arrow balloon-popping mini-game — pop enough balloons within your arrow limit to unlock a coupon code, with a fail/retry screen if you run out.",
+      "files": [
+        {
+          "path": "registry/new-york/balloon-popper-game/balloon-popper-game.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "dart-throw-game",
+      "type": "registry:component",
+      "title": "Dart Throw Game",
+      "description": "A drag-to-aim, release-to-throw target game with gravity-arced projectiles, ring-based scoring, streak bonuses, a best-score tracker, and a confetti burst on bullseyes.",
+      "files": [
+        {
+          "path": "registry/new-york/dart-throw-game/dart-throw-game.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "spin-to-win-wheel",
+      "type": "registry:component",
+      "title": "Spin to Win Wheel",
+      "description": "A canvas-drawn prize wheel with a single-spin-per-visitor lock (persisted in localStorage), eased spin-down physics, and a reward modal with a copyable coupon code.",
+      "files": [
+        {
+          "path": "registry/new-york/spin-to-win-wheel/spin-to-win-wheel.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "memory-cards-widget",
+      "type": "registry:component",
+      "title": "Memory Cards Widget",
+      "description": "A floating-action-button popup that opens a color-matching memory game — 3 difficulty levels, a live timer/move counter, best-score tracking, subtle Web Audio sound effects, and a confetti win screen.",
+      "files": [
+        {
+          "path": "registry/new-york/memory-cards-widget/memory-cards-widget.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "bubble-cursor",
+      "type": "registry:component",
+      "title": "Bubble Cursor",
+      "description": "A liquid-glass bubble that follows the pointer across the whole page, rendered with a raymarched WebGL2 metaball trail with fresnel shading and iridescent glints, plus an optional light/dark theme toggle.",
+      "files": [
+        {
+          "path": "registry/new-york/bubble-cursor/bubble-cursor.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "glass-showcase-scroll",
+      "type": "registry:component",
+      "title": "Glass Showcase Scroll",
+      "description": "A scroll-driven 3D glass box (Three.js) that rotates through a set of images with particle-explosion transitions between them, plus an optional gentle float animation.",
+      "files": [
+        {
+          "path": "registry/new-york/glass-showcase-scroll/glass-showcase-scroll.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "wave-marquee",
+      "type": "registry:component",
+      "title": "Wave Marquee",
+      "description": "An SVG textPath marquee that tiles text along a curved track — wave, circle, infinity, arch, or line — with an optional gradient glowing ribbon and a second independent layer for a layered scrolling effect.",
+      "files": [
+        {
+          "path": "registry/new-york/wave-marquee/wave-marquee.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "progress-rows-card",
+      "type": "registry:component",
+      "title": "Progress Rows Card",
+      "description": "A light/dark card of labeled gradient progress bars with dividers between rows, animating to their target width on scroll-into-view or immediately.",
+      "files": [
+        {
+          "path": "registry/new-york/progress-rows-card/progress-rows-card.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "feature-media-highlight",
+      "type": "registry:component",
+      "title": "Feature Media Highlight",
+      "description": "A two-column feature section — a heading and rich-text subtitles with inline bold-highlight markup on one side, a configurable image/video panel on the other, stacking on narrow widths with scroll fade-ins.",
+      "files": [
+        {
+          "path": "registry/new-york/feature-media-highlight/feature-media-highlight.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "cinematic-stacked-gallery",
+      "type": "registry:component",
+      "title": "Cinematic Stacked Gallery",
+      "description": "A fullscreen hero gallery where inactive slides collapse into a stacked deck of thumbnails; clicking one crossfades it to full size with Ken Burns zoom, cursor parallax, and a title/description rail with CTA and prev/next controls.",
+      "files": [
+        {
+          "path": "registry/new-york/cinematic-stacked-gallery/cinematic-stacked-gallery.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "phone-reel-showcase",
+      "type": "registry:component",
+      "title": "Phone Reel Showcase",
+      "description": "An iPhone mockup that plays a swipeable, story-style reel of videos and images with tap/drag navigation, a progress bar, 3D cursor tilt, and an ambient glow behind the device.",
+      "files": [
+        {
+          "path": "registry/new-york/phone-reel-showcase/phone-reel-showcase.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "cinematic-scroll-story",
+      "type": "registry:component",
+      "title": "Cinematic Scroll Story",
+      "description": "A self-contained scroll-driven product story: a pinned, scroll-scrubbed video backdrop with particles and a sticky nav, a fading hero, a scroll-revealed 3-card grid, and a closing statement that blurs into view.",
+      "files": [
+        {
+          "path": "registry/new-york/cinematic-scroll-story/cinematic-scroll-story.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "dice-roll-discount-popup",
+      "type": "registry:component",
+      "title": "Dice Roll Discount Popup",
+      "description": "A gamified discount-capture widget where visitors roll two 3D dice for a reward tier, with a themed reveal modal and code copy, rendered inline or as a corner-launched popup with manual/delay/scroll triggers.",
+      "files": [
+        {
+          "path": "registry/new-york/dice-roll-discount-popup/dice-roll-discount-popup.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "wheel-spin-discount-popup",
+      "type": "registry:component",
+      "title": "Wheel Spin Discount Popup",
+      "description": "A gamified discount-capture widget where visitors spin a weighted SVG prize wheel for a reward, with a themed reveal modal and code copy, rendered inline or as a corner-launched popup with manual/delay/scroll triggers.",
+      "files": [
+        {
+          "path": "registry/new-york/wheel-spin-discount-popup/wheel-spin-discount-popup.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    }
+  ]
+}

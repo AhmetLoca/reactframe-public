@@ -196,7 +196,7 @@ export function HoverCard({
                 onMouseEnter={() => clearTimers()}
                 onMouseLeave={scheduleClose}
                 className="fixed z-[9999]"
-                style={{ left: pos.left, top: pos.top, width, transform: `translate(${tx}, ${ty})`, transformOrigin: origin[place] }}
+                style={{ left: pos.left, top: pos.top, width, x: tx, y: ty, transformOrigin: origin[place] }}
                 initial={{ opacity: 0, scale: 0.94 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.96 }}

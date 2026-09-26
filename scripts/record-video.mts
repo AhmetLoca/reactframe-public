@@ -68,7 +68,7 @@ try {
   await page.waitForTimeout(1200);
   await page.clock.runFor(2500);
 
-  const total = Math.round(scene.duration * FPS);
+  const total = Math.round((scene.duration + (scene.loopBlend ?? 0)) * FPS);
   for (let f = 0; f < total; f++) {
     await scene.frame({ f, t: f / FPS, fps: FPS, page, at: (s) => f === Math.round(s * FPS) });
     await page.clock.runFor(1000 / FPS);
@@ -76,6 +76,22 @@ try {
   }
 } finally {
   await browser.close();
+}
+
+if (scene.loopBlend) {
+  // Frame i of the first `loopBlend` seconds becomes a mix of the extra tail frame N+i (fading out) and
+  // frame i (fading in); the clip then ends on frame N-1, which flows straight into tail frame N.
+  const n = Math.round(scene.duration * FPS);
+  const nb = Math.round(scene.loopBlend * FPS);
+  execFileSync("python3", ["-c", `
+import sys
+from PIL import Image
+d, n, nb = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
+f = lambda i: f"{d}/f{i:03d}.png"
+for i in range(nb):
+    Image.blend(Image.open(f(n + i)).convert("RGB"), Image.open(f(i)).convert("RGB"), i / nb).save(f(i))
+`, frames, String(n), String(nb)]);
+  for (let i = n; i < n + nb; i++) fs.rmSync(path.join(frames, `f${String(i).padStart(3, "0")}.png`));
 }
 
 const out = path.join(root, "public", "thumbnails", `${slug}.mp4`);

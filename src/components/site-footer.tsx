@@ -17,6 +17,7 @@ const columns = [
   {
     heading: "Resources",
     links: [
+      { label: "About", href: "/about" },
       { label: "Blog", href: "/blog" },
       { label: "Build with AI", href: "/docs/ai" },
       { label: "Compare", href: "/compare" },

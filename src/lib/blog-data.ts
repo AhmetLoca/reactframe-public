@@ -15,6 +15,449 @@ export interface BlogPost {
 // real ones — it exists only so the blog layout isn't empty by default.
 export const posts: BlogPost[] = [
   {
+    slug: "react-phone-number-input-with-country-code",
+    title: "How to add a phone number input with country codes in React",
+    excerpt:
+      "A phone field with a searchable country menu, as-you-type formatting and an E.164 value, in React and Tailwind, plus how to validate it properly on the server.",
+    category: "Tutorial",
+    date: "2026-09-26",
+    readTime: "5 min read",
+    content: `Phone numbers are one of the most mistyped fields on any form. People leave out the country code, add a leading 0, paste numbers with spaces and dashes, or type one digit too few. A good phone input fixes most of that while they type and hands your backend one clean format.
+
+This tutorial uses ReactFrame's free [Phone Input](/components/phone-input) element: a country menu with flags and calling codes, formatting per country, paste detection and an E.164 value.
+
+## 1. Install
+
+\`\`\`bash
+npx shadcn@latest add https://reactframe.com/r/phone-input.json
+\`\`\`
+
+It installs into \`components/phone-input.tsx\` with \`motion\`, \`clsx\` and \`tailwind-merge\`. There's no phone library underneath, so it adds very little to your bundle.
+
+## 2. Drop it into a form
+
+\`\`\`tsx
+import { PhoneInput } from "@/components/phone-input";
+
+export function ContactForm() {
+  return (
+    <form action="/api/contact" method="post" className="flex flex-col gap-4">
+      <PhoneInput
+        label="Phone number"
+        name="phone"
+        defaultCountry="TR"
+        preferredCountries={["TR", "US", "GB"]}
+        helperText="We'll text you a confirmation code"
+      />
+      <button type="submit">Send</button>
+    </form>
+  );
+}
+\`\`\`
+
+\`name="phone"\` adds a hidden input, so a plain form post receives \`phone=+905321234567\` with no JavaScript on your side.
+
+## 3. What people see while they type
+
+- **Formatting per country.** Digits fall into the local layout: \`532 123 45 67\` in Türkiye, \`(415) 555-0123\` in the US, \`7911 123456\` in the UK.
+- **Leading 0 dropped.** Typing \`0532…\` keeps \`532…\`, because the trunk 0 isn't part of an international number.
+- **Paste detection.** Pasting \`+44 7911 123456\` switches the country to the United Kingdom by its calling code.
+- **Searchable menu.** The country menu matches names, ISO codes and calling codes, so typing \`+49\` finds Germany.
+- **A length check.** A check mark appears when the number has a valid length for the country, and leaving the field with too few digits shows "Enter a valid phone number".
+
+## 4. Read the value
+
+\`\`\`tsx
+const [phone, setPhone] = React.useState("");
+const [valid, setValid] = React.useState(false);
+
+<PhoneInput
+  value={phone}
+  onValueChange={(value, meta) => {
+    setPhone(value);          // "+905321234567"
+    setValid(meta.isValid);   // length is right for the country
+  }}
+/>
+\`\`\`
+
+The value is **E.164**: a plus, the calling code and the national number, no spaces. It's the format Twilio, WhatsApp, Vonage and most SMS and calling APIs expect, and it's easy to store and compare.
+
+## 5. Validate on the server
+
+The built-in check only looks at the number's length, which catches most typos. It can't tell whether a number exists or is a mobile line. For that, validate on the server:
+
+- **Format and type:** \`libphonenumber-js\` (\`isValidPhoneNumber\`, \`getNumberType\`) knows every country's number plan.
+- **Ownership:** send a one-time code by SMS and ask for it back. ReactFrame's [Input OTP](/components/input-otp) is made for that step.
+
+## Common mistakes
+
+- **Storing the formatted string.** Store E.164; format for display only.
+- **One country for everyone.** Set \`defaultCountry\` from your audience (or the visitor's locale) and pin your top markets with \`preferredCountries\`.
+- **Blocking the form on the length check.** Treat it as a hint and let your server decide.
+
+## Related
+
+Phone Input shares its look with the other form elements: [Credit Card Input](/components/credit-card-input), [Currency Input](/components/currency-input), [Time Picker](/components/time-picker) and [Form Field](/components/form-field). All of them are free in the [UI Elements kit](/kits/ui-elements).`,
+  },
+  {
+    slug: "react-countdown-timer-tutorial",
+    title: "How to build a countdown timer in React (days, hours, minutes, seconds)",
+    excerpt:
+      "Add a countdown to a launch, sale or event in React with a free animated component, and avoid the time zone and hydration mistakes most countdowns make.",
+    category: "Tutorial",
+    date: "2026-09-26",
+    readTime: "4 min read",
+    content: `A countdown is one of the simplest ways to add urgency to a sale, a launch or an event page. It's also easy to get subtly wrong: the wrong time zone, a flash of the wrong numbers on first load, or a timer that sits at zero after the deadline.
+
+This tutorial uses ReactFrame's free [Countdown Timer](/components/countdown-timer), which ticks with animated digits and handles the end state for you.
+
+## 1. Install
+
+\`\`\`bash
+npx shadcn@latest add https://reactframe.com/r/countdown-timer.json
+\`\`\`
+
+## 2. Count down to a date
+
+\`\`\`tsx
+import { CountdownTimer } from "@/components/countdown-timer";
+
+export function LaunchCountdown() {
+  return <CountdownTimer endDate="2026-12-31T23:59:00+03:00" expiredText="We're live!" />;
+}
+\`\`\`
+
+Write the end time with its UTC offset (\`+03:00\` above is Istanbul). Without an offset, \`2026-12-31T23:59:00\` is read in each **visitor's** own time zone, so someone in New York and someone in Tokyo would see different deadlines. With the offset, everyone counts down to the same moment.
+
+## 3. Or count a fixed duration
+
+For "offer ends in 15 minutes" style timers, pass a duration in milliseconds instead:
+
+\`\`\`tsx
+<CountdownTimer duration={15 * 60 * 1000} showDays={false} showHours={false} loop />
+\`\`\`
+
+\`duration\` starts when the component mounts. \`loop\` restarts it at zero, which suits demo and recurring offers; it has no effect when you use \`endDate\`.
+
+## 4. Shape it
+
+| Prop | What it does |
+|---|---|
+| \`showDays\`, \`showHours\`, \`showSeconds\` | Hide units you don't need. |
+| \`compact\` | A tighter single-line version for banners and cards. |
+| \`cellShape\` | \`"rounded"\`, \`"square"\` or \`"circle"\` cells. |
+| \`cellSize\` | Size of each digit cell in pixels. |
+| \`labelPosition\` | Unit labels (\`Days\`, \`Hours\`...) on \`"top"\` or \`"bottom"\`. |
+| \`fontFamily\` | \`"system"\`, \`"mono"\` or \`"serif"\` digits. |
+| \`blinkColon\` | Blinks the separators every second. |
+| \`expiredText\` | What shows once the time is up. |
+
+## Common mistakes
+
+- **Trusting the client for real deadlines.** A countdown is display only. If a price or coupon really expires, enforce it on the server; anyone can change their system clock.
+- **Computing the time during render.** The server and the browser read the clock at different moments, so a countdown rendered with real numbers on the server causes hydration warnings. This component starts from a fixed placeholder and fills in the real time right after it mounts.
+- **A countdown that never ends.** Set \`expiredText\` (or swap the section out after the date) so the page doesn't show 00:00:00 forever.
+
+## Pair it with
+
+A countdown works best next to an offer: an [Announcement Banner](/components/announcement-banner) at the top of the page or a discount popup. See the [Growth kit](/kits/growth) for sets that share one campaign theme.`,
+  },
+  {
+    slug: "react-data-table-sort-filter-pagination",
+    title: "How to add a data table with sorting, search and pagination in React",
+    excerpt:
+      "Turn an array of objects into a sortable, searchable, paginated table with badges, avatars and row actions in React and Tailwind, without a table library.",
+    category: "Tutorial",
+    date: "2026-09-26",
+    readTime: "5 min read",
+    content: `Admin panels, dashboards and internal tools all end up needing the same table: sortable columns, a search box, status tabs, pagination and a few row actions. Libraries like TanStack Table give you the logic but leave the UI to you. This tutorial uses ReactFrame's free [Data Table](/components/data-table), which ships both.
+
+## 1. Install
+
+\`\`\`bash
+npx shadcn@latest add https://reactframe.com/r/data-table.json
+\`\`\`
+
+## 2. Describe your columns and pass your rows
+
+\`\`\`tsx
+import { DataTable, type DataTableColumn } from "@/components/data-table";
+
+const columns: DataTableColumn[] = [
+  { key: "name", label: "Customer", type: "avatar", sortable: true },
+  { key: "email", label: "Email", type: "text", sortable: true, filterable: true },
+  { key: "plan", label: "Plan", type: "badge", sortable: true, filterable: true },
+  { key: "mrr", label: "MRR", type: "currency", sortable: true, align: "right" },
+  { key: "status", label: "Status", type: "badge", filterable: true },
+  { key: "actions", label: "", type: "actions", align: "right" },
+];
+
+const rows = [
+  { name: "Ada Lovelace", email: "ada@acme.com", plan: "Pro", mrr: 49, status: "Active" },
+  { name: "Alan Turing", email: "alan@acme.com", plan: "Team", mrr: 199, status: "Active" },
+  { name: "Grace Hopper", email: "grace@acme.com", plan: "Free", mrr: 0, status: "Inactive" },
+];
+
+export function CustomersTable() {
+  return <DataTable title="Customers" columns={columns} data={rows} rowsPerPage={10} />;
+}
+\`\`\`
+
+Each row is a plain object; the column \`key\` says which field it reads. The column \`type\` decides how the cell looks:
+
+| Type | Renders |
+|---|---|
+| \`text\` | Plain text. |
+| \`number\` | A number, right for IDs and counts. |
+| \`currency\` | A dollar amount with two decimals. |
+| \`badge\` | A pill, coloured by \`badgeColors\`. |
+| \`avatar\` | Initials in a coloured circle next to the name. |
+| \`actions\` | Icon buttons from \`actionButtons\`. |
+
+## 3. Search, filters and tabs
+
+- **Search** (\`showSearch\`) matches every column.
+- **Column filters**: columns with \`filterable: true\` get a filter menu in the header, listing that column's values.
+- **Status tabs** (\`showStatusTabs\`) build tabs from the values of one column, \`status\` by default; point \`statusTabsColumn\` at another field if needed.
+- **Pagination** (\`showPagination\`, \`rowsPerPage\`) and **row selection** (\`selectable\`) are on by default.
+
+## 4. Colour the badges
+
+\`\`\`tsx
+<DataTable
+  columns={columns}
+  data={rows}
+  badgeColors={[
+    { value: "Active", background: "rgba(135,255,227,0.12)", text: "#87FFE3", dot: true },
+    { value: "Inactive", background: "rgba(255,255,255,0.08)", text: "rgba(255,255,255,0.6)", dot: true },
+    { value: "Pro", background: "rgba(124,92,255,0.14)", text: "#B6A6FF" },
+  ]}
+/>
+\`\`\`
+
+## When to reach for something else
+
+This table sorts, searches and pages **in the browser**, which is ideal up to a few thousand rows. For tens of thousands of rows or data that lives on the server, page and filter in your API and pass one page of results at a time, or use a headless library such as TanStack Table for the logic.
+
+## Related
+
+Pair the table with [charts](/collections/react-chart-components) and stat cards in the [Dashboard kit](/kits/dashboard).`,
+  },
+  {
+    slug: "react-drag-and-drop-kanban-board",
+    title: "How to build a drag and drop Kanban board in React",
+    excerpt:
+      "A Trello-style board with columns, draggable cards, tags, priorities and avatars in React, and how to save every move to your database.",
+    category: "Tutorial",
+    date: "2026-09-26",
+    readTime: "4 min read",
+    content: `A Kanban board looks simple and turns out to be fiddly: pointer events, drop targets, reordering inside a column, auto-scrolling, and a card that follows the cursor without jank. This tutorial uses ReactFrame's free [Kanban Board](/components/kanban-board), which handles the dragging, so you only bring the data.
+
+## 1. Install
+
+\`\`\`bash
+npx shadcn@latest add https://reactframe.com/r/kanban-board.json
+\`\`\`
+
+It has no drag and drop dependency; the dragging is built on pointer events, so it works with a mouse, a pen or a finger, and the board scrolls on its own when you drag a card near its edge.
+
+## 2. Columns and cards
+
+\`\`\`tsx
+import { KanbanBoard, type KanbanCard } from "@/components/kanban-board";
+
+const columns = [
+  { id: "todo", title: "To do", accentColor: "#9a9a96" },
+  { id: "doing", title: "In progress", accentColor: "#c98a3f" },
+  { id: "done", title: "Done", accentColor: "#5fa874" },
+];
+
+const cards: KanbanCard[] = [
+  { id: "1", title: "Write launch post", tag: "Content", tagColor: "#6f7fbf", priority: "high", columnId: "todo" },
+  { id: "2", title: "Fix checkout bug", tag: "Engineering", tagColor: "#d44c3a", priority: "urgent", columnId: "doing" },
+  { id: "3", title: "Pick pricing", tag: "Strategy", priority: "medium", columnId: "done", avatars: ["/team/ada.jpg"] },
+];
+
+export function Board() {
+  return <KanbanBoard boardTitle="Launch" columns={columns} cards={cards} />;
+}
+\`\`\`
+
+Each card belongs to a column through \`columnId\`. Optional fields add detail: a \`tag\` with its \`tagColor\`, a \`priority\` (\`"urgent"\`, \`"high"\`, \`"medium"\` or \`"low"\`), a \`note\`, and \`avatars\` (image URLs, up to four shown).
+
+## 3. Save every move
+
+\`onCardsChange\` runs after each drop with every card in its new column and order:
+
+\`\`\`tsx
+"use client";
+
+import * as React from "react";
+import { KanbanBoard, type KanbanCard } from "@/components/kanban-board";
+
+export function Board({ initialCards }: { initialCards: KanbanCard[] }) {
+  const [cards, setCards] = React.useState(initialCards);
+
+  return (
+    <KanbanBoard
+      columns={columns}
+      cards={cards}
+      onCardsChange={async (next) => {
+        setCards(next);
+        await fetch("/api/cards", { method: "PUT", body: JSON.stringify(next) });
+      }}
+    />
+  );
+}
+\`\`\`
+
+Storing the whole list is the simplest approach for small boards. For bigger ones, compare \`next\` with the previous list and save only the card whose \`columnId\` or position changed.
+
+## 4. Look and feel
+
+- \`defaultTheme\` (\`"dark"\` or \`"light"\`) and \`showThemeToggle\`.
+- \`showCounts\` shows the number of cards on each column header.
+- Separate light and dark colours: \`backgroundColor\`, \`inkColor\`, \`mutedColor\`, \`surfaceColor\` and their \`dark...\` versions.
+
+## Tips
+
+- Keep card \`id\`s stable (database ids, not array indexes), or cards can jump after a save.
+- On phone widths the columns stack vertically, so a four or five column board still reads well on mobile.
+
+## Related
+
+See more app building blocks in the [Dashboard kit](/kits/dashboard), including the [Data Table](/components/data-table) for list views of the same data.`,
+  },
+  {
+    slug: "react-infinite-logo-marquee-tailwind",
+    title: "How to make an infinite logo marquee in React and Tailwind",
+    excerpt:
+      "A seamless scrolling strip of client logos with pause on hover, grayscale to colour, and soft faded edges, in React and Tailwind CSS.",
+    category: "Tutorial",
+    date: "2026-09-26",
+    readTime: "3 min read",
+    content: `A row of client logos that scrolls forever is the most common trust signal on a landing page. Getting it seamless (no jump when the loop restarts, no gap at the end) takes a little care. This tutorial uses ReactFrame's free [Logo Marquee](/components/logo-marquee).
+
+## 1. Install
+
+\`\`\`bash
+npx shadcn@latest add https://reactframe.com/r/logo-marquee.json
+\`\`\`
+
+## 2. Pass your logos
+
+\`\`\`tsx
+import { LogoMarquee } from "@/components/logo-marquee";
+
+const logos = [
+  { name: "Acme", image: "/logos/acme.svg", link: "https://acme.com" },
+  { name: "Globex", image: "/logos/globex.svg" },
+  { name: "Initech", image: "/logos/initech.svg", imageScale: 90 },
+  { name: "Umbrella", image: "/logos/umbrella.svg" },
+];
+
+export function Clients() {
+  return (
+    <section className="py-16">
+      <p className="mb-8 text-center text-sm text-neutral-500">Trusted by teams at</p>
+      <LogoMarquee logos={logos} />
+    </section>
+  );
+}
+\`\`\`
+
+A logo without an \`image\` shows its \`name\` as text, which is handy while you're still collecting files. \`imageScale\` (a percentage) evens out logos that look bigger or smaller than the rest, and \`link\` makes a logo clickable.
+
+## 3. Tune it
+
+| Prop | Default | What it does |
+|---|---|---|
+| \`speed\` | \`60\` | Scroll speed. |
+| \`direction\` | \`"left"\` | \`"left"\` or \`"right"\`. |
+| \`pauseOnHover\` | \`true\` | Stops the strip under the cursor. |
+| \`grayscale\`, \`hoverReveal\` | \`true\` | Grey logos that turn to colour on hover. |
+| \`logoHeight\`, \`gap\` | \`36\`, \`64\` | Size and spacing. |
+| \`edgeFade\`, \`edgeBlur\`, \`fadeWidth\` | on, on, \`80\` | Soft edges so logos don't start and end abruptly. |
+
+## Tips for logos that look right
+
+- **Use SVGs** where you can; they stay sharp at any size.
+- **Match the visual weight**, not the pixel size. Wordmarks usually need a smaller \`imageScale\` than square icons.
+- **Get permission** before showing a customer's logo, and keep a text fallback for the ones still in review.
+- **Two rows going opposite ways** (\`direction="left"\` and \`"right"\`) fill a wide section nicely.
+
+## Related
+
+For a static trust bar with logos and a short quote, see [Testimonial Logos](/components/testimonial-logos). To scroll anything else (cards, quotes, product shots), use [Infinite Marquee](/components/infinite-marquee). Both are free.`,
+  },
+  {
+    slug: "react-business-hours-open-now-widget",
+    title: "How to show opening hours and an \"Open now\" status on your website",
+    excerpt:
+      "Add business hours with a live Open now / Closed badge to a React or Next.js site, including the time zone setting most widgets get wrong.",
+    category: "Tutorial",
+    date: "2026-09-26",
+    readTime: "3 min read",
+    content: `For cafés, clinics, shops and offices, "are they open right now?" is one of the first questions a visitor has. A small hours widget with a live status answers it before they reach for Google Maps. This tutorial uses ReactFrame's free [Business Hours](/components/business-hours) widget.
+
+## 1. Install
+
+\`\`\`bash
+npx shadcn@latest add https://reactframe.com/r/business-hours.json
+\`\`\`
+
+## 2. Add your hours
+
+\`\`\`tsx
+import { BusinessHours } from "@/components/business-hours";
+
+const days = [
+  { day: "Monday", hours: "08:00 AM - 06:00 PM" },
+  { day: "Tuesday", hours: "08:00 AM - 06:00 PM" },
+  { day: "Wednesday", hours: "08:00 AM - 06:00 PM" },
+  { day: "Thursday", hours: "08:00 AM - 06:00 PM" },
+  { day: "Friday", hours: "08:00 AM - 10:00 PM" },
+  { day: "Saturday", hours: "10:00 AM - 02:00 AM" },
+  { day: "Sunday", hours: "Closed" },
+];
+
+export function VisitUs() {
+  return (
+    <BusinessHours
+      title="Visit Moda Roasters"
+      headerTitle="Opening hours"
+      days={days}
+      timeZone="Europe/Istanbul"
+      address="Moda Cd. 12, Kadıköy, İstanbul"
+      phone="+90 216 123 45 67"
+      directionsUrl="https://maps.google.com/?q=Moda+Roasters"
+    />
+  );
+}
+\`\`\`
+
+Write hours as \`"HH:MM AM - HH:MM PM"\` (with the spaces around the dash) and use \`"Closed"\` for days off. Late nights work too: Saturday above runs from 10 AM to 2 AM.
+
+## 3. Set the time zone
+
+\`timeZone\` is the business's IANA time zone (\`"Europe/Istanbul"\`, \`"America/New_York"\`, \`"Asia/Tokyo"\`). With it, the Open now badge follows the shop's clock, so a visitor browsing from another country still sees the right status. Without it, the status follows the visitor's own clock, which is only right for people in the same time zone.
+
+## 4. Style it
+
+- \`theme\` (\`"dark"\` or \`"light"\`), and \`showThemeToggle\` to let visitors switch.
+- \`backgroundImage\` or \`backgroundVideo\` for a photo of the place behind the card.
+- \`openText\` and \`closedText\` to translate the badge, for example \`"Şu an açık"\` / \`"Kapalı"\`.
+- \`showDirectionsButton\` with \`directionsUrl\` for a one-tap route in Maps.
+
+## Keep it in sync with Google
+
+Use the same hours as your Google Business Profile. Mismatched hours are a common reason for bad reviews, and search engines compare them. If you use structured data, \`openingHoursSpecification\` on your LocalBusiness schema should match too.
+
+## Related
+
+For a full local business page, pair it with reviews from the [Review widgets collection](/collections/react-review-widgets) and a chat button from [Chat widgets](/collections/react-chat-widgets).`,
+  },
+  {
     slug: "how-to-build-an-ai-voice-assistant-ui-in-react",
     title: "How to build an AI voice assistant UI in React",
     excerpt:

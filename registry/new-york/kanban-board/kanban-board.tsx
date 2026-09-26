@@ -71,6 +71,8 @@ interface DragState {
 export interface KanbanBoardProps {
   columns?: KanbanColumn[];
   cards?: KanbanCard[];
+  /** Called after a drag moves a card, with every card in its new column and order. */
+  onCardsChange?: (cards: KanbanCard[]) => void;
   boardTitle?: string;
   boardSubtitle?: string;
   backgroundColor?: string;
@@ -113,6 +115,7 @@ const DEFAULT_CARDS: KanbanCard[] = [
 export function KanbanBoard({
   columns,
   cards: cardsProp,
+  onCardsChange,
   boardTitle = "Product Roadmap",
   boardSubtitle = "Drag cards across columns to update status",
   backgroundColor: lightBg = "#f4f3f1",
@@ -144,6 +147,13 @@ export function KanbanBoard({
     const id = setTimeout(() => setCardList(initialCards), 0);
     return () => clearTimeout(id);
   }, [initialCards]);
+  // Set when a drop moves a card, so onCardsChange reports moves made by the user, not prop resets.
+  const movedRef = React.useRef(false);
+  React.useEffect(() => {
+    if (!movedRef.current) return;
+    movedRef.current = false;
+    onCardsChange?.(cardList);
+  }, [cardList, onCardsChange]);
   const rootRef = React.useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = React.useState(1200);
 
@@ -335,6 +345,7 @@ export function KanbanBoard({
       const targetIndex = d.overIndex;
 
       if (cardId && targetCol != null && targetIndex != null) {
+        movedRef.current = true;
         setCardList((prev) => {
           const without = prev.filter((c) => c.id !== cardId);
           const moving = prev.find((c) => c.id === cardId);

@@ -1099,6 +1099,23 @@
       ]
     },
     {
+      "name": "time-picker",
+      "type": "registry:component",
+      "title": "Time Picker",
+      "description": "A time picker with a popover of scrollable hour, minute and AM/PM columns: 12 or 24-hour clock, minute steps, min/max times, a Now shortcut and full keyboard support.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/time-picker/time-picker.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "input-otp",
       "type": "registry:component",
       "title": "Input OTP",
@@ -1145,6 +1162,57 @@
       "files": [
         {
           "path": "registry/new-york/password-input/password-input.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "phone-input",
+      "type": "registry:component",
+      "title": "Phone Input",
+      "description": "A phone number input with a searchable country menu: flags and calling codes, as-you-type formatting per country, paste detection for +codes, an E.164 value and a length check.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/phone-input/phone-input.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "credit-card-input",
+      "type": "registry:component",
+      "title": "Credit Card Input",
+      "description": "A grouped card number, expiry and CVC field: brand detection with an animated mark, 4-4-4-4 or Amex 4-6-5 spacing, Luhn and expiry checks, and focus that moves on as each part is complete.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/credit-card-input/credit-card-input.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "currency-input",
+      "type": "registry:component",
+      "title": "Currency Input",
+      "description": "A money input with a currency picker: live thousands separators for any locale, the right number of decimals per currency, an animated symbol, arrow-key steps and min/max, returning a plain number.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/currency-input/currency-input.tsx",
           "type": "registry:component"
         }
       ]
@@ -1705,6 +1773,23 @@
       "files": [
         {
           "path": "registry/new-york/textarea/textarea.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "form-field",
+      "type": "registry:component",
+      "title": "Form Field",
+      "description": "A form field wrapper with label, description, required or optional marker, info tooltip, character counter and animated helper, error and success messages, with sync or async validation and aria wiring for any control.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/form-field/form-field.tsx",
           "type": "registry:component"
         }
       ]

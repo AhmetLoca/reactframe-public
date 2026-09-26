@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { allAccessOffer } from "@/lib/quote";
+import { CopyPromptCard } from "@/components/copy-prompt-card";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/docs/ai" },
@@ -24,6 +26,16 @@ const PROMPTS = [
   "Using ReactFrame, create a portfolio site for a product designer: project gallery, about section, testimonials and contact.",
   "Make a SaaS pricing page with ReactFrame components and tell me what the premium ones would cost.",
 ];
+
+// Ask the assistant for the framed grid layout from design-guide.md §4.4 by name.
+const FRAMED_GRID_PROMPT = `Build my site from ReactFrame components in the Framed Grid layout. First read https://reactframe.com/llms.txt and https://reactframe.com/ai/design-guide.md, then follow section 4.4 of the guide exactly:
+- one max-w-6xl column with 1px rails on both sides, and full-width hairlines between sections
+- left-aligned section headers at 40–48px, font-weight 500, tight tracking, with a 16–18px muted description
+- features in hairline-divided cells (no shadows, no rounded cards), compact buttons
+- a near-black background with neutrals and one accent used sparingly
+- section order: nav, hero with a product visual, logo row, one-sentence statement, tabs, feature cells, case studies with big numbers, trust, final CTA, footer inside the frame
+
+My product: [what it does, who it's for, your brand colour if you have one]`;
 
 const FAQ = [
   {
@@ -113,6 +125,28 @@ export default function DocsAiPage() {
           ))}
         </ul>
       </Step>
+
+      <section className="mt-12">
+        <h2 className="text-xl font-semibold tracking-tight">Pick a layout style (optional)</h2>
+        <div className="mt-4 space-y-4 text-[15px] leading-relaxed text-foreground/70">
+          <p>
+            By default the assistant picks a layout from the{" "}
+            <a href="/ai/design-guide.md" className={linkClass}>
+              design guide
+            </a>
+            &apos;s page recipes. To give it a specific look, ask for a style by name.
+          </p>
+          <figure className="overflow-hidden rounded-2xl border border-border">
+            <Image src="/docs/framed-grid-preview.webp" alt="A dark product landing page in the Framed Grid layout: a thin navigation bar, a centered headline with two small buttons, and a product screenshot inside a browser frame, all inside a column bordered by thin vertical lines." width={1600} height={1000} className="h-auto w-full" />
+          </figure>
+          <p>
+            <strong className="font-semibold text-foreground">Framed Grid</strong> suits SaaS, AI, developer tools and fintech: one column framed by thin
+            lines, hairline dividers between sections, content in divided cells instead of floating cards, large medium-weight headings and a lot of space.
+            Copy the prompt, fill in the last line, and paste it into your assistant.
+          </p>
+          <CopyPromptCard prompt={FRAMED_GRID_PROMPT} />
+        </div>
+      </section>
 
       <Step n={3} title="Get the site and a quote">
         <p>

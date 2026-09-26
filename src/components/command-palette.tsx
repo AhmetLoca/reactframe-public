@@ -26,6 +26,7 @@ const PAGE_RESULTS: Result[] = [
   { id: "docs", label: "Documentation", href: "/docs", group: "Pages" },
   { id: "changelog", label: "Changelog", href: "/changelog", group: "Pages" },
   { id: "blog", label: "Blog", href: "/blog", group: "Pages" },
+  { id: "about", label: "About", href: "/about", group: "Pages" },
   { id: "faq", label: "FAQ", href: "/faq", group: "Pages" },
   { id: "help-center", label: "Help Center", href: "/help-center", group: "Pages" },
   { id: "support", label: "Support", href: "/support", group: "Pages" },

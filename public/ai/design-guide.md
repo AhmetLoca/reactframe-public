@@ -153,11 +153,86 @@ content        the component(s)
 
 ### 4.3 Layout rules
 
-- **Alignment:** left-align section headers on content-heavy pages; center them on landing pages. Pick one and keep it for the whole page. The hero may differ.
+- **Alignment:** left-align section headers on content-heavy pages; center them on landing pages (the framed grid in §4.4 always left-aligns). Pick one and keep it for the whole page. The hero may differ.
 - **Full-bleed components** (marquees, galleries, backgrounds, video heroes) sit outside the container; everything else sits inside it.
 - **Adjacent sections** with the same background need the full section padding between them. Never stack two components with no space between them.
 - **Grids:** 1 column on mobile, 2 at `sm`/`md`, 3 (or 4 for small items) at `lg`. Never more than 4.
 - **Heights:** components that need a height (carousels, galleries, canvas backgrounds) get an explicit one: `h-[420px] md:h-[560px]` for media sections, `min-h-[80vh]` or `min-h-screen` for heroes.
+
+### 4.4 Framed grid layout (tech, AI and developer products)
+
+A calm, precise layout that makes a product page feel engineered: every section lives inside one visible frame, content sits in hairline-divided cells instead of floating cards, and hierarchy comes from space and restraint rather than size. Use it for SaaS, AI, developer tools and fintech; it works best in dark mode with the **Mono** or **Midnight** palette. Use it for the whole page or not at all.
+
+**The frame**
+
+- One content column (`max-w-6xl`) with 1 px vertical rails on both sides that run the full page height (`border-x border-border`).
+- Sections are separated by 1 px horizontal lines that cross the whole viewport, not just the column (`border-t border-border` on a full-width wrapper).
+- Text inside the frame is inset from the rails: `px-6 md:px-12`. Cells (below) touch the rails.
+
+**Section header** (left-aligned in this layout, including on landing pages)
+
+- Heading: bigger than elsewhere in this guide: `text-[32px] md:text-[44px]` (40–48 px on desktop, about 32 px on mobile), `font-medium` (500, not 600), `tracking-[-0.02em]`, `leading-[1.15]`, at most two lines (`max-w-[20ch]`). The hero `h1` uses the same size or up to 48 px.
+- Description: 16–18 px (`text-base md:text-lg`), `text-muted`, `max-w-md`, `mt-3`. The larger heading keeps roughly a 2.5× ratio to it; this replaces the 2× rule in §5.2 for this layout only.
+- Controls (carousel arrows, "See all") sit on the right of the same header block, bottom-aligned with the description, never under the content.
+- Space: `pt-24 md:pt-28` above the heading, `mt-12 md:mt-16` to the content, and a hairline between header and content when the content is a cell grid.
+
+**Cell grids instead of cards**
+
+- Features, integrations, security points and logos go in a grid of cells divided by 1 px lines, with no gap, no shadow and no radius: wrap the grid in `grid gap-px bg-border` and give each cell `bg-background`.
+- Each cell: a visual area on top (`h-56 md:h-64`: a mockup, chart, UI crop or icon cluster), then an h3 (16–18 px, `font-medium`), a one-line muted description (14 px) and one small ghost button (`h-8 px-3 text-sm rounded-md bg-surface-2`) pinned to the bottom left. Padding `p-6 md:p-8`.
+- Two cells per row for rich visuals, three for simple ones. A full-width cell can lead a group.
+
+**Section rhythm** (top to bottom)
+
+| Section | What it does | Free | Premium upgrade |
+|---|---|---|---|
+| Nav | Thin (`h-12`), sticky; links 14 px muted; one small filled CTA on the right. Optional one-line announcement bar under it with a small accent tag. | `header-simple`, `glass-navigation` | `announcement-banner` ($5) for the bar |
+| Hero | Centered `h1`, one-sentence description, two compact buttons (filled `bg-foreground text-background` + `bg-surface-2`), then a large product visual directly below, reaching the frame rails, with a soft fade into the page at its bottom edge. | `browser-mockup`, `desktop-mockup-carousel`; `noise-background` behind the hero | |
+| Logos | One row of equal cells with hairline dividers (6 on desktop, 3 on mobile), label on the left and a "Customers →" link on the right above it. | `logo-marquee` (or a static cell row), `testimonial-logos` | |
+| Statement | One centered sentence about the problem at heading size (about 44 px on desktop), revealed word by word on scroll, with lots of air (`py-32`). | `word-reveal` | `scroll-word-highlight` ($6) |
+| Capabilities | Section header, then icon chips as tabs (`rounded-full`, icon + label) switching one panel: text on the left, a product visual on the right. | `tabs`, `segmented-control` | |
+| Feature cells | Section header + a cell grid (above). | `card`, `button` inside cells | `feature-grid-mosaic` ($6) |
+| Proof | Case studies as a row of tall photo cells (2–3 across, `h-[360px] md:h-[440px]`): the photo `object-cover`, a dark gradient from the bottom, one big number (`text-5xl font-medium tabular-nums`) and a one-line caption with the customer name. Build these cells in your own markup; image carousels add motion this layout doesn't want. | `stat-feature` for numbers without photos | `animated-stats` ($5) |
+| Enterprise / trust | Cell grid: security, integrations, admin controls. | `card` | |
+| Final CTA | Centered heading + description + the same two buttons as the hero, inside the frame, `py-32`. | | |
+| Footer | 3–4 columns of 14 px muted links **inside the frame** (wrap the footer in the same `max-w-6xl border-x` column) on the page background, not a lighter band. | `footer-section` with `theme="custom"` and `customColors.bg` set to the page background | |
+
+**Details that make it work**
+
+- Buttons stay compact everywhere (`h-8`–`h-9`, `px-3`, `text-sm`, `rounded-md`); the frame and the space do the talking.
+- The accent appears at most twice per screen (the announcement tag, one chart line or number). Everything else is neutral.
+- Product visuals are real UI (mockups with real-looking data), not stock photos. Photos are for case studies only.
+- Motion: the hero visual and the statement reveal; cells stay still apart from hover.
+- Mobile: rails move to the screen edges (`border-x-0` below `sm` is fine), cell grids become one column with hairlines between cells, header controls move under the description.
+
+```tsx
+// The frame: full-width hairlines between sections, rails around the column.
+<main className="border-b border-border">
+  <section className="border-t border-border">
+    <div className="mx-auto max-w-6xl border-x border-border">
+      <div className="px-6 pt-24 md:px-12 md:pt-28">
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="max-w-[20ch] text-[32px] leading-[1.15] font-medium tracking-[-0.02em] text-balance md:text-[44px]">Everything your team needs to ship faster</h2>
+            <p className="mt-3 max-w-md text-base leading-relaxed text-muted md:text-lg">One sentence that says what this section proves.</p>
+          </div>
+          {/* optional: carousel arrows or "See all" */}
+        </div>
+      </div>
+      <div className="mt-12 grid gap-px border-t border-border bg-border md:mt-16 md:grid-cols-2">
+        {features.map((f) => (
+          <div key={f.title} className="flex flex-col bg-background p-6 md:p-8">
+            <div className="h-56 md:h-64">{/* mockup, chart or UI crop */}</div>
+            <h3 className="mt-6 text-base font-medium md:text-lg">{f.title}</h3>
+            <p className="mt-1.5 text-sm text-muted">{f.description}</p>
+            <a href={f.href} className="mt-5 inline-flex h-8 w-fit items-center rounded-md bg-surface-2 px-3 text-sm">{f.cta}</a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</main>
+```
 
 ---
 
@@ -192,8 +267,8 @@ Monospace (code, numbers in tables, eyebrows if the brand is technical): Geist M
 | Eyebrow | 12 px | `text-xs font-medium uppercase tracking-[0.2em] text-muted` | Above headings. |
 | Button | 14 px | `text-sm font-medium` | |
 
-- Don't go below 14 px for anything the user has to read to understand the page, or above 32 px for headings.
-- Headings: tight tracking, `font-semibold` (600). Never `font-bold` and `font-semibold` on the same level.
+- Don't go below 14 px for anything the user has to read to understand the page, or above 32 px for headings. **Exception:** the framed grid layout (§4.4) uses 40–48 px headings with 16–18 px descriptions.
+- Headings: tight tracking, `font-semibold` (600); in the framed grid layout (§4.4) use `font-medium` (500) throughout. Never mix weights on the same heading level.
 - One highlighted word per headline at most, in the accent or accent gradient.
 - Numbers in stats and prices: `tabular-nums`.
 
@@ -203,7 +278,7 @@ Every page you build **must** have exactly one `<h1>`, and every template in §7
 
 - **Where:** the hero's main heading is the `<h1>`. It must be real HTML text, never text inside an image, a canvas or an SVG.
 - **What:** the page's primary keyword plus what makes it specific (the business name, the city, the audience). Write it for a person first; it should still read naturally. Keep it under about 60 characters.
-- **Size:** same as other headings (28–32 px, §5.2). Its SEO weight comes from being the `<h1>`, not from being bigger.
+- **Size:** same as other headings (28–32 px, §5.2; 40–48 px in the framed grid, §4.4). Its SEO weight comes from being the `<h1>`, not from being bigger.
 - **Outline:** `h1` → one `h2` per section → `h3` for cards and features inside a section. Never skip a level (no `h3` directly under the `h1`), and never pick a heading level for its size; style it with classes instead.
 - **Distinct from `<title>`:** related but not identical. The `<title>` adds the brand (`Specialty Coffee in Kadıköy | Moda Roasters`); the `<h1>` reads like a headline (`Specialty coffee, roasted every morning in Kadıköy`).
 - **Components that render their own `<h1>`:** `about-founder-section`, `cards-gallery-ring`, `error-404-page-section`, `fullpage-photos`, `hero-scroll-gallery`, `marquee-hero-section`, `product-detail`, `rotary-card-carousel`, `your-cart-page`. Use them only as the page's hero (and then don't add another `<h1>`), or pick a different component for lower sections. `coverflow-services-hero` takes a `headingLevel` prop; set it to `"h1"` when it's the hero and `"h2"` otherwise.
@@ -255,6 +330,8 @@ Section order for common briefs. **Free** components can be installed right away
 ### 7.1 SaaS / product landing page
 
 **H1 formula:** `[What the product does] for [audience]`, e.g. *"Invoicing that runs itself for freelance designers"*.
+
+**Layout:** for tech, AI, developer and fintech products, build the page on the framed grid (§4.4) and follow its section rhythm; the table below lists the components for each slot.
 
 | Section | Free | Premium upgrade |
 |---|---|---|

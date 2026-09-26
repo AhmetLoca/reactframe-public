@@ -22,6 +22,12 @@ export interface Scene {
   duration: number;
   /** Runs once per frame, before the frame is captured. Move the mouse, click, type. */
   frame: (ctx: FrameCtx) => Promise<void> | void;
+  /**
+   * For components that never come back to their first frame (shaders, free-running loops): record
+   * this many extra seconds and crossfade them over the start, so the clip loops without a seam.
+   * Keep the cursor hidden in the first and last `loopBlend` seconds, or it ghosts.
+   */
+  loopBlend?: number;
 }
 
 export const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);

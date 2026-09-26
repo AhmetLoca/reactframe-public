@@ -6,7 +6,7 @@ import { components, type ComponentMeta } from "@/lib/catalog-data";
 // ---- Elements ------------------------------------------------------------------------------------
 
 export const ELEMENT_GROUPS: { title: string; placeholders: string[] }[] = [
-  { title: "Form & Input", placeholders: ["Time Picker", "Phone Input", "Credit Card Input", "Currency Input", "Checkbox Group", "Form Field", "Rich Text Editor", "Signature Pad", "Image Cropper"] },
+  { title: "Form & Input", placeholders: ["Checkbox Group", "Rich Text Editor", "Signature Pad", "Image Cropper"] },
   { title: "Feedback & Status", placeholders: ["Toast Stack", "Notification Center", "Status Dot", "Inline Validation Message"] },
   { title: "Navigation", placeholders: ["Dropdown Menu", "Mega Menu", "Mobile Tab Bar", "Table of Contents", "Scrollspy Anchor Links", "Language Switcher"] },
   { title: "Overlay", placeholders: ["Bottom Sheet", "Lightbox", "Cookie Consent Banner", "Product Tour"] },
@@ -19,7 +19,7 @@ export const ELEMENT_GROUPS: { title: string; placeholders: string[] }[] = [
 // catalog (see ComponentMeta.type in catalog-data.ts) — they're still
 // /components/[slug] pages, just also relevant as primitives.
 export const BUILT_SLUGS_BY_GROUP: Record<string, string[]> = {
-  "Form & Input": ["button", "input", "textarea", "animated-checkbox", "radio-button", "select", "slider", "search-bar", "combobox", "multi-select", "date-picker", "input-otp", "number-input", "password-input", "segmented-control", "color-picker", "file-upload", "toggle-pro"],
+  "Form & Input": ["button", "input", "textarea", "form-field", "animated-checkbox", "radio-button", "select", "slider", "search-bar", "combobox", "multi-select", "date-picker", "time-picker", "input-otp", "number-input", "password-input", "phone-input", "credit-card-input", "currency-input", "segmented-control", "color-picker", "file-upload", "toggle-pro"],
   "Feedback & Status": ["badges-kit", "alert-toast", "progress-circle-bars", "linear-progress-bars", "linear-progress", "animated-loader", "tag", "tooltip", "skeleton", "callout", "meter"],
   Navigation: ["tabs", "breadcrumb", "pagination", "stepper", "command-palette", "menubar", "sidebar", "dock"],
   Overlay: ["modal", "popover", "drawer", "confirm-dialog", "hover-card", "context-menu"],

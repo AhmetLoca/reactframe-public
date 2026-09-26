@@ -28,6 +28,7 @@ const STATIC_ROUTES = [
   "/changelog",
   "/blog",
   "/support",
+  "/about",
   "/faq",
   "/help-center",
   "/license",

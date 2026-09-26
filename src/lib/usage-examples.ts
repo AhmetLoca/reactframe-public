@@ -30,6 +30,16 @@ export const usageExamples: Record<string, string> = {
 <div className="h-[700px] w-full overflow-hidden rounded-xl">
   <KanbanBoard />
 </div>
+
+// Your own columns and cards; save each move
+<KanbanBoard
+  columns={[
+    { id: "todo", title: "To do", accentColor: "#9a9a96" },
+    { id: "done", title: "Done", accentColor: "#5fa874" },
+  ]}
+  cards={cards}
+  onCardsChange={(next) => saveCards(next)}
+/>
 `,
   "x-twitter-widget": `import { XTwitterWidget } from "@/components/x-twitter-widget";
 
@@ -64,6 +74,15 @@ export const usageExamples: Record<string, string> = {
 <div className="h-[700px] w-full">
   <BusinessHours address="123 Main St, City" phone="+1 234 567 8900" />
 </div>
+
+// "Open now" follows the business's clock, wherever the visitor is
+<BusinessHours
+  timeZone="Europe/Istanbul"
+  days={[
+    { day: "Monday", hours: "08:00 AM - 06:00 PM" },
+    { day: "Sunday", hours: "Closed" },
+  ]}
+/>
 `,
   "bubble-cursor": `import { BubbleCursor } from "@/components/bubble-cursor";
 
@@ -516,6 +535,80 @@ const [date, setDate] = React.useState<Date | null>(new Date());
 // Range
 const [range, setRange] = React.useState({});
 <DatePicker mode="range" range={range} onRangeChange={setRange} />
+`,
+  "time-picker": `import * as React from "react";
+import { TimePicker } from "@/components/time-picker";
+
+// Uncontrolled
+<TimePicker label="Meeting time" placeholder="Pick a time" />
+
+// Controlled, 24-hour, 15-minute steps
+const [time, setTime] = React.useState<string | null>("14:30");
+<TimePicker value={time} onValueChange={setTime} hourCycle={24} minuteStep={15} />
+
+// Business hours only
+<TimePicker label="Pickup" minTime="09:00" maxTime="17:00" />
+`,
+  "phone-input": `import * as React from "react";
+import { PhoneInput } from "@/components/phone-input";
+
+// Uncontrolled, Türkiye by default
+<PhoneInput label="Phone" defaultCountry="TR" preferredCountries={["TR", "US", "GB"]} />
+
+// Controlled: value is E.164, meta says whether the length is valid
+const [phone, setPhone] = React.useState("");
+<PhoneInput value={phone} onValueChange={(value, { isValid }) => setPhone(value)} />
+
+// Plain form post: a hidden input named "phone" carries "+905321234567"
+<PhoneInput name="phone" countries={["TR", "DE", "NL"]} />
+`,
+  "credit-card-input": `import * as React from "react";
+import { CreditCardInput, type CreditCardValue } from "@/components/credit-card-input";
+
+// Uncontrolled
+<CreditCardInput label="Card details" />
+
+// Controlled, with the cardholder name; enable Pay once every part checks out
+const [card, setCard] = React.useState<CreditCardValue | null>(null);
+<CreditCardInput showName onValueChange={setCard} />
+<button disabled={!card?.isComplete}>Pay</button>
+`,
+  "currency-input": `import * as React from "react";
+import { CurrencyInput } from "@/components/currency-input";
+
+// Uncontrolled
+<CurrencyInput label="Budget" defaultValue={2500} />
+
+// Controlled, euros with German separators (1.234,56)
+const [amount, setAmount] = React.useState<number | null>(1234.56);
+<CurrencyInput value={amount} onValueChange={(value) => setAmount(value)} defaultCurrency="EUR" locale="de-DE" />
+
+// Fixed currency, whole lira only above 100
+<CurrencyInput defaultCurrency="TRY" currencies={["TRY"]} locale="tr-TR" min={100} step={50} />
+`,
+  "form-field": `import * as React from "react";
+import { FormField } from "@/components/form-field";
+
+// Built-in input with validation
+<FormField
+  label="Email"
+  required
+  type="email"
+  placeholder="you@company.com"
+  validate={(v) => (/^\\S+@\\S+\\.\\S+$/.test(v) ? null : "Enter a valid email address")}
+/>
+
+// Async check with a success message
+<FormField
+  label="Username"
+  successText="Username is available"
+  validate={async (v) => ((await isTaken(v)) ? "That username is taken" : null)}
+/>
+
+// Wrap your own control; it gets id and aria props
+<FormField label="Country" description="Used for tax and invoices">
+  <select>{/* ... */}</select>
+</FormField>
 `,
   "input-otp": `import * as React from "react";
 import { InputOTP } from "@/components/input-otp";

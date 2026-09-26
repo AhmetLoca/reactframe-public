@@ -61,8 +61,9 @@ export async function generateMetadata({
   const component = getComponent(slug);
   if (!component) return {};
   const url = `${siteUrl}/components/${slug}`;
-  // Leads with the words people actually search ("<name> react component", "tailwind", "shadcn").
-  const title = `${component.name}: React ${component.category} Component (Tailwind, shadcn/ui)`;
+  // Leads with the words people search ("react time picker"), then "free" (which lifts clicks on free
+  // items) and the stack; the layout template appends ", ReactFrame".
+  const title = component.free ? `React ${component.name} Component: Free, Tailwind & shadcn/ui` : `React ${component.name} Component (Tailwind, shadcn/ui)`;
   const description = `${component.free ? "Free" : "Premium"} ${component.name} React component built with Tailwind CSS, shadcn/ui compatible. ${component.description}`;
   return {
     title,

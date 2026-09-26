@@ -247,12 +247,76 @@ function isVariantAvailable(code: ComponentCode, lang: CodeLang, style: CodeStyl
   return code.jsCss != null;
 }
 
+// Packages the shown source imports, so someone copying it by hand knows what to install (the
+// shadcn CLI installs them on its own). Read from the active variant, since the CSS variants drop
+// clsx/tailwind-merge. `cn` from "@/lib/utils" is the stock shadcn helper, which needs both.
+const BUILT_IN_PACKAGES = new Set(["react", "react-dom", "next"]);
+
+function codeDependencies(source: string, lang: CodeLang): { install: string | null; usesCn: boolean } {
+  const packages = new Set<string>();
+  let usesCn = false;
+  for (const [, spec] of source.matchAll(/(?:from\s+|import\s+)["']([^"']+)["']/g)) {
+    if (spec === "@/lib/utils") {
+      usesCn = true;
+      packages.add("clsx").add("tailwind-merge");
+      continue;
+    }
+    if (spec.startsWith(".") || spec.startsWith("@/")) continue;
+    const parts = spec.split("/");
+    const name = spec.startsWith("@") ? parts.slice(0, 2).join("/") : parts[0];
+    if (!BUILT_IN_PACKAGES.has(name)) packages.add(name);
+  }
+  if (packages.size === 0) return { install: null, usesCn };
+  let install = `npm i ${[...packages].join(" ")}`;
+  if (lang === "ts" && packages.has("three")) install += " && npm i -D @types/three";
+  return { install, usesCn };
+}
+
+function DependenciesRow({ install, usesCn }: { install: string; usesCn: boolean }) {
+  const [copied, setCopied] = React.useState(false);
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(install);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // Clipboard access can be denied (permissions, insecure context) —
+      // fail quietly rather than surface an unhandled rejection.
+    }
+  }
+
+  return (
+    <div className="flex items-center justify-between gap-3 border-t border-border px-4 py-3">
+      <div className="min-w-0">
+        <p className="text-xs text-foreground/50">Dependencies</p>
+        <code className="mt-1 block font-mono text-[13px] text-foreground/85">
+          {/* Wrap between words only, so a package name like tailwind-merge never splits at its hyphen. */}
+          {install.split(" ").map((word, i) => (
+            <React.Fragment key={i}>
+              {i > 0 && " "}
+              <span className="whitespace-nowrap">{word}</span>
+            </React.Fragment>
+          ))}
+        </code>
+        {usesCn && (
+          <p className="mt-1 text-xs text-foreground/50">
+            Also uses <code className="font-mono">cn()</code> from <code className="font-mono">@/lib/utils</code>, which every shadcn/ui project already has.
+          </p>
+        )}
+      </div>
+      <CopyButton copied={copied} onCopy={copy} />
+    </div>
+  );
+}
+
 export function CodeTab({ slug, code }: { slug: string; code: ComponentCode }) {
   const [lang, setLang] = React.useState<CodeLang>("ts");
   const [style, setStyle] = React.useState<CodeStyle>("tailwind");
   const [copied, setCopied] = React.useState(false);
   const hasVariants = code.jsTailwind != null || code.tsCss != null || code.jsCss != null;
   const activeCode = pickCode(code, lang, style);
+  const deps = codeDependencies(activeCode, lang);
 
   async function copy() {
     try {
@@ -299,6 +363,7 @@ export function CodeTab({ slug, code }: { slug: string; code: ComponentCode }) {
           />
         </div>
       )}
+      {deps.install && <DependenciesRow install={deps.install} usesCn={deps.usesCn} />}
       <CodeSurface code={activeCode} bare />
     </div>
   );

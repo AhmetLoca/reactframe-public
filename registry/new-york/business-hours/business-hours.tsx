@@ -18,6 +18,8 @@ export interface BusinessHoursProps extends Omit<React.ComponentPropsWithoutRef<
   subtitle?: string;
   headerTitle?: string;
   days?: BusinessHoursDay[];
+  /** IANA time zone of the business, e.g. "Europe/Istanbul", so "Open now" is right for visitors anywhere. Defaults to the visitor's clock. */
+  timeZone?: string;
   showStatus?: boolean;
   openText?: string;
   closedText?: string;
@@ -70,6 +72,15 @@ function minutesTo24Hour(minutes: number): string {
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 }
 
+/** Weekday index (0 = Sunday) and minutes past midnight, in `timeZone` or the visitor's own clock. */
+function clockNow(timeZone?: string): { day: number; minutes: number } {
+  const now = new Date();
+  if (!timeZone) return { day: now.getDay(), minutes: now.getHours() * 60 + now.getMinutes() };
+  const parts = new Intl.DateTimeFormat("en-US", { timeZone, weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(now);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
+  return { day: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(get("weekday")), minutes: Number(get("hour")) * 60 + Number(get("minute")) };
+}
+
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 export function BusinessHours({
@@ -77,6 +88,7 @@ export function BusinessHours({
   subtitle = "Drop by our workspace for a meeting, a tour, or just to say hello. Check today's status before you head over.",
   headerTitle = "Office Hours",
   days = DEFAULT_DAYS,
+  timeZone,
   showStatus = true,
   openText = "Open Now",
   closedText = "Closed",
@@ -114,20 +126,20 @@ export function BusinessHours({
 
   React.useEffect(() => {
     const compute = () => {
-      const now = new Date();
-      const todayEntry = days.find((d) => d.day === DAY_NAMES[now.getDay()]);
+      const now = clockNow(timeZone);
+      const todayEntry = days.find((d) => d.day === DAY_NAMES[now.day]);
       const range = todayEntry ? getOpenRange(todayEntry.hours) : null;
       if (!range) {
         setIsOpenNow(false);
         return;
       }
-      const nowMinutes = now.getHours() * 60 + now.getMinutes();
+      const nowMinutes = now.minutes;
       setIsOpenNow(range[1] > range[0] ? nowMinutes >= range[0] && nowMinutes < range[1] : nowMinutes >= range[0] || nowMinutes < range[1]);
     };
     compute();
     const id = setInterval(compute, 60000);
     return () => clearInterval(id);
-  }, [days]);
+  }, [days, timeZone]);
 
   React.useEffect(() => {
     const id = setInterval(() => setPulseOn((p) => !p), 1000);

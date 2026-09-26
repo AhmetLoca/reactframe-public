@@ -167,6 +167,7 @@ function Sparkline({ data, s, p, color, style, prefix, suffix, formatValue, labe
   const areaPath = `${linePath} L${last[0].toFixed(2)},${height} L${points[0][0].toFixed(2)},${height} Z`;
   const gradId = React.useId();
   const glowId = React.useId();
+  const clipId = React.useId();
 
   const [hover, setHover] = React.useState<number | null>(null);
   const [entered, setEntered] = React.useState(false);
@@ -240,6 +241,12 @@ function Sparkline({ data, s, p, color, style, prefix, suffix, formatValue, labe
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+          {/* The line draws in by widening this clip. Animating pathLength instead breaks here: with
+           * vector-effect="non-scaling-stroke" on a horizontally stretched viewBox, Chrome measures
+           * the dash in screen pixels, so the stroke stopped partway across. */}
+          <clipPath id={clipId}>
+            <motion.rect x={-4} y={-height} height={height * 3} initial={{ width: 0 }} animate={{ width: width + 8 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} />
+          </clipPath>
         </defs>
         <motion.path d={areaPath} fill={`url(#${gradId})`} stroke="none" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.15 }} />
         <motion.path
@@ -249,9 +256,7 @@ function Sparkline({ data, s, p, color, style, prefix, suffix, formatValue, labe
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          clipPath={`url(#${clipId})`}
           vectorEffect="non-scaling-stroke"
           filter={`url(#${glowId})`}
         />

@@ -74,6 +74,61 @@ export const componentGuides: Record<string, ComponentGuide> = {
       { q: "Can I start the week on Monday?", a: "Yes. Set weekStartsOn={1}. The default is Sunday (0)." },
     ],
   },
+  "time-picker": {
+    whenToUse: [
+      "Use Time Picker for appointment slots, delivery windows, reminders and opening hours. minTime and maxTime keep people inside the hours you actually offer, and minuteStep (5, 15 or 30) turns a list of 60 minutes into a handful of real slots.",
+      "The value is always a 24-hour \"HH:mm\" string, whatever the display, so it goes straight into a form, a database column or an API without any parsing. Set hourCycle={24} for a 24-hour display.",
+    ],
+    faq: [
+      { q: "What format is the value?", a: "A 24-hour \"HH:mm\" string such as \"09:30\" or \"17:45\", or null when nothing is picked. The 12-hour AM/PM display is only for the screen." },
+      { q: "Can I limit it to business hours?", a: "Yes. Set minTime=\"09:00\" and maxTime=\"17:00\"; times outside the window are dimmed and can't be picked." },
+      { q: "Does it work with the keyboard?", a: "Yes. Tab moves between the hour, minute and AM/PM columns, the arrow keys change the value, and Enter or Escape closes it." },
+    ],
+  },
+  "phone-input": {
+    whenToUse: [
+      "Use Phone Input in sign-up, checkout, booking and contact forms. The value is always E.164 (for example \"+905321234567\"), the format SMS, WhatsApp and calling APIs expect, so you can store and send it without reformatting.",
+      "The built-in check only looks at the number's length for the chosen country. It catches typos and missing digits while typing; if you need to know that a number really exists or is a mobile line, verify it on your server with a library such as libphonenumber or with an SMS code.",
+    ],
+    faq: [
+      { q: "What format does it return?", a: "E.164: a plus, the calling code and the national number with no spaces, such as \"+14155550123\". onValueChange also gives the country code, the national digits and isValid." },
+      { q: "Can people paste an international number?", a: "Yes. A number that starts with + switches the country by its calling code, so pasting \"+44 7911 123456\" selects the United Kingdom." },
+      { q: "Can I limit or reorder the countries?", a: "Yes. countries limits the list to the ISO codes you pass, and preferredCountries pins some of them to the top of the menu." },
+    ],
+  },
+  "credit-card-input": {
+    whenToUse: [
+      "Use Credit Card Input for checkout mockups, prototypes, subscription forms that hand the details to your own tokenising backend, and anywhere you want a card form that matches the rest of your UI. It catches the usual typos while people type: a wrong digit fails the Luhn check, an expired date is flagged, and the CVC length follows the card brand.",
+      "For real payments, keep raw card numbers off your servers: most sites use their payment provider's hosted fields (Stripe Elements, Adyen, Braintree and similar) so they stay out of PCI scope. This component doesn't send data anywhere, so pair it with a provider that accepts card details from your own form, or use it as the design reference for their hosted fields.",
+    ],
+    faq: [
+      { q: "Which card brands does it recognise?", a: "Visa, Mastercard (including 2-series), American Express, Discover and Troy. Unknown numbers still format and pass through the Luhn check." },
+      { q: "Is the card number validated?", a: "Yes, with the Luhn checksum and the brand's length. That catches typos, not whether the card exists or has funds; only your payment provider can tell you that." },
+      { q: "What does onValueChange return?", a: "{ number, expiry (\"MM/YY\"), cvc, name, brand, isComplete }, where isComplete is true only when every shown field passes its check." },
+    ],
+  },
+  "currency-input": {
+    whenToUse: [
+      "Use Currency Input for prices, budgets, invoices, donations and transfers: anywhere people type an amount of money. Separators appear as they type, so 1250000 reads as 1,250,000 before they submit, which prevents the classic extra-zero mistake.",
+      "It returns a plain number (and the currency code), not a formatted string, so you can do maths and store it straight away. For accounting where rounding matters, convert it to integer minor units (cents) on your side before storing.",
+    ],
+    faq: [
+      { q: "Which separators does it use?", a: "The ones for the locale you pass: en-US shows 1,234.56, de-DE 1.234,56, tr-TR 1.234,56 and so on, via the browser's Intl API." },
+      { q: "How many decimals does it allow?", a: "As many as the currency uses: two for USD and EUR, none for JPY or KRW. Changing the currency re-rounds the amount." },
+      { q: "Can I lock it to one currency?", a: "Yes. Pass currencies with a single code, or showCurrencySelect={false}, and the code shows as a plain label." },
+    ],
+  },
+  "form-field": {
+    whenToUse: [
+      "Use Form Field to give every input in a form the same label, description, required marker, counter and message line, so forms stay consistent without re-building that scaffolding each time. It works with its own input or wraps any control (a select, a date picker, a third-party input) and wires the id and aria attributes for screen readers.",
+      "Validation waits until someone leaves the field before showing an error, then re-checks as they type so the error clears the moment it's fixed. That pattern (reward early, punish late) is less nagging than validating every keystroke and faster to recover from than validating only on submit.",
+    ],
+    faq: [
+      { q: "Can validate be async?", a: "Yes. Return a Promise and the field shows a small spinner while it waits; results from older, slower checks are ignored." },
+      { q: "How do I show a server error?", a: "Pass errorText. It overrides the field's own validation until you clear it." },
+      { q: "Does it work with my own input component?", a: "Yes. Pass it as children and it receives id, aria-describedby, aria-invalid and aria-required, or use a function child to place them yourself." },
+    ],
+  },
   slider: {
     whenToUse: [
       "Use Slider when the exact number matters less than a quick feel for the amount, like volume, brightness, a price filter or a budget. Set range to get two thumbs for a min and max, which is the usual pattern for price filters in shops.",

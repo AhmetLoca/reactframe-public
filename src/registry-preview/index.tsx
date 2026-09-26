@@ -523,6 +523,46 @@ const MultiSelect = dynamic(() =>
 const DatePicker = dynamic(() =>
   import("../../registry/new-york/date-picker/date-picker").then((m) => m.DatePicker),
 );
+const CurrencyInput = dynamic(() =>
+  import("../../registry/new-york/currency-input/currency-input").then((m) => m.CurrencyInput),
+);
+const FormField = dynamic(() =>
+  import("../../registry/new-york/form-field/form-field").then((m) => m.FormField),
+);
+const TAKEN_USERNAMES = ["admin", "reactframe", "root", "support"];
+function FormFieldDemo({ size = "md", theme = "dark", disabled = false }: { size?: "sm" | "md" | "lg"; theme?: "dark" | "light"; disabled?: boolean }) {
+  return (
+    <div className="flex flex-col gap-3">
+      <FormField
+        label="Username"
+        required
+        size={size}
+        theme={theme}
+        disabled={disabled}
+        placeholder="ada"
+        helperText="Try admin to see a taken name"
+        successText="Username is available"
+        info="Letters, numbers and dashes. You can change it later."
+        validate={async (v) => {
+          await new Promise((r) => setTimeout(r, 700));
+          if (!/^[a-z0-9-]{3,}$/i.test(v)) return "Use at least 3 letters, numbers or dashes";
+          return TAKEN_USERNAMES.includes(v.toLowerCase()) ? "That username is taken" : null;
+        }}
+      />
+      <FormField label="Email" required type="email" size={size} theme={theme} disabled={disabled} placeholder="you@company.com" validate={(v) => (/^\S+@\S+\.\S+$/.test(v) ? null : "Enter a valid email address")} />
+      <FormField label="Bio" optional multiline maxLength={160} size={size} theme={theme} disabled={disabled} description="Shown on your public profile" placeholder="A line or two about you" />
+    </div>
+  );
+}
+const TimePicker = dynamic(() =>
+  import("../../registry/new-york/time-picker/time-picker").then((m) => m.TimePicker),
+);
+const PhoneInput = dynamic(() =>
+  import("../../registry/new-york/phone-input/phone-input").then((m) => m.PhoneInput),
+);
+const CreditCardInput = dynamic(() =>
+  import("../../registry/new-york/credit-card-input/credit-card-input").then((m) => m.CreditCardInput),
+);
 const InputOTP = dynamic(() =>
   import("../../registry/new-york/input-otp/input-otp").then((m) => m.InputOTP),
 );
@@ -3212,6 +3252,31 @@ export const registryPreviews: Record<string, () => React.ReactNode> = {
   "date-picker": () => (
     <div className="flex h-[560px] w-full items-start justify-center rounded-xl bg-[#080808] px-6 pt-20">
       <DatePicker label="Due date" helperText="Arrow keys move, PageUp/PageDown change month" />
+    </div>
+  ),
+  "credit-card-input": () => (
+    <div className="flex h-[400px] w-full items-center justify-center rounded-xl bg-[#080808] px-6">
+      <CreditCardInput label="Card details" helperText="Try 4242 4242 4242 4242, any future date and any CVC" />
+    </div>
+  ),
+  "phone-input": () => (
+    <div className="flex h-[480px] w-full items-start justify-center rounded-xl bg-[#080808] px-6 pt-20">
+      <PhoneInput label="Phone number" defaultCountry="TR" preferredCountries={["TR", "US", "GB"]} helperText="We'll text you a confirmation code" />
+    </div>
+  ),
+  "currency-input": () => (
+    <div className="flex h-[440px] w-full items-start justify-center rounded-xl bg-[#080808] px-6 pt-20">
+      <CurrencyInput label="Monthly budget" defaultValue={2500} helperText="Arrow keys add or remove 10, Shift for 100" step={10} />
+    </div>
+  ),
+  "form-field": () => (
+    <div className="flex min-h-[560px] w-full items-center justify-center rounded-xl bg-[#080808] px-6 py-10">
+      <FormFieldDemo />
+    </div>
+  ),
+  "time-picker": () => (
+    <div className="flex h-[440px] w-full items-start justify-center rounded-xl bg-[#080808] px-6 pt-20">
+      <TimePicker label="Meeting time" defaultValue="09:30" helperText="Arrow keys change the focused column" />
     </div>
   ),
   "input-otp": () => (
@@ -12057,6 +12122,134 @@ export const registryPlaygroundPreviews: Partial<
             weekStartsOn={Number(v.week) as 0 | 1}
             minDate={v.future ? new Date() : undefined}
             closeOnSelect={Boolean(v.close)}
+            clearable={Boolean(v.clearable)}
+            disabled={Boolean(v.disabled)}
+          />
+        </div>
+      )}
+    </Playground>
+  ),
+  "credit-card-input": () => (
+    <Playground
+      controls={[
+        { type: "select", key: "size", label: "Size", options: ["sm", "md", "lg"], optionLabels: ["S", "M", "L"], defaultValue: "md" },
+        { type: "select", key: "theme", label: "Theme", options: ["dark", "light"], optionLabels: ["Dark", "Light"], defaultValue: "dark" },
+        { type: "toggle", key: "name", label: "Name on card", defaultValue: false },
+        { type: "toggle", key: "disabled", label: "Disabled", defaultValue: false },
+      ]}
+    >
+      {(v) => (
+        <div className={`flex h-[400px] w-full items-center justify-center rounded-xl px-6 ${v.theme === "light" ? "bg-white" : "bg-[#080808]"}`}>
+          <CreditCardInput
+            label="Card details"
+            helperText="Try 4242 4242 4242 4242, any future date and any CVC"
+            showName={Boolean(v.name)}
+            size={v.size as "sm" | "md" | "lg"}
+            theme={v.theme as "dark" | "light"}
+            disabled={Boolean(v.disabled)}
+          />
+        </div>
+      )}
+    </Playground>
+  ),
+  "phone-input": () => (
+    <Playground
+      controls={[
+        { type: "select", key: "country", label: "Default country", options: ["US", "GB", "TR", "DE", "IN", "BR"], optionLabels: ["US", "UK", "TR", "DE", "IN", "BR"], defaultValue: "TR" },
+        { type: "select", key: "size", label: "Size", options: ["sm", "md", "lg"], optionLabels: ["S", "M", "L"], defaultValue: "md" },
+        { type: "select", key: "theme", label: "Theme", options: ["dark", "light"], optionLabels: ["Dark", "Light"], defaultValue: "dark" },
+        { type: "toggle", key: "preferred", label: "Pin TR, US, UK", defaultValue: true },
+        { type: "toggle", key: "check", label: "Validate on blur", defaultValue: true },
+        { type: "toggle", key: "disabled", label: "Disabled", defaultValue: false },
+      ]}
+    >
+      {(v) => (
+        <div className={`flex h-[480px] w-full items-start justify-center rounded-xl px-6 pt-20 ${v.theme === "light" ? "bg-white" : "bg-[#080808]"}`}>
+          <PhoneInput
+            key={String(v.country)}
+            label="Phone number"
+            defaultCountry={String(v.country)}
+            preferredCountries={v.preferred ? ["TR", "US", "GB"] : []}
+            invalidText={v.check ? undefined : ""}
+            helperText="We'll text you a confirmation code"
+            size={v.size as "sm" | "md" | "lg"}
+            theme={v.theme as "dark" | "light"}
+            disabled={Boolean(v.disabled)}
+          />
+        </div>
+      )}
+    </Playground>
+  ),
+  "currency-input": () => (
+    <Playground
+      controls={[
+        { type: "select", key: "currency", label: "Currency", options: ["USD", "EUR", "GBP", "TRY", "JPY"], optionLabels: ["USD", "EUR", "GBP", "TRY", "JPY"], defaultValue: "USD" },
+        { type: "select", key: "locale", label: "Locale", options: ["en-US", "de-DE", "tr-TR", "fr-FR"], optionLabels: ["en-US", "de-DE", "tr-TR", "fr-FR"], defaultValue: "en-US" },
+        { type: "select", key: "size", label: "Size", options: ["sm", "md", "lg"], optionLabels: ["S", "M", "L"], defaultValue: "md" },
+        { type: "select", key: "theme", label: "Theme", options: ["dark", "light"], optionLabels: ["Dark", "Light"], defaultValue: "dark" },
+        { type: "toggle", key: "select", label: "Currency menu", defaultValue: true },
+        { type: "toggle", key: "negative", label: "Allow negative", defaultValue: false },
+        { type: "toggle", key: "disabled", label: "Disabled", defaultValue: false },
+      ]}
+    >
+      {(v) => (
+        <div className={`flex h-[440px] w-full items-start justify-center rounded-xl px-6 pt-20 ${v.theme === "light" ? "bg-white" : "bg-[#080808]"}`}>
+          <CurrencyInput
+            key={`${v.currency}-${v.locale}`}
+            label="Monthly budget"
+            defaultValue={2500}
+            step={10}
+            helperText="Arrow keys add or remove 10, Shift for 100"
+            defaultCurrency={String(v.currency)}
+            locale={String(v.locale)}
+            showCurrencySelect={Boolean(v.select)}
+            allowNegative={Boolean(v.negative)}
+            size={v.size as "sm" | "md" | "lg"}
+            theme={v.theme as "dark" | "light"}
+            disabled={Boolean(v.disabled)}
+          />
+        </div>
+      )}
+    </Playground>
+  ),
+  "form-field": () => (
+    <Playground
+      controls={[
+        { type: "select", key: "size", label: "Size", options: ["sm", "md", "lg"], optionLabels: ["S", "M", "L"], defaultValue: "md" },
+        { type: "select", key: "theme", label: "Theme", options: ["dark", "light"], optionLabels: ["Dark", "Light"], defaultValue: "dark" },
+        { type: "toggle", key: "disabled", label: "Disabled", defaultValue: false },
+      ]}
+    >
+      {(v) => (
+        <div className={`flex min-h-[560px] w-full items-center justify-center rounded-xl px-6 py-10 ${v.theme === "light" ? "bg-white" : "bg-[#080808]"}`}>
+          <FormFieldDemo size={v.size as "sm" | "md" | "lg"} theme={v.theme as "dark" | "light"} disabled={Boolean(v.disabled)} />
+        </div>
+      )}
+    </Playground>
+  ),
+  "time-picker": () => (
+    <Playground
+      controls={[
+        { type: "select", key: "cycle", label: "Clock", options: ["12", "24"], optionLabels: ["12h", "24h"], defaultValue: "12" },
+        { type: "select", key: "step", label: "Minute step", options: ["1", "5", "15", "30"], optionLabels: ["1", "5", "15", "30"], defaultValue: "5" },
+        { type: "select", key: "size", label: "Size", options: ["sm", "md", "lg"], optionLabels: ["S", "M", "L"], defaultValue: "md" },
+        { type: "select", key: "theme", label: "Theme", options: ["dark", "light"], optionLabels: ["Dark", "Light"], defaultValue: "dark" },
+        { type: "toggle", key: "hours", label: "Business hours only", defaultValue: false },
+        { type: "toggle", key: "clearable", label: "Clearable", defaultValue: true },
+        { type: "toggle", key: "disabled", label: "Disabled", defaultValue: false },
+      ]}
+    >
+      {(v) => (
+        <div className={`flex h-[440px] w-full items-start justify-center rounded-xl px-6 pt-20 ${v.theme === "light" ? "bg-white" : "bg-[#080808]"}`}>
+          <TimePicker
+            label="Meeting time"
+            defaultValue="09:30"
+            hourCycle={Number(v.cycle) as 12 | 24}
+            minuteStep={Number(v.step)}
+            size={v.size as "sm" | "md" | "lg"}
+            theme={v.theme as "dark" | "light"}
+            minTime={v.hours ? "09:00" : undefined}
+            maxTime={v.hours ? "17:00" : undefined}
             clearable={Boolean(v.clearable)}
             disabled={Boolean(v.disabled)}
           />

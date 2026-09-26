@@ -5,6 +5,7 @@ import { SiteChrome } from "@/components/site-chrome";
 import { Nav } from "@/components/nav";
 import { SiteFooter } from "@/components/site-footer";
 import { CookieConsent } from "@/components/cookie-consent";
+import { GoogleAnalytics } from "@/components/google-analytics";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -76,6 +77,7 @@ export default function RootLayout({
             {children}
           </SiteChrome>
           <CookieConsent />
+          <GoogleAnalytics />
         </ThemeProvider>
       </body>
     </html>

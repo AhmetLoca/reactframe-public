@@ -10,8 +10,14 @@ export function Stage({ children, onReset }: { children: React.ReactNode; onRese
   const [pos, setPos] = React.useState({ x: 0, y: 0, on: false });
   React.useEffect(() => {
     const move = (e: MouseEvent) => setPos({ x: e.clientX, y: e.clientY, on: true });
-    window.addEventListener("mousemove", move);
-    return () => window.removeEventListener("mousemove", move);
+    // Capture phase, pointer events too: components that capture the pointer while dragging (splitter,
+    // sliders) can stop the move from bubbling up to the window, which froze the drawn cursor.
+    window.addEventListener("mousemove", move, true);
+    window.addEventListener("pointermove", move, true);
+    return () => {
+      window.removeEventListener("mousemove", move, true);
+      window.removeEventListener("pointermove", move, true);
+    };
   }, []);
   return (
     <div style={{ position: "fixed", inset: 0, background: "#080808", display: "flex", alignItems: "center", justifyContent: "center", overflow: "clip" }}>

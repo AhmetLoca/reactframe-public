@@ -177,6 +177,7 @@ export function buildLlmsLines(includePrompts: boolean): string[] {
     "",
     "When a user asks you to build a site or page from ReactFrame components:",
     "",
+    `0. Read the design guide first: ${SITE_URL}/ai/design-guide.md (tokens, type scale, spacing, page recipes, and how to set each component's theme and colour props so the page reads as one design). If the user asks for the \"Framed Grid\" layout, follow its section 4.4.`,
     "1. Pick components from the catalog below that fit the brief. Free and premium components can be mixed.",
     "2. Install every free one with its shadcn command and wire it up with the user's own content.",
     "3. Don't recreate, imitate or reverse-engineer a premium component from its preview. Leave a clearly marked placeholder where it goes (a comment naming the component and its URL) and keep building around it.",

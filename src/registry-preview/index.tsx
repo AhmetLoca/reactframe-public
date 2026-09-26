@@ -554,6 +554,55 @@ function FormFieldDemo({ size = "md", theme = "dark", disabled = false }: { size
     </div>
   );
 }
+const RTE_SAMPLE =
+  "<h2>What\u2019s new in 4.12</h2><p>Release notes now write themselves from <strong>merged pull requests</strong>, and you can <em>edit before publishing</em>.</p><ul><li>Bulk-edit release channels</li><li>Webhooks retry with backoff</li></ul><blockquote>Shipping is only half the job; telling people is the other half.</blockquote><p>Run <code>npx tessera publish</code> or read the <a href=\"https://reactframe.com\">docs</a>.</p>";
+const RichTextEditor = dynamic(() =>
+  import("../../registry/new-york/rich-text-editor/rich-text-editor").then((m) => m.RichTextEditor),
+);
+const SignaturePad = dynamic(() =>
+  import("../../registry/new-york/signature-pad/signature-pad").then((m) => m.SignaturePad),
+);
+// Shows the exported PNG on a white "paper" card under the pad, so the export colour is visible.
+function SignatureDemo({ size = "md", theme = "dark", allowTyping = true, disabled = false }: { size?: "sm" | "md" | "lg"; theme?: "dark" | "light"; allowTyping?: boolean; disabled?: boolean }) {
+  const [png, setPng] = React.useState<string | null>(null);
+  return (
+    <div className="flex w-full max-w-[440px] flex-col gap-5">
+      <SignaturePad label="Signature" helperText="Draw with a mouse, finger or pen, or switch to Type" size={size} theme={theme} allowTyping={allowTyping} disabled={disabled} width="100%" onChange={(r) => setPng(r.dataUrl)} />
+      <div className={`flex h-24 items-center justify-center rounded-xl border ${theme === "light" ? "border-black/10" : "border-white/10"} bg-white`}>
+        {png ? <img src={png} alt="Exported signature" className="h-full w-auto object-contain" /> : <span className="text-[13px] text-black/40">The exported PNG appears here</span>}
+      </div>
+    </div>
+  );
+}
+const ImageCropper = dynamic(() =>
+  import("../../registry/new-york/image-cropper/image-cropper").then((m) => m.ImageCropper),
+);
+const CROPPER_SAMPLE = "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1600&q=80";
+// The cropped result next to the numbers, so the export is visible while dragging.
+function CropperDemo({ shape = "rect", size = "md", theme = "dark", disabled = false }: { shape?: "rect" | "circle"; size?: "sm" | "md" | "lg"; theme?: "dark" | "light"; disabled?: boolean }) {
+  const [result, setResult] = React.useState<{ url: string | null; label: string } | null>(null);
+  return (
+    <div className="flex w-full max-w-[560px] flex-col gap-5">
+      <ImageCropper
+        src={CROPPER_SAMPLE}
+        shape={shape}
+        label={shape === "circle" ? "Profile photo" : "Cover image"}
+        helperText="Drag the box or its handles, or Tab to it and use the arrow keys"
+        defaultAspect={shape === "circle" ? 1 : 16 / 9}
+        maxOutputSize={600}
+        size={size}
+        theme={theme}
+        disabled={disabled}
+        width="100%"
+        onChange={(r) => setResult({ url: r.dataUrl, label: `${r.area.width} × ${r.area.height} px` })}
+      />
+      <div className={`flex items-center gap-4 text-[13px] ${theme === "light" ? "text-black/50" : "text-white/50"}`}>
+        {result?.url && <img src={result.url} alt="Cropped result" className={`h-16 w-auto ${shape === "circle" ? "rounded-full" : "rounded-lg"}`} />}
+        <span>{result ? `Result: ${result.label}` : "The cropped image appears here"}</span>
+      </div>
+    </div>
+  );
+}
 const TimePicker = dynamic(() =>
   import("../../registry/new-york/time-picker/time-picker").then((m) => m.TimePicker),
 );
@@ -3272,6 +3321,21 @@ export const registryPreviews: Record<string, () => React.ReactNode> = {
   "form-field": () => (
     <div className="flex min-h-[560px] w-full items-center justify-center rounded-xl bg-[#080808] px-6 py-10">
       <FormFieldDemo />
+    </div>
+  ),
+  "rich-text-editor": () => (
+    <div className="flex min-h-[520px] w-full items-center justify-center rounded-xl bg-[#080808] px-6 py-10">
+      <RichTextEditor label="Release notes" defaultValue={RTE_SAMPLE} helperText="Try ## or - at the start of a line, or paste from Google Docs" maxLength={1200} />
+    </div>
+  ),
+  "signature-pad": () => (
+    <div className="flex min-h-[520px] w-full items-center justify-center rounded-xl bg-[#080808] px-6 py-10">
+      <SignatureDemo />
+    </div>
+  ),
+  "image-cropper": () => (
+    <div className="flex min-h-[600px] w-full items-center justify-center rounded-xl bg-[#080808] px-6 py-10">
+      <CropperDemo />
     </div>
   ),
   "time-picker": () => (
@@ -12223,6 +12287,66 @@ export const registryPlaygroundPreviews: Partial<
       {(v) => (
         <div className={`flex min-h-[560px] w-full items-center justify-center rounded-xl px-6 py-10 ${v.theme === "light" ? "bg-white" : "bg-[#080808]"}`}>
           <FormFieldDemo size={v.size as "sm" | "md" | "lg"} theme={v.theme as "dark" | "light"} disabled={Boolean(v.disabled)} />
+        </div>
+      )}
+    </Playground>
+  ),
+  "rich-text-editor": () => (
+    <Playground
+      controls={[
+        { type: "select", key: "toolbar", label: "Toolbar", options: ["full", "compact"], optionLabels: ["Full", "Compact"], defaultValue: "full" },
+        { type: "select", key: "size", label: "Size", options: ["sm", "md", "lg"], optionLabels: ["S", "M", "L"], defaultValue: "md" },
+        { type: "select", key: "theme", label: "Theme", options: ["dark", "light"], optionLabels: ["Dark", "Light"], defaultValue: "dark" },
+        { type: "toggle", key: "count", label: "Word count", defaultValue: true },
+        { type: "toggle", key: "disabled", label: "Disabled", defaultValue: false },
+      ]}
+    >
+      {(v) => (
+        <div className={`flex min-h-[520px] w-full items-center justify-center rounded-xl px-6 py-10 ${v.theme === "light" ? "bg-white" : "bg-[#080808]"}`}>
+          <RichTextEditor
+            key={String(v.toolbar)}
+            label="Release notes"
+            defaultValue={RTE_SAMPLE}
+            helperText="Try ## or - at the start of a line, or paste from Google Docs"
+            tools={v.toolbar === "compact" ? ["bold", "italic", "code", "link"] : undefined}
+            showCount={Boolean(v.count)}
+            maxLength={1200}
+            size={v.size as "sm" | "md" | "lg"}
+            theme={v.theme as "dark" | "light"}
+            disabled={Boolean(v.disabled)}
+          />
+        </div>
+      )}
+    </Playground>
+  ),
+  "signature-pad": () => (
+    <Playground
+      controls={[
+        { type: "select", key: "size", label: "Size", options: ["sm", "md", "lg"], optionLabels: ["S", "M", "L"], defaultValue: "md" },
+        { type: "select", key: "theme", label: "Theme", options: ["dark", "light"], optionLabels: ["Dark", "Light"], defaultValue: "dark" },
+        { type: "toggle", key: "typing", label: "Type option", defaultValue: true },
+        { type: "toggle", key: "disabled", label: "Disabled", defaultValue: false },
+      ]}
+    >
+      {(v) => (
+        <div className={`flex min-h-[520px] w-full items-center justify-center rounded-xl px-6 py-10 ${v.theme === "light" ? "bg-white" : "bg-[#080808]"}`}>
+          <SignatureDemo size={v.size as "sm" | "md" | "lg"} theme={v.theme as "dark" | "light"} allowTyping={Boolean(v.typing)} disabled={Boolean(v.disabled)} />
+        </div>
+      )}
+    </Playground>
+  ),
+  "image-cropper": () => (
+    <Playground
+      controls={[
+        { type: "select", key: "shape", label: "Shape", options: ["rect", "circle"], optionLabels: ["Rectangle", "Circle"], defaultValue: "rect" },
+        { type: "select", key: "size", label: "Size", options: ["sm", "md", "lg"], optionLabels: ["S", "M", "L"], defaultValue: "md" },
+        { type: "select", key: "theme", label: "Theme", options: ["dark", "light"], optionLabels: ["Dark", "Light"], defaultValue: "dark" },
+        { type: "toggle", key: "disabled", label: "Disabled", defaultValue: false },
+      ]}
+    >
+      {(v) => (
+        <div className={`flex min-h-[600px] w-full items-center justify-center rounded-xl px-6 py-10 ${v.theme === "light" ? "bg-white" : "bg-[#080808]"}`}>
+          <CropperDemo key={String(v.shape)} shape={v.shape as "rect" | "circle"} size={v.size as "sm" | "md" | "lg"} theme={v.theme as "dark" | "light"} disabled={Boolean(v.disabled)} />
         </div>
       )}
     </Playground>

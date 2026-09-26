@@ -129,6 +129,39 @@ export const componentGuides: Record<string, ComponentGuide> = {
       { q: "Does it work with my own input component?", a: "Yes. Pass it as children and it receives id, aria-describedby, aria-invalid and aria-required, or use a function child to place them yourself." },
     ],
   },
+  "rich-text-editor": {
+    whenToUse: [
+      "Use Rich Text Editor for product descriptions, blog and changelog drafts, support replies, comments and bios: anywhere people need headings, lists and links but not a full document editor. It has no editor library, so it adds very little to your bundle, and paste from Google Docs or Word comes in clean.",
+      "The value is HTML. The editor keeps only a small set of tags and safe links, but treat anything that comes from a browser as untrusted: sanitise it again on your server (for example with DOMPurify or sanitize-html) before you store or render it. The component is built on the browser's contentEditable and execCommand, which are old but supported in every current browser; for collaborative editing, comments in the margin or custom blocks, use an editor framework such as Tiptap or Lexical instead.",
+    ],
+    faq: [
+      { q: "What does it save?", a: "An HTML string using p, h2, h3, strong, em, u, s, ul, ol, li, blockquote, code and a. onValueChange also gives you the plain text, handy for search, previews and length checks." },
+      { q: "Are there keyboard shortcuts?", a: "Yes: Cmd/Ctrl+B, I and U, Cmd/Ctrl+K for a link, Cmd/Ctrl+Z to undo, and Markdown-style shortcuts at the start of a line: ## for a heading, - for a list, 1. for a numbered list and > for a quote." },
+      { q: "Can I choose which buttons appear?", a: "Yes. Pass tools with the ones you want, in order, for example [\"bold\", \"italic\", \"link\"] for a comment box." },
+    ],
+  },
+  "signature-pad": {
+    whenToUse: [
+      "Use Signature Pad for contracts, delivery confirmations, consent forms, waivers and check-ins. The ink responds to speed and pen pressure, so a signature drawn with a finger or an Apple Pencil looks like ink rather than a flat line.",
+      "Always keep the Type option on unless you have a reason not to: people who use a keyboard, a screen reader or switch access can't draw, and a typed name is legally accepted as an electronic signature in most places. Store the image together with who signed, when and what they agreed to; the image alone doesn't prove much.",
+    ],
+    faq: [
+      { q: "What format does it export?", a: "Both a transparent PNG (as a data URL) and standalone SVG markup, in exportColor (near-black by default) so a signature drawn on a dark page still shows on a white PDF." },
+      { q: "Does it work on phones and tablets?", a: "Yes. It uses pointer events with touch scrolling disabled on the pad, and it reads pen pressure from a stylus when the device reports it." },
+      { q: "Can people type instead of drawing?", a: "Yes. The Draw / Type switch lets them type their name, which is shown and exported in a script face. Turn it off with allowTyping={false}." },
+    ],
+  },
+  "image-cropper": {
+    whenToUse: [
+      "Use Image Cropper for profile photos, cover images, product shots and anywhere an upload has to fit a fixed shape. Set shape=\"circle\" for avatars; it locks a 1:1 crop and exports a round PNG with transparent corners.",
+      "onChange gives you both the crop area in the original image's pixels and the cropped image as a data URL. Send the data URL when you only need the result, or upload the original file (from onFileChange) with the area and crop on your server when you want to keep full quality. Remote images must be served with CORS headers to be exported; otherwise dataUrl is null and you can still use the area.",
+    ],
+    faq: [
+      { q: "Can people crop with the keyboard?", a: "Yes. Tab to the crop box and use the arrow keys to move it (Shift for bigger steps) and Alt with the arrows to resize it." },
+      { q: "How big is the exported image?", a: "The crop at the image's own resolution, scaled down so its longer side is at most maxOutputSize (2048 px by default)." },
+      { q: "Can I offer my own aspect ratios?", a: "Yes. Pass aspectOptions, for example [{ label: \"Story\", value: 9 / 16 }, { label: \"Post\", value: 4 / 5 }]; use value: null for a free crop." },
+    ],
+  },
   slider: {
     whenToUse: [
       "Use Slider when the exact number matters less than a quick feel for the amount, like volume, brightness, a price filter or a budget. Set range to get two thumbs for a min and max, which is the usual pattern for price filters in shops.",

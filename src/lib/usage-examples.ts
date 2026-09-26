@@ -610,6 +610,40 @@ import { FormField } from "@/components/form-field";
   <select>{/* ... */}</select>
 </FormField>
 `,
+  "rich-text-editor": `import * as React from "react";
+import { RichTextEditor } from "@/components/rich-text-editor";
+
+// Uncontrolled
+<RichTextEditor label="Description" placeholder="Describe the product…" />
+
+// Controlled: keep the HTML, and the plain text for search or previews
+const [html, setHtml] = React.useState("<p>Hello <strong>world</strong></p>");
+<RichTextEditor value={html} onValueChange={(nextHtml, text) => setHtml(nextHtml)} maxLength={2000} />
+
+// A smaller toolbar for comments
+<RichTextEditor tools={["bold", "italic", "code", "link"]} minHeight={90} showCount={false} />
+`,
+  "signature-pad": `import * as React from "react";
+import { SignaturePad, type SignatureResult } from "@/components/signature-pad";
+
+const [signature, setSignature] = React.useState<SignatureResult | null>(null);
+
+<SignaturePad label="Signature" onChange={setSignature} helperText="By signing you agree to the terms above" />
+<button disabled={!signature || signature.isEmpty}>Submit</button>
+
+// Send signature.dataUrl (PNG) or signature.svg to your server with the form
+`,
+  "image-cropper": `import * as React from "react";
+import { ImageCropper, type CropResult } from "@/components/image-cropper";
+
+// Cover photo with aspect presets
+const [crop, setCrop] = React.useState<CropResult | null>(null);
+<ImageCropper src="/photos/team.jpg" defaultAspect={16 / 9} onChange={setCrop} />
+// crop.area is in the image's own pixels; crop.dataUrl is the cropped image
+
+// Round avatar from a file the user picks
+<ImageCropper shape="circle" label="Profile photo" maxOutputSize={512} onChange={(r) => uploadAvatar(r.dataUrl)} />
+`,
   "input-otp": `import * as React from "react";
 import { InputOTP } from "@/components/input-otp";
 

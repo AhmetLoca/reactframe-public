@@ -33,6 +33,7 @@ import { FileUploadStage } from "./file-upload";
 import { HoverCardStage } from "./hover-card";
 import { InputStage } from "./input";
 import { InputOtpStage } from "./input-otp";
+import { ImageCropperStage } from "./image-cropper";
 import { InlineEditStage } from "./inline-edit";
 import { KbdStage } from "./kbd";
 import { LivingOrbAiStage } from "./living-orb-ai";
@@ -52,10 +53,12 @@ import { ProgressCircleBarsStage } from "./progress-circle-bars";
 import { RadioButtonStage } from "./radio-button";
 import { RatingStarsStage } from "./rating-stars";
 import { ScrollAreaStage } from "./scroll-area";
+import { RichTextEditorStage } from "./rich-text-editor";
 import { SearchBarStage } from "./search-bar";
 import { SegmentedControlStage } from "./segmented-control";
 import { SelectStage } from "./select";
 import { SidebarStage } from "./sidebar";
+import { SignaturePadStage } from "./signature-pad";
 import { SkeletonStage } from "./skeleton";
 import { SliderStage } from "./slider";
 import { SplitterStage } from "./splitter";
@@ -126,6 +129,9 @@ export const VIDEO_STAGES: Record<string, ComponentType> = {
   "credit-card-input": CreditCardInputStage,
   "currency-input": CurrencyInputStage,
   "form-field": FormFieldStage,
+  "rich-text-editor": RichTextEditorStage,
+  "signature-pad": SignaturePadStage,
+  "image-cropper": ImageCropperStage,
   popover: PopoverStage,
   "progress-circle-bars": ProgressCircleBarsStage,
   "radio-button": RadioButtonStage,

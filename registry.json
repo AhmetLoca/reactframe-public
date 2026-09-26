@@ -1269,6 +1269,40 @@
       ]
     },
     {
+      "name": "signature-pad",
+      "type": "registry:component",
+      "title": "Signature Pad",
+      "description": "A signature field that draws smooth, pressure-aware ink, with undo, clear, a typed-signature option for people who can't draw, and PNG and SVG export in a paper-ready ink colour.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/signature-pad/signature-pad.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "image-cropper",
+      "type": "registry:component",
+      "title": "Image Cropper",
+      "description": "An image cropper with a draggable, resizable crop box, aspect presets or a circle mask for avatars, keyboard nudging, drag-and-drop upload and the cropped image returned as a data URL.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/image-cropper/image-cropper.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "callout",
       "type": "registry:component",
       "title": "Callout",
@@ -1790,6 +1824,23 @@
       "files": [
         {
           "path": "registry/new-york/form-field/form-field.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "rich-text-editor",
+      "type": "registry:component",
+      "title": "Rich Text Editor",
+      "description": "A rich text editor with a formatting toolbar, headings, lists, quotes, inline code and links, Markdown-style shortcuts, clean pasting from Docs and Word, and a word count, with no editor library.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/rich-text-editor/rich-text-editor.tsx",
           "type": "registry:component"
         }
       ]

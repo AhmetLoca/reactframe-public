@@ -1,15 +1,16 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { ElementsPage } from "./elements-page";
+import { ElementsPage, ElementsPageFallback } from "./elements-page";
 
 export const metadata: Metadata = {
-  title: "Elements",
-  description: "Small UI primitives — buttons, badges, inputs, and other building blocks that components are built from.",
+  alternates: { canonical: "/elements" },
+  title: "React UI Elements: Buttons, Inputs, Selects & More",
+  description: "Small UI primitives, buttons, badges, inputs, and other building blocks that components are built from.",
 };
 
 export default function Page() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<ElementsPageFallback />}>
       <ElementsPage />
     </Suspense>
   );

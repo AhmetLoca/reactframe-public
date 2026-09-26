@@ -28,16 +28,24 @@ if [ ! -d "$MIRROR_DIR/.git" ]; then
   git clone "https://github.com/$PUBLIC_REPO.git" "$MIRROR_DIR"
 fi
 
-EXCLUDES=(
-  --exclude .git --exclude node_modules --exclude .next --exclude public/r
-  --exclude dist-zips --exclude __pycache__ --exclude "*.py"
-)
-while IFS= read -r slug; do
-  [ -n "$slug" ] && EXCLUDES+=(--exclude "registry/new-york/$slug")
-done <<< "$PREMIUM_SLUGS"
+# Only files tracked by git are published, so env files, the Vercel project link, scratch scripts and
+# any other untracked file in the working directory can never reach the public repo. Premium component
+# folders are dropped on top of that. The mirror's own tracked files are cleared first so files deleted
+# here are deleted there too.
+# Filter the list itself (not rsync --exclude, whose directory rules don't reliably catch individually
+# listed files) so no premium component path is ever handed to rsync.
+PREMIUM_RE="$(echo "$PREMIUM_SLUGS" | sed '/^$/d' | sed 's#.*#^registry/new-york/&/|^registry-code-variants/&\\.json$#' | paste -sd'|' -)"
+FILE_LIST="$(mktemp)"
+git ls-files | grep -v '^public/r/' | { if [ -n "$PREMIUM_RE" ]; then grep -Ev "$PREMIUM_RE"; else cat; fi; } > "$FILE_LIST"
+if [ -n "$PREMIUM_RE" ] && grep -Eq "$PREMIUM_RE" "$FILE_LIST"; then
+  echo "! Premium paths left in the file list, aborting." >&2
+  exit 1
+fi
 
-echo "- Syncing files..."
-rsync -a --delete "${EXCLUDES[@]}" ./ "$MIRROR_DIR/"
+echo "- Syncing tracked files..."
+(cd "$MIRROR_DIR" && git ls-files -z | xargs -0 rm -f)
+rsync -a --files-from="$FILE_LIST" ./ "$MIRROR_DIR/"
+rm -f "$FILE_LIST"
 
 # rsync's --exclude list only knows how to drop whole registry/new-york/<slug>
 # folders — several other files mix free and premium data together in the

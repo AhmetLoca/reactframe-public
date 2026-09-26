@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useParams } from "next/navigation";
 import { registryPreviews, registryPlaygroundPreviews } from "@/registry-preview";
+import { getComponent } from "@/lib/catalog-data";
 import { cn } from "@/lib/utils";
 
 // Rendered inside an <iframe> by the component detail page's device
@@ -16,7 +17,8 @@ export default function PreviewPage() {
   const params = useParams<{ slug: string }>();
   const slug = params.slug;
   const isPlayground = slug in registryPlaygroundPreviews;
-  const preview = registryPlaygroundPreviews[slug] ?? registryPreviews[slug];
+  // Hidden (unpublished) components are absent from the catalog, so their preview 404s too.
+  const preview = getComponent(slug) ? (registryPlaygroundPreviews[slug] ?? registryPreviews[slug]) : undefined;
   const ref = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -33,8 +35,36 @@ export default function PreviewPage() {
     // *do* have real internal scroll room, deliberately capped short) keep
     // their own scroll until they hit their own edge, same as any nested
     // scrollable element would.
+    const isScrollable = (el: Element) => {
+      const style = window.getComputedStyle(el);
+      return /(auto|scroll)/.test(style.overflowY) && el.scrollHeight > el.clientHeight;
+    };
+
     const onWheel = (e: WheelEvent) => {
+      // A component (e.g. a wheel-driven carousel) already used this event, so it must not scroll the page too.
+      if (e.defaultPrevented) return;
       const doc = document.documentElement;
+
+      // A "scroll-jacked" component (scroll-zoom-media-reveal and siblings)
+      // owns a nested overflow-y-auto region with real scroll room of its
+      // own. That inner region should keep consuming wheel input until IT
+      // hits its own edge, same as any nested scrollable element would —
+      // only once it's exhausted should the event fall through to this
+      // document's own edge check below. Without this, the outer document
+      // (which rarely needs to scroll at all for a short demo) reports
+      // atTop/atBottom as permanently true and preventDefault()s every
+      // tick before the inner region ever gets a chance to move.
+      let node: Element | null = e.target as Element | null;
+      while (node && node !== doc) {
+        if (isScrollable(node)) {
+          const atInnerTop = node.scrollTop <= 0;
+          const atInnerBottom = node.scrollTop + node.clientHeight >= node.scrollHeight - 1;
+          if ((e.deltaY < 0 && !atInnerTop) || (e.deltaY > 0 && !atInnerBottom)) return;
+          break;
+        }
+        node = node.parentElement;
+      }
+
       const atTop = doc.scrollTop <= 0;
       const atBottom = doc.scrollTop + doc.clientHeight >= doc.scrollHeight - 1;
       if ((e.deltaY < 0 && atTop) || (e.deltaY > 0 && atBottom)) {
@@ -71,15 +101,11 @@ export default function PreviewPage() {
     <div
       ref={ref}
       className={cn(
-        // p-6 (24px) matches the outer page's own container padding
-        // (max-w-6xl px-6 in the detail page), so at the Mobile device
-        // width — where the iframe's own viewport is only 375px — this
-        // wrapper's left/right edges line up with the page's text above
-        // it instead of adding another 32px on top and reading as an
-        // extra, unexplained indent. sm:p-8 keeps the roomier padding at
-        // Tablet/Desktop widths where 32px is a small enough fraction of
-        // the total width to not read as misaligned.
-        "flex min-h-[400px] flex-col items-center p-6 sm:p-8",
+        // No padding at any breakpoint: the preview should fill its frame
+        // edge to edge — the full content column at the Desktop device
+        // width, and the device frame's own border at Tablet/Mobile —
+        // rather than floating inside it with a gap.
+        "flex min-h-[400px] flex-col items-center",
         // Playground already renders its own separate, bordered canvas and
         // controls boxes — boxing this outer wrapper too would nest a third
         // box around both of them. Non-Playground previews have no box of

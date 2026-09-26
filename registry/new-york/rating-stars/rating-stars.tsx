@@ -260,7 +260,7 @@ function RatingLabel({
   if (labelStyle === "score") text = value.toFixed(1);
   else if (labelStyle === "fraction") text = `${value.toFixed(1)} / ${max}`;
   else if (labelStyle === "percent") text = `${Math.round((value / max) * 100)}%`;
-  else text = value > 0 ? labels[Math.min(labelIndex, labels.length - 1)] : "—";
+  else text = value > 0 ? labels[Math.min(labelIndex, labels.length - 1)] : "-";
 
   return (
     <div className="flex select-none items-center gap-1.5" style={{ fontSize, color: textColor }}>

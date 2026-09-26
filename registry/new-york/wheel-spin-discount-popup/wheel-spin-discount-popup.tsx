@@ -43,7 +43,7 @@ const THEMES: { [key: string]: ThemeConfig } = {
     buttonText: "Spin Wheel",
     triggerText: "Spin for a Discount",
     glow: "rgba(255,255,255,0.16)",
-    background: "linear-gradient(160deg, #07080b 0%, #101319 100%)",
+    background: "#080808",
     segments: [
       { label: "5% off", code: "SPIN5", weight: 3 },
       { label: "10% off", code: "SPIN10", weight: 3 },
@@ -62,7 +62,7 @@ const THEMES: { [key: string]: ThemeConfig } = {
     buttonText: "Spin for Deal",
     triggerText: "Spin for a Deal",
     glow: "rgba(248,113,113,0.22)",
-    background: "linear-gradient(160deg, #0c0505 0%, #1a0808 100%)",
+    background: "#080808",
     segments: [
       { label: "10% off", code: "SALE10", weight: 3 },
       { label: "20% off", code: "SALE20", weight: 2 },
@@ -81,7 +81,7 @@ const THEMES: { [key: string]: ThemeConfig } = {
     buttonText: "Spin for Treat",
     triggerText: "Spin for a Treat",
     glow: "rgba(251,191,36,0.20)",
-    background: "linear-gradient(160deg, #0c0904 0%, #1a1206 100%)",
+    background: "#080808",
     segments: [
       { label: "Free Coffee", code: "CAFE-COFFEE", weight: 2 },
       { label: "10% off", code: "CAFE10", weight: 3 },
@@ -100,7 +100,7 @@ const THEMES: { [key: string]: ThemeConfig } = {
     buttonText: "Spin Wheel",
     triggerText: "Spin for a Discount",
     glow: "rgba(129,140,248,0.22)",
-    background: "linear-gradient(160deg, #06050c 0%, #100a1c 100%)",
+    background: "#080808",
     segments: [
       { label: "10% off", code: "SAAS10", weight: 3 },
       { label: "20% off", code: "SAAS20", weight: 2 },
@@ -119,7 +119,7 @@ const THEMES: { [key: string]: ThemeConfig } = {
     buttonText: "Spin for Bonus",
     triggerText: "Spin for a Bonus",
     glow: "rgba(45,212,191,0.20)",
-    background: "linear-gradient(160deg, #04080a 0%, #081619 100%)",
+    background: "#080808",
     segments: [
       { label: "5% off", code: "EVT5", weight: 3 },
       { label: "10% off", code: "EVT10", weight: 3 },
@@ -306,6 +306,12 @@ export function WheelSpinDiscountPopup({
   const [scrollTriggered, setScrollTriggered] = React.useState(false);
   const [widgetHover, setWidgetHover] = React.useState(false);
   const [widgetVisible, setWidgetVisible] = React.useState(true);
+  const [prevAsPopup, setPrevAsPopup] = React.useState(asPopup);
+
+  if (asPopup !== prevAsPopup) {
+    setPrevAsPopup(asPopup);
+    setPopupOpen(!asPopup || defaultOpen);
+  }
 
   const activeTheme = THEMES[theme] || THEMES.ecommerce;
   const segments = activeTheme.segments;
@@ -516,7 +522,7 @@ export function WheelSpinDiscountPopup({
           Result
         </div>
         <div className="font-normal" style={{ color: mode.ink, fontFamily: "Georgia, 'Times New Roman', serif", fontSize: 22, marginTop: 2 }} aria-live="polite">
-          {lastLabel ?? "—"}
+          {lastLabel ?? "-"}
         </div>
       </div>
 

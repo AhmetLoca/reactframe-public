@@ -4,6 +4,8 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/logo";
+import { CommandPalette } from "@/components/command-palette";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -11,8 +13,9 @@ const NAV_LINKS = [
   { href: "/components", label: "Components" },
   { href: "/blocks", label: "Blocks" },
   { href: "/pages", label: "Pages" },
-  { href: "/templates", label: "Templates" },
-  { href: "/dashboards", label: "Dashboards" },
+  // HIDDEN-UNTIL-LAUNCH (templates, dashboards): uncomment when those sections go live (and delete their layout.tsx gate).
+  // { href: "/templates", label: "Templates" },
+  // { href: "/dashboards", label: "Dashboards" },
 ];
 
 // A page is "active" for its own route and anything nested under it
@@ -129,11 +132,14 @@ export function Nav() {
         </nav>
 
         <div className="flex items-center gap-3">
+          <CommandPalette />
+          <ThemeToggle />
+
           <Link
-            href="/components"
+            href="/premium"
             className="hidden rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity duration-300 ease-signature hover:opacity-80 md:block"
           >
-            Browse Components
+            Get All-Access
           </Link>
 
           <button

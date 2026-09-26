@@ -5,6 +5,15 @@ import Link from "next/link";
 import { Lock } from "lucide-react";
 import { CopyButton } from "@/components/code-toolbar";
 import { cn } from "@/lib/utils";
+import { BuyButton } from "@/components/buy-button";
+import { isCheckoutLive } from "@/lib/checkout-links";
+
+const INSTALL_VERBS = {
+  npm: "npm install",
+  pnpm: "pnpm add",
+  yarn: "yarn add",
+  bun: "bun add",
+} as const;
 
 const PACKAGE_MANAGERS = {
   npm: "npx",
@@ -17,16 +26,19 @@ export function InstallCommand({
   slug,
   free,
   checkout,
+  packages,
 }: {
   slug: string;
   free: boolean;
+  /** Install these npm packages instead of the shadcn registry item (used by Pages, which are not registry items). */
+  packages?: string[];
   /** Set once this component has a real Lemon Squeezy product — swaps the generic "Get Premium" CTA for a real "Buy" link. */
   checkout?: { url: string; price?: string };
 }) {
   const [pm, setPm] = React.useState<keyof typeof PACKAGE_MANAGERS>("npm");
   const [copied, setCopied] = React.useState(false);
 
-  const command = `${PACKAGE_MANAGERS[pm]} shadcn@latest add https://reactframe.com/r/${slug}.json`;
+  const command = packages ? `${INSTALL_VERBS[pm]} ${packages.join(" ")}` : `${PACKAGE_MANAGERS[pm]} shadcn@latest add https://reactframe.com/r/${slug}.json`;
 
   async function copy() {
     try {
@@ -44,17 +56,10 @@ export function InstallCommand({
       <div className="flex items-center justify-between gap-4 rounded-xl border border-border bg-card px-4 py-3.5">
         <div className="flex items-center gap-2.5 text-sm text-foreground/60">
           <Lock className="h-3.5 w-3.5 shrink-0" />
-          {checkout ? "Buy this component to install it." : "You need Premium access to install this component."}
+          {checkout ? (isCheckoutLive(checkout) ? "Buy this component to install it." : "This component will be available to buy soon.") : "You need Premium access to install this component."}
         </div>
         {checkout ? (
-          <a
-            href={checkout.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0 rounded-full bg-foreground px-4 py-1.5 text-xs font-semibold text-background transition-opacity hover:opacity-85"
-          >
-            {checkout.price ? `Buy for ${checkout.price}` : "Buy Now"}
-          </a>
+          <BuyButton checkout={checkout} size="sm" />
         ) : (
           <Link
             href="/premium"

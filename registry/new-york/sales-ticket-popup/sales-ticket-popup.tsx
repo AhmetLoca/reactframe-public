@@ -57,6 +57,7 @@ interface Palette {
   stubBg: string;
   stubText: string;
   stubBorder?: string;
+  stubTicket?: boolean;
   buttonBg: string;
   buttonText: string;
   buttonBorder?: string;
@@ -65,79 +66,86 @@ interface Palette {
 
 const THEMES: Record<SalesTicketTheme, Palette> = {
   dark: {
-    outerBg: "#ffffff",
-    outerStrong: "#18181b",
-    outerMuted: "#71717a",
-    outerTexture: "rgba(0,0,0,0.05)",
-    innerBg: "#0b0b0d",
-    innerText: "#ffffff",
-    innerTexture: "rgba(255,255,255,0.08)",
-    stubBg: "#ffffff",
-    stubText: "#0b0b0d",
-    buttonBg: "#111114",
-    buttonText: "#ffffff",
-    shadow: "0 24px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08)",
+    outerBg: "#0E0E0E",
+    outerStrong: "#F5F4F1",
+    outerMuted: "rgba(245,244,241,0.55)",
+    outerTexture: "rgba(255,255,255,0.04)",
+    outerBorder: "1px solid rgba(255,255,255,0.08)",
+    innerBg: "#161616",
+    innerText: "#F5F4F1",
+    innerTexture: "rgba(255,255,255,0.06)",
+    innerBorder: "1px solid rgba(255,255,255,0.06)",
+    stubBg: "#F5F4F1",
+    stubText: "#0A0A0A",
+    buttonBg: "#F5F4F1",
+    buttonText: "#0A0A0A",
+    shadow: "0 28px 70px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05)",
   },
   light: {
-    outerBg: "#f4f4f5",
-    outerStrong: "#18181b",
-    outerMuted: "#71717a",
+    outerBg: "#F5F4F1",
+    outerStrong: "#0A0A0A",
+    outerMuted: "rgba(10,10,10,0.55)",
     outerTexture: "rgba(0,0,0,0.04)",
-    innerBg: "#ffffff",
-    innerText: "#111114",
-    innerTexture: "rgba(0,0,0,0.05)",
-    innerBorder: "1px solid rgba(17,17,20,0.08)",
-    stubBg: "#111114",
-    stubText: "#ffffff",
-    buttonBg: "#111114",
-    buttonText: "#ffffff",
-    shadow: "0 20px 50px rgba(17,17,20,0.12)",
+    outerBorder: "1px solid rgba(10,10,10,0.06)",
+    innerBg: "#FFFFFF",
+    innerText: "#0A0A0A",
+    innerTexture: "rgba(0,0,0,0.04)",
+    innerBorder: "1px solid rgba(10,10,10,0.08)",
+    stubBg: "#0A0A0A",
+    stubText: "#F5F4F1",
+    buttonBg: "#0A0A0A",
+    buttonText: "#F5F4F1",
+    shadow: "0 28px 70px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.7)",
   },
   gradient: {
-    outerBg: "#ffffff",
-    outerStrong: "#18181b",
-    outerMuted: "#71717a",
-    outerTexture: "rgba(124,58,237,0.05)",
-    innerBg: "linear-gradient(135deg, #7c3aed 0%, #db2777 100%)",
-    innerText: "#ffffff",
-    innerTexture: "rgba(255,255,255,0.12)",
-    stubBg: "#ffffff",
-    stubText: "#7c3aed",
-    buttonBg: "linear-gradient(135deg, #7c3aed 0%, #db2777 100%)",
-    buttonText: "#ffffff",
-    shadow: "0 24px 55px rgba(124,58,237,0.25)",
+    outerBg: "#0E0E0E",
+    outerStrong: "#F5F4F1",
+    outerMuted: "rgba(245,244,241,0.55)",
+    outerTexture: "rgba(135,255,227,0.05)",
+    outerBorder: "1px solid rgba(135,255,227,0.18)",
+    innerBg: "linear-gradient(135deg, #87FFE3 0%, #C4F26B 100%)",
+    innerText: "#0A0A0A",
+    innerTexture: "rgba(0,0,0,0.1)",
+    stubBg: "#0A0A0A",
+    stubText: "#87FFE3",
+    buttonBg: "linear-gradient(135deg, #87FFE3 0%, #C4F26B 100%)",
+    buttonText: "#0A0A0A",
+    shadow: "0 28px 70px rgba(135,255,227,0.16), 0 0 0 1px rgba(135,255,227,0.06)",
   },
   neon: {
-    outerBg: "#0a0f0c",
-    outerStrong: "#eafff4",
-    outerMuted: "rgba(202,255,228,0.6)",
-    outerTexture: "rgba(57,255,138,0.05)",
-    innerBg: "#06140d",
-    innerText: "#39ff8a",
-    innerTexture: "rgba(57,255,138,0.1)",
-    stubBg: "#39ff8a",
-    stubText: "#06180d",
-    buttonBg: "#39ff8a",
-    buttonText: "#06180d",
-    shadow: "0 0 0 1px rgba(57,255,138,0.25), 0 24px 60px rgba(57,255,138,0.15)",
+    outerBg: "#0E0E0E",
+    outerStrong: "#F5F4F1",
+    outerMuted: "rgba(245,244,241,0.55)",
+    outerTexture: "rgba(242,168,65,0.05)",
+    outerBorder: "1px solid rgba(242,168,65,0.22)",
+    innerBg: "#15110A",
+    innerText: "#F2A841",
+    innerTexture: "rgba(242,168,65,0.1)",
+    innerBorder: "1px solid rgba(242,168,65,0.14)",
+    stubBg: "#F2A841",
+    stubText: "#1A1204",
+    buttonBg: "#F2A841",
+    buttonText: "#1A1204",
+    shadow: "0 28px 70px rgba(242,168,65,0.14), 0 0 0 1px rgba(242,168,65,0.05)",
   },
   outline: {
-    outerBg: "#ffffff",
-    outerStrong: "#111114",
-    outerMuted: "#6b7280",
+    outerBg: "#0E0E0E",
+    outerStrong: "#F5F4F1",
+    outerMuted: "rgba(245,244,241,0.55)",
     outerTexture: "transparent",
-    outerBorder: "1.5px solid #111114",
+    outerBorder: "1px solid rgba(245,244,241,0.28)",
     innerBg: "transparent",
-    innerText: "#111114",
+    innerText: "#F5F4F1",
     innerTexture: "transparent",
-    innerBorder: "1.5px dashed #111114",
+    innerBorder: "1px dashed rgba(245,244,241,0.3)",
     stubBg: "transparent",
-    stubText: "#111114",
-    stubBorder: "1.5px solid #111114",
+    stubText: "#F5F4F1",
+    stubBorder: "1px solid rgba(245,244,241,0.45)",
+    stubTicket: true,
     buttonBg: "transparent",
-    buttonText: "#111114",
-    buttonBorder: "1.5px solid #111114",
-    shadow: "0 16px 40px rgba(17,17,20,0.1)",
+    buttonText: "#F5F4F1",
+    buttonBorder: "1px solid rgba(245,244,241,0.45)",
+    shadow: "0 28px 70px rgba(0,0,0,0.5)",
   },
 };
 
@@ -270,9 +278,17 @@ function TicketCard({
 
         <div
           className="relative z-[1] mx-auto mt-3.5 flex items-center justify-center text-sm font-extrabold whitespace-nowrap"
-          style={{ width: "64%", height: STUB_HEIGHT, background: stubBg, border: palette.stubBorder, clipPath: zigzagPolygon(STUB_HEIGHT), color: palette.stubText, letterSpacing: 0.3 }}
+          style={{ width: "64%", height: STUB_HEIGHT, background: stubBg, border: palette.stubBorder, clipPath: palette.stubTicket ? undefined : zigzagPolygon(STUB_HEIGHT),
+            borderRadius: palette.stubTicket ? 10 : undefined,
+            position: "relative", color: palette.stubText, letterSpacing: 0.3 }}
         >
           {badgeText}
+          {palette.stubTicket && (
+            <>
+              <span aria-hidden="true" style={{ position: "absolute", top: "50%", left: -7, width: 14, height: 14, marginTop: -7, borderRadius: "50%", background: palette.outerBg, border: palette.stubBorder, clipPath: "inset(0 0 0 50%)" }} />
+              <span aria-hidden="true" style={{ position: "absolute", top: "50%", right: -7, width: 14, height: 14, marginTop: -7, borderRadius: "50%", background: palette.outerBg, border: palette.stubBorder, clipPath: "inset(0 50% 0 0)" }} />
+            </>
+          )}
         </div>
       </div>
 
@@ -280,7 +296,7 @@ function TicketCard({
         <div className="mb-4 text-[13.5px] leading-[1.5]" style={{ color: palette.outerMuted }}>
           {renderRichText(description, palette.outerStrong)}
         </div>
-        <button onClick={handleClick} className="w-full rounded-full border-none px-[26px] py-[11px] text-[13.5px] font-bold" style={{ background: buttonBg, color: palette.buttonText, border: palette.buttonBorder }}>
+        <button onClick={handleClick} className="w-full cursor-pointer rounded-full border-none px-[26px] py-[11px] text-[13.5px] font-bold" style={{ background: buttonBg, color: palette.buttonText, border: palette.buttonBorder }}>
           {buttonLabel}
         </button>
       </div>
@@ -319,6 +335,7 @@ export function SalesTicketPopup({
 }: SalesTicketPopupProps) {
   const [visible, setVisible] = React.useState(!fixed);
   const [dismissed, setDismissed] = React.useState(false);
+  const [inlineClosed, setInlineClosed] = React.useState(false);
 
   const handleClose = React.useCallback(() => {
     setVisible(false);
@@ -367,6 +384,7 @@ export function SalesTicketPopup({
   const palette = THEMES[theme];
 
   if (!fixed) {
+    if (inlineClosed) return null;
     return (
       <div className={cn("inline-block", className)}>
         <TicketCard
@@ -379,7 +397,10 @@ export function SalesTicketPopup({
           radius={radius}
           texture={texture}
           palette={palette}
-          onClose={() => {}}
+          onClose={() => {
+            setInlineClosed(true);
+            onClose?.();
+          }}
           onButtonClick={onButtonClick}
           buttonHref={buttonHref}
           dismissible={dismissible}

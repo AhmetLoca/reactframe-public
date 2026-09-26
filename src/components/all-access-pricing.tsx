@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ALL_ACCESS_REGULAR_PRICE, allAccessCheckout } from "@/lib/checkout-links";
 
 // Curated thumbnails for the flanking gallery columns — no per-item
 // metadata needed, just enough visual variety that no column reads as
@@ -62,10 +63,16 @@ export function AllAccessPricing() {
             <p className="font-mono text-xs tracking-[0.2em] text-foreground/50 uppercase">Best Offer</p>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight md:text-3xl">All-Access</h2>
 
+            <div className="mt-6 flex items-end justify-center gap-2.5">
+              <span className="text-lg font-medium text-foreground/35 line-through">{ALL_ACCESS_REGULAR_PRICE}</span>
+              <span className="text-5xl font-semibold tracking-tight">{allAccessCheckout.price}</span>
+            </div>
+            <p className="mt-2 text-xs font-medium text-[#F2A841]">Launch price · one payment</p>
+
             <p className="mt-6 text-sm text-foreground/60">
-              All current components.
+              Every premium component and Pro page.
               <br />
-              All future updates, included.
+              Everything new for 12 months, included.
             </p>
 
             <Link

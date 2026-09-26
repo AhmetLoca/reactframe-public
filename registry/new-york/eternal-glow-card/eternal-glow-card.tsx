@@ -69,6 +69,13 @@ const stagger = (i: number) => ({
   transition: { duration: 0.36, delay: 0.03 + i * 0.055, ease: [0.25, 0.46, 0.45, 0.94] as const },
 });
 
+// "$48.00" as a schema.org Offer; undefined when the currency symbol isn't one we recognise.
+function toOffer(price: string | undefined) {
+  const currency = ({ $: "USD", "€": "EUR", "£": "GBP", "₺": "TRY", "¥": "JPY" } as Record<string, string>)[price?.trim()[0] ?? ""];
+  const amount = parseFloat(price?.replace(/[^0-9.]/g, "") ?? "");
+  return currency && !Number.isNaN(amount) ? { "@type": "Offer", price: amount.toFixed(2), priceCurrency: currency } : undefined;
+}
+
 export function EternalGlowCard({
   image = "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800",
   title = "Eternal Glow",
@@ -108,6 +115,19 @@ export function EternalGlowCard({
     if (isTouch) setTapped((v) => !v);
   };
 
+  // schema.org Product markup (JSON-LD) for search engines, skipped while the placeholder product shows.
+  const jsonLd = title === "Eternal Glow"
+    ? null
+    : JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Product",
+        name: title,
+        ...(description ? { description } : {}),
+        ...(image ? { image } : {}),
+        ...(href ? { url: href } : {}),
+        ...(toOffer(price) ? { offers: toOffer(price) } : {}),
+      }).replace(/</g, "\\u003c");
+
   return (
     <div
       className={cn("relative h-full w-full overflow-hidden rounded-3xl select-none", href && !isTouch ? "cursor-pointer" : "cursor-default", className)}
@@ -115,6 +135,7 @@ export function EternalGlowCard({
       onMouseLeave={() => setHovered(false)}
       onClick={handleCardClick}
     >
+      {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />}
       <motion.img
         src={image}
         alt={title}
@@ -175,9 +196,6 @@ export function EternalGlowCard({
               style={{ background: themeUi.btnBg, color: themeUi.btnColor }}
             >
               {buttonText}
-              <motion.span animate={{ x: active ? 3 : 0 }} transition={{ duration: 0.28 }} className="text-[17px]">
-                →
-              </motion.span>
             </motion.button>
           </motion.div>
         )}

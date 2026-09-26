@@ -181,7 +181,7 @@ export interface AlertToastProps {
 export function AlertToast({
   content = { title: "New update available", description: "A new version of the app is ready to install.", layout: "stacked" },
   appearance = { tone: "info", background: "tinted", accentBar: true, icon: "info", customIcon: "🙁", theme: "light", radius: 12 },
-  actions = { showPrimary: true, primaryLabel: "Update now", primaryExternal: false, showSecondary: true, secondaryLabel: "Later", secondaryEmphasis: false },
+  actions = { showPrimary: false, primaryLabel: "Update now", primaryExternal: false, showSecondary: false, secondaryLabel: "Later", secondaryEmphasis: false },
   dismiss = { dismissible: true, autoDismiss: false, duration: 4 },
   onDismiss,
   onPrimaryClick,
@@ -207,9 +207,9 @@ export function AlertToast({
   const customIcon = appearance.customIcon ?? "🙁";
   const accentBar = appearance.accentBar ?? true;
   const layout = content.layout ?? "stacked";
-  const showPrimary = actions.showPrimary ?? true;
+  const showPrimary = actions.showPrimary ?? false;
   const primaryLabel = actions.primaryLabel ?? "Update now";
-  const showSecondary = actions.showSecondary ?? true;
+  const showSecondary = actions.showSecondary ?? false;
   const secondaryLabel = actions.secondaryLabel ?? "Later";
   const dismissible = dismiss.dismissible ?? true;
 
@@ -299,114 +299,5 @@ export function AlertToast({
         </motion.div>
       )}
     </AnimatePresence>
-  );
-}
-
-interface DemoItem {
-  content: AlertContent;
-  appearance: Omit<AlertAppearance, "theme" | "radius">;
-  actions: AlertActions;
-  dismiss: AlertDismiss;
-}
-
-const NO_ACTIONS: AlertActions = { showPrimary: false, primaryLabel: "", primaryExternal: false, showSecondary: false, secondaryLabel: "", secondaryEmphasis: false };
-const NO_DISMISS: AlertDismiss = { dismissible: false, autoDismiss: false, duration: 4 };
-
-const DEMO_ITEMS: DemoItem[] = [
-  {
-    content: { title: "Custom code is not validated", description: "Incorrect code may impact your website's performance", layout: "stacked" },
-    appearance: { tone: "neutral", background: "subtle", accentBar: false, icon: "none" },
-    actions: { ...NO_ACTIONS, showPrimary: true, primaryLabel: "Ok, I got it" },
-    dismiss: NO_DISMISS,
-  },
-  {
-    content: { title: "The data export you requested is ready!", layout: "stacked" },
-    appearance: { tone: "info", background: "subtle", accentBar: true, icon: "info" },
-    actions: { ...NO_ACTIONS, showPrimary: true, primaryLabel: "View the data", showSecondary: true, secondaryLabel: "Maybe later" },
-    dismiss: { ...NO_DISMISS, dismissible: true },
-  },
-  {
-    content: { title: "You have no credits left!", description: "Upgrade to continue.", layout: "inline" },
-    appearance: { tone: "warning", background: "tinted", accentBar: false, icon: "info" },
-    actions: { ...NO_ACTIONS, showSecondary: true, secondaryLabel: "Upgrade", secondaryEmphasis: true },
-    dismiss: NO_DISMISS,
-  },
-  {
-    content: { title: "Warning", description: "Your password strength is too low", layout: "inline" },
-    appearance: { tone: "warning", background: "tinted", accentBar: false, icon: "info" },
-    actions: NO_ACTIONS,
-    dismiss: { ...NO_DISMISS, dismissible: true },
-  },
-  {
-    content: { title: "Successfully uploaded!", layout: "inline" },
-    appearance: { tone: "success", background: "tinted", accentBar: false, icon: "success" },
-    actions: NO_ACTIONS,
-    dismiss: { ...NO_DISMISS, dismissible: true },
-  },
-  {
-    content: { description: "A new software update is available. See what's new in version 2.0.", layout: "inline" },
-    appearance: { tone: "info", background: "tinted", accentBar: true, icon: "info" },
-    actions: { ...NO_ACTIONS, showPrimary: true, primaryLabel: "View the changelog", primaryExternal: true },
-    dismiss: { ...NO_DISMISS, dismissible: true },
-  },
-  {
-    content: { title: "Did you know?", description: "Here's something you'd like to know.", layout: "inline" },
-    appearance: { tone: "info", background: "tinted", accentBar: false, icon: "info" },
-    actions: NO_ACTIONS,
-    dismiss: { ...NO_DISMISS, dismissible: true },
-  },
-  {
-    content: { title: "There was a problem with your submission", description: "Must include at least 1 number\nMust include at least 2 uppercase letters", layout: "stacked" },
-    appearance: { tone: "error", background: "tinted", accentBar: true, icon: "error" },
-    actions: NO_ACTIONS,
-    dismiss: NO_DISMISS,
-  },
-  {
-    content: { description: "Whoops! Something went wrong", layout: "inline" },
-    appearance: { tone: "error", background: "tinted", accentBar: false, icon: "custom", customIcon: "🙁" },
-    actions: { ...NO_ACTIONS, showSecondary: true, secondaryLabel: "Send crash report", secondaryEmphasis: true },
-    dismiss: NO_DISMISS,
-  },
-];
-
-export interface AlertToastShowcaseProps {
-  radius?: number;
-  lightBg?: string;
-  darkBg?: string;
-  gap?: number;
-  outerRadius?: number;
-  className?: string;
-}
-
-export function AlertToastShowcase({ radius = 12, lightBg = "#FFFFFF", darkBg = "#0A0A0A", gap = 28, outerRadius = 20, className }: AlertToastShowcaseProps) {
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = React.useState(false);
-
-  React.useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver((entries) => {
-      const width = entries[0]?.contentRect.width ?? 0;
-      setIsMobile(width < 560);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  const panels: { theme: AlertTheme; bg: string }[] = [
-    { theme: "light", bg: lightBg },
-    { theme: "dark", bg: darkBg },
-  ];
-
-  return (
-    <div ref={containerRef} className={cn("flex h-full w-full overflow-hidden", isMobile ? "flex-col" : "flex-row", className)} style={{ borderRadius: outerRadius }}>
-      {panels.map((panel) => (
-        <div key={panel.theme} className="box-border flex flex-1 flex-col overflow-auto" style={{ backgroundColor: panel.bg, padding: gap }}>
-          {DEMO_ITEMS.map((item, i) => (
-            <AlertToast key={i} content={item.content} appearance={{ ...item.appearance, theme: panel.theme, radius }} actions={item.actions} dismiss={item.dismiss} spacing={gap * 0.45} enterDelay={i * 0.04} />
-          ))}
-        </div>
-      ))}
-    </div>
   );
 }

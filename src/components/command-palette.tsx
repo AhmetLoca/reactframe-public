@@ -3,6 +3,8 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { components } from "@/lib/catalog-data";
+import { BLOCK_CATEGORIES } from "@/lib/catalog-order";
+import { PAGE_GROUPS } from "@/app/pages/pages-page";
 import { cn } from "@/lib/utils";
 
 type Result = {
@@ -10,7 +12,7 @@ type Result = {
   label: string;
   sublabel?: string;
   href: string;
-  group: "Pages" | "Components";
+  group: "Pages" | "Components" | "Component Categories" | "Block Categories" | "Page Categories";
 };
 
 const PAGE_RESULTS: Result[] = [
@@ -19,7 +21,8 @@ const PAGE_RESULTS: Result[] = [
   { id: "elements", label: "Elements", href: "/elements", group: "Pages" },
   { id: "blocks", label: "Blocks", href: "/blocks", group: "Pages" },
   { id: "pages", label: "Pages", href: "/pages", group: "Pages" },
-  { id: "templates", label: "Templates", href: "/templates", group: "Pages" },
+  // HIDDEN-UNTIL-LAUNCH (templates)
+  // { id: "templates", label: "Templates", href: "/templates", group: "Pages" },
   { id: "docs", label: "Documentation", href: "/docs", group: "Pages" },
   { id: "changelog", label: "Changelog", href: "/changelog", group: "Pages" },
   { id: "blog", label: "Blog", href: "/blog", group: "Pages" },
@@ -38,7 +41,41 @@ const COMPONENT_RESULTS: Result[] = components.map((c) => ({
   group: "Components",
 }));
 
-const ALL_RESULTS = [...PAGE_RESULTS, ...COMPONENT_RESULTS];
+// Category-level results — e.g. typing "card" surfaces the "Card"
+// component category itself (16 matching components) rather than
+// flooding the list with every individual card component. These are
+// prioritized ahead of individual matches in the results computation
+// below, since that's the whole point: fewer, higher-signal hits.
+const catalogComponentCounts = new Map<string, number>();
+for (const c of components) {
+  if (c.type) continue; // block-typed entries belong to Block Categories, not Component Categories
+  catalogComponentCounts.set(c.category, (catalogComponentCounts.get(c.category) ?? 0) + 1);
+}
+const COMPONENT_CATEGORY_RESULTS: Result[] = Array.from(catalogComponentCounts.entries()).map(([category, count]) => ({
+  id: `component-category-${category}`,
+  label: category,
+  sublabel: `${count} component${count === 1 ? "" : "s"}`,
+  href: `/components?category=${encodeURIComponent(category)}`,
+  group: "Component Categories",
+}));
+
+const BLOCK_CATEGORY_RESULTS: Result[] = BLOCK_CATEGORIES.filter((label) => label !== "All").map((label) => ({
+  id: `block-category-${label}`,
+  label,
+  href: `/blocks?category=${encodeURIComponent(label)}`,
+  group: "Block Categories",
+}));
+
+const PAGE_CATEGORY_RESULTS: Result[] = PAGE_GROUPS.map((g) => ({
+  id: `page-category-${g.title}`,
+  label: g.title,
+  sublabel: `${g.items.length} page${g.items.length === 1 ? "" : "s"}`,
+  href: `/pages?category=${encodeURIComponent(g.title)}`,
+  group: "Page Categories",
+}));
+
+const CATEGORY_RESULTS: Result[] = [...COMPONENT_CATEGORY_RESULTS, ...BLOCK_CATEGORY_RESULTS, ...PAGE_CATEGORY_RESULTS];
+const ITEM_RESULTS: Result[] = [...PAGE_RESULTS, ...COMPONENT_RESULTS];
 const MAX_RESULTS = 8;
 
 function isTypingTarget(el: EventTarget | null) {
@@ -57,7 +94,12 @@ export function CommandPalette() {
   const results = React.useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return PAGE_RESULTS.slice(0, MAX_RESULTS);
-    return ALL_RESULTS.filter((r) => r.label.toLowerCase().includes(q) || r.sublabel?.toLowerCase().includes(q)).slice(0, MAX_RESULTS);
+    const matches = (r: Result) => r.label.toLowerCase().includes(q) || r.sublabel?.toLowerCase().includes(q);
+    // Category matches go first: typing "card" should surface the Card
+    // category itself, not bury it under all 16 individual card components.
+    const categoryMatches = CATEGORY_RESULTS.filter(matches);
+    const itemMatches = ITEM_RESULTS.filter(matches);
+    return [...categoryMatches, ...itemMatches].slice(0, MAX_RESULTS);
   }, [query]);
 
   const close = React.useCallback(() => {

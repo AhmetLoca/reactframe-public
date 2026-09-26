@@ -24,7 +24,7 @@ function coverDims(nw: number, nh: number, cw: number, ch: number) {
   return { w, h, x: (cw - w) / 2, y: (ch - h) / 2 };
 }
 
-const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1000&q=80";
+const DEFAULT_IMAGE = "/demo/dot-image-slider.webp";
 
 export function DotImageSlider({
   image = DEFAULT_IMAGE,
@@ -191,9 +191,9 @@ export function DotImageSlider({
             style={{ background: `radial-gradient(ellipse at center, ${saberColor}3a 0%, transparent 72%)`, animation: "dis-aura 2.2s ease-in-out infinite" }}
           />
           <div
-            className="absolute top-[3%] bottom-[3%] left-1/2 w-0.5 -translate-x-1/2 rounded-[2px]"
+            className="absolute top-0 bottom-0 left-1/2 w-0.5 -translate-x-1/2 rounded-[2px]"
             style={{
-              background: "linear-gradient(to bottom, transparent 0%, #fff 7%, #fff 93%, transparent 100%)",
+              background: "#fff",
               boxShadow: `0 0 5px 2px #fff, 0 0 14px 5px ${saberColor}, 0 0 32px 10px ${saberColor}66`,
               animation: "dis-core 2.2s ease-in-out infinite",
             }}

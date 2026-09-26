@@ -82,6 +82,14 @@ const DASHBOARD_GROUPS: { title: string; items: string[] }[] = [
     title: "Retail & POS",
     items: ["POS Admin Dashboard", "Retail Inventory Dashboard"],
   },
+  {
+    title: "Cybersecurity",
+    items: ["Threat Monitoring Dashboard", "Security Operations Dashboard", "Vulnerability Management Dashboard", "Compliance Audit Dashboard"],
+  },
+  {
+    title: "Sports Tech",
+    items: ["Athlete Performance Dashboard", "Team Analytics Dashboard", "Match Statistics Dashboard", "Sports Scouting Dashboard"],
+  },
 ];
 
 // No dashboard templates have shipped yet, so Free/Premium both read 0
@@ -118,7 +126,7 @@ export function DashboardsPage() {
       <p className="mt-3 max-w-xl text-foreground/60">
         {totalCount}
         {" "}
-        complete, themed dashboard builds — built end to end from ReactFrame components.
+        complete, themed dashboard builds, built end to end from ReactFrame components.
       </p>
 
       <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-[220px_1fr]">
@@ -140,7 +148,7 @@ export function DashboardsPage() {
               ))}
             </div>
           ) : (
-            <p className="mt-3 text-sm text-foreground/40">Nothing here yet — check back soon.</p>
+            <p className="mt-3 text-sm text-foreground/40">Nothing here yet, check back soon.</p>
           )}
         </main>
       </div>

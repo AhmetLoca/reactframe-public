@@ -12,7 +12,8 @@ export type PlaygroundControl =
   | { type: "select"; key: string; label: string; options: readonly string[]; optionLabels?: readonly string[]; defaultValue: string }
   | { type: "toggle"; key: string; label: string; defaultValue: boolean }
   | { type: "color"; key: string; label: string; defaultValue: string }
-  | { type: "range"; key: string; label: string; min: number; max: number; step: number; defaultValue: number };
+  | { type: "range"; key: string; label: string; min: number; max: number; step: number; defaultValue: number }
+  | { type: "text"; key: string; label: string; defaultValue: string; placeholder?: string };
 
 type PlaygroundValues = Record<string, string | boolean | number>;
 
@@ -50,9 +51,9 @@ function PlaygroundField({
 }) {
   if (control.type === "select") {
     return (
-      <div className="flex flex-col gap-1.5">
+      <div className="flex max-w-full min-w-0 flex-col gap-1.5">
         <span className="text-[10px] font-semibold tracking-wider text-foreground/40 uppercase">{control.label}</span>
-        <div className="flex gap-0.5 rounded-full border border-border p-1">
+        <div className="flex gap-0.5 overflow-x-auto rounded-full border border-border p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {control.options.map((opt, i) => (
             <button
               key={opt}
@@ -107,6 +108,21 @@ function PlaygroundField({
           />
           <span className="min-w-[2ch] text-right text-xs tabular-nums text-foreground/55">{Number(value)}</span>
         </div>
+      </div>
+    );
+  }
+
+  if (control.type === "text") {
+    return (
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+        <span className="text-[10px] font-semibold tracking-wider text-foreground/40 uppercase">{control.label}</span>
+        <input
+          type="text"
+          value={String(value)}
+          placeholder={control.placeholder}
+          onChange={(e) => onChange(e.target.value)}
+          className="min-w-[160px] rounded-md border border-border bg-transparent px-2.5 py-1.5 text-sm text-foreground outline-none focus:border-foreground/30"
+        />
       </div>
     );
   }

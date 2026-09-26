@@ -18,7 +18,10 @@ export interface ProductGridItem {
   badgeText?: string;
 }
 
+export type ProductGridTheme = "light" | "dark";
+
 export interface ProductGridSectionProps {
+  theme?: ProductGridTheme;
   headingText?: string;
   headingColor?: string;
   headingFontSize?: number;
@@ -31,6 +34,7 @@ export interface ProductGridSectionProps {
   gap?: number;
   imageRadius?: number;
   imageAspect?: number;
+  cardBorderColor?: string;
   titleColor?: string;
   titleFontSize?: number;
   metaColor?: string;
@@ -52,18 +56,55 @@ export interface ProductGridSectionProps {
   className?: string;
 }
 
+const THEMES = {
+  light: {
+    backgroundColor: "#f5f5f5",
+    headingColor: "#1a1a1a",
+    titleColor: "#1a1a1a",
+    metaColor: "#6b6b6b",
+    cardBorderColor: "rgba(0,0,0,0.08)",
+    imageBackground: "#ffffff",
+    badgeBackground: "#1a1a1a",
+    badgeTextColor: "#ffffff",
+    buttonTextColor: "#1a1a1a",
+    buttonBackground: "#ffffff",
+    buttonHoverBackground: "#ececec",
+  },
+  dark: {
+    backgroundColor: "#080808",
+    headingColor: "#f5f4f1",
+    titleColor: "#f5f4f1",
+    metaColor: "rgba(245,244,241,0.6)",
+    cardBorderColor: "rgba(255,255,255,0.1)",
+    imageBackground: "#141414",
+    badgeBackground: "#f5f4f1",
+    badgeTextColor: "#0a0a0a",
+    buttonTextColor: "#0a0a0a",
+    buttonBackground: "#f5f4f1",
+    buttonHoverBackground: "#dcdad6",
+  },
+} as const;
+
 const DEFAULT_CARDS: ProductGridItem[] = [
-  { image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80", title: "Editorial Look", category: "Agency", price: "$39 USD" },
-  { image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80", title: "Studio Set", category: "Portfolio", price: "$49 USD", badgeText: "New" },
-  { image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&q=80", title: "Brand Kit", category: "Startup", price: "$29 USD" },
-  { image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80", title: "Landing Page", category: "SaaS", price: "$59 USD" },
-  { image: "https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=800&q=80", title: "Photo Suite", category: "Creative", price: "$45 USD" },
-  { image: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&q=80", title: "Motion Pack", category: "Animation", price: "$69 USD", badgeText: "Popular" },
+  { image: "/demo/running-shoes.webp", title: "Running Shoes", category: "Agency", price: "$99.00" },
+  { image: "/demo/wireless-earbuds.webp", title: "Wireless Earbuds", category: "Portfolio", price: "$129.00", badgeText: "New" },
+  { image: "/demo/notebook.webp", title: "Premium Notebook", category: "Startup", price: "$24.00" },
+  { image: "/demo/minimal-watch.webp", title: "Minimal Watch", category: "SaaS", price: "$59.00" },
+  { image: "/demo/laptop-stand.webp", title: "Laptop Stand", category: "Creative", price: "$49.00" },
+  { image: "/demo/insulated-water-bottle.webp", title: "Insulated Water Bottle", category: "Animation", price: "$39.00", badgeText: "Popular" },
 ];
 
+// "$48.00" as a schema.org Offer; undefined when the currency symbol isn't one we recognise.
+function toOffer(price: string | undefined) {
+  const currency = ({ $: "USD", "€": "EUR", "£": "GBP", "₺": "TRY", "¥": "JPY" } as Record<string, string>)[price?.trim()[0] ?? ""];
+  const amount = parseFloat(price?.replace(/[^0-9.]/g, "") ?? "");
+  return currency && !Number.isNaN(amount) ? { "@type": "Offer", price: amount.toFixed(2), priceCurrency: currency } : undefined;
+}
+
 export function ProductGridSection({
+  theme = "dark",
   headingText = "Latest Templates",
-  headingColor = "#1a1a1a",
+  headingColor,
   headingFontSize = 32,
   headingFontWeight = 700,
   headingGap = 40,
@@ -73,13 +114,14 @@ export function ProductGridSection({
   mobileColumns = 1,
   gap = 32,
   imageRadius = 16,
-  imageAspect = 1,
-  titleColor = "#1a1a1a",
+  imageAspect = 1344 / 752,
+  cardBorderColor,
+  titleColor,
   titleFontSize = 17,
-  metaColor = "#6b6b6b",
+  metaColor,
   metaFontSize = 15,
-  badgeBackground = "#1a1a1a",
-  badgeTextColor = "#ffffff",
+  badgeBackground,
+  badgeTextColor,
   showOverlay = true,
   overlayText = "View Template →",
   overlayBackground = "rgba(0,0,0,0.45)",
@@ -87,18 +129,50 @@ export function ProductGridSection({
   showButton = true,
   buttonText = "Explore All",
   buttonLink,
-  buttonTextColor = "#1a1a1a",
-  buttonBackground = "#ffffff",
-  buttonHoverBackground = "#ececec",
+  buttonTextColor,
+  buttonBackground,
+  buttonHoverBackground,
   buttonGap = 20,
-  backgroundColor = "#f2f2f2",
+  backgroundColor,
   className,
 }: ProductGridSectionProps) {
+  const palette = THEMES[theme];
+  headingColor ??= palette.headingColor;
+  titleColor ??= palette.titleColor;
+  metaColor ??= palette.metaColor;
+  cardBorderColor ??= palette.cardBorderColor;
+  badgeBackground ??= palette.badgeBackground;
+  badgeTextColor ??= palette.badgeTextColor;
+  buttonTextColor ??= palette.buttonTextColor;
+  buttonBackground ??= palette.buttonBackground;
+  buttonHoverBackground ??= palette.buttonHoverBackground;
+  backgroundColor ??= palette.backgroundColor;
   const [hoveredButton, setHoveredButton] = React.useState(false);
   const gridId = React.useId().replace(/:/g, "");
 
+  // schema.org ItemList of Products (JSON-LD) for search engines, skipped while the placeholder cards show.
+  const jsonLd = cards === DEFAULT_CARDS
+    ? null
+    : JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        itemListElement: cards.map((card, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          item: {
+            "@type": "Product",
+            name: card.title,
+            category: card.category,
+            ...(card.image ? { image: card.image } : {}),
+            ...(card.link ? { url: card.link } : {}),
+            ...(toOffer(card.price) ? { offers: toOffer(card.price) } : {}),
+          },
+        })),
+      }).replace(/</g, "\\u003c");
+
   return (
     <div className={cn("box-border flex w-full flex-col", className)} style={{ backgroundColor, padding: "60px 80px" }}>
+      {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />}
       <style>{`
         .pgs-card-image-${gridId} { transition: transform 0.35s ease; }
         .pgs-card-${gridId}:hover .pgs-card-image-${gridId} { transform: scale(1.04); }
@@ -132,8 +206,8 @@ export function ProductGridSection({
             transition={{ duration: 0.5, delay: i * 0.08, ease: "easeOut" }}
           >
             <div
-              className="relative w-full overflow-hidden bg-white"
-              style={{ aspectRatio: String(imageAspect), borderRadius: imageRadius }}
+              className="relative w-full overflow-hidden"
+              style={{ backgroundColor: palette.imageBackground, aspectRatio: String(imageAspect), borderRadius: imageRadius, border: `1px solid ${cardBorderColor}` }}
             >
               {card.image && (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -162,11 +236,11 @@ export function ProductGridSection({
                 </div>
               )}
             </div>
-            <div style={{ fontSize: titleFontSize, fontWeight: 700, color: titleColor }}>{card.title}</div>
-            <div className="flex items-center gap-1.5" style={{ fontSize: metaFontSize, color: metaColor }}>
-              <span>{card.category}</span>
-              <span>·</span>
-              <span>{card.price}</span>
+            <div className="flex flex-col gap-1">
+              <div style={{ fontSize: titleFontSize, fontWeight: 700, color: titleColor }}>{card.title}</div>
+              <div className="flex items-center gap-1.5" style={{ fontSize: metaFontSize, color: metaColor }}>
+                <span>{card.price}</span>
+              </div>
             </div>
           </motion.a>
         ))}

@@ -77,7 +77,7 @@ export interface ProgressCircleBarsProps extends Omit<React.ComponentPropsWithou
 
 export function ProgressCircleBars({
   sizePreset = "lg",
-  arcStyle = "ring",
+  arcStyle = "dashes",
   circleSize = 120,
   strokeWidth = 12,
   dashCount = 60,
@@ -94,8 +94,8 @@ export function ProgressCircleBars({
   badgeBg = "#111111",
   badgeTextColor = "#ffffff",
 
-  colorStart = "#7c3aed",
-  colorEnd = "#3b82f6",
+  colorStart = "#F39C12",
+  colorEnd = "#F39C12",
 
   thresholdsEnabled = false,
   thresholdLowMax = 40,

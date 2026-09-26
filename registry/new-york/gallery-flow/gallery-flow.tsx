@@ -43,14 +43,19 @@ interface FlowItem {
 const SIZE_MAP: Record<GalleryFlowCardSize, number> = { small: 0.75, medium: 1, large: 1.35 };
 
 const DEFAULT_IMAGES = [
-  "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&q=80",
-  "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=600&q=80",
-  "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&q=80",
-  "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80",
-  "https://images.unsplash.com/photo-1500534623283-312aade485b7?w=600&q=80",
-  "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=80",
-  "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=600&q=80",
-  "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=600&q=80",
+  "/demo/23.webp",
+  "/demo/24.webp",
+  "/demo/25.webp",
+  "/demo/26.webp",
+  "/demo/27.webp",
+  "/demo/28.webp",
+  "/demo/29.webp",
+  "/demo/30.webp",
+  "/demo/31.webp",
+  "/demo/32.webp",
+  "/demo/33.webp",
+  "/demo/34.webp",
+  "/demo/52.webp",
 ];
 
 function useContainerSize(ref: React.RefObject<HTMLDivElement | null>) {

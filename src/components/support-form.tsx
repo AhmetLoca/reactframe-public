@@ -267,7 +267,7 @@ export function SupportForm({ items }: { items: PickerItem[] }) {
         />
       </div>
 
-      {status === "error" && <p className="text-sm text-red-500">Something went wrong — try emailing directly instead.</p>}
+      {status === "error" && <p className="text-sm text-red-500">Something went wrong, try emailing directly instead.</p>}
 
       <button
         type="submit"

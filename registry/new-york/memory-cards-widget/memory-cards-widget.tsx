@@ -209,7 +209,7 @@ export function MemoryCardsWidget({
   const columns = pairCount <= 6 ? 4 : pairCount <= 8 ? 4 : 6;
 
   return (
-    <div data-mcw={instanceId} className={cn("relative", className)} style={{ width: 340, height: 460, fontFamily: "Inter, system-ui, sans-serif", ...style }} {...props}>
+    <div data-mcw={instanceId} className={cn("relative", className)} style={{ width: "100%", maxWidth: 440, height: 500, fontFamily: "Inter, system-ui, sans-serif", ...style }} {...props}>
       <style>{`
         [data-mcw="${instanceId}"] * { box-sizing: border-box; }
 
@@ -290,18 +290,26 @@ export function MemoryCardsWidget({
         [data-mcw="${instanceId}"] .mcw-header {
           flex-shrink: 0;
           display: flex;
+          flex-wrap: wrap;
           justify-content: space-between;
           align-items: center;
           padding: 10px 14px;
           background: rgba(255,255,255,0.06);
           font-size: 13px;
           font-weight: 600;
-          gap: 12px;
+          gap: 8px 12px;
         }
 
         [data-mcw="${instanceId}"] .mcw-header-left {
           display: flex;
-          gap: 16px;
+          flex-wrap: wrap;
+          gap: 10px 14px;
+        }
+
+        [data-mcw="${instanceId}"] .mcw-header-right {
+          display: flex;
+          align-items: center;
+          gap: 8px;
         }
 
         [data-mcw="${instanceId}"] .mcw-stat-label {
@@ -469,11 +477,11 @@ export function MemoryCardsWidget({
               <span className="mcw-stat-label">Moves</span> {moves}
             </span>
             <span>
-              <span className="mcw-stat-label">Best</span> {bestScore ?? "—"}
+              <span className="mcw-stat-label">Best</span> {bestScore ?? "-"}
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="mcw-header-right">
             <button className="mcw-reset-btn" onClick={startGame}>
               Reset
             </button>

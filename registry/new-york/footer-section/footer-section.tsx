@@ -8,7 +8,7 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export type FooterSectionTheme = "paper" | "glass" | "custom";
+export type FooterSectionTheme = "dark" | "light" | "custom";
 
 export interface FooterSectionLink {
   label: string;
@@ -48,7 +48,19 @@ const DEFAULT_COLUMNS: FooterSectionColumn[] = [
   { title: "Legal", links: [{ label: "Privacy Policy", url: "#" }, { label: "Terms of Service", url: "#" }, { label: "Cookie Policy", url: "#" }] },
 ];
 
-function FooterLinkItem({ link, fg, accentColor, showUnderline }: { link: FooterSectionLink; fg?: string; accentColor: string; showUnderline: boolean }) {
+function FooterLinkItem({
+  link,
+  fg,
+  accentColor,
+  showUnderline,
+  isDark,
+}: {
+  link: FooterSectionLink;
+  fg?: string;
+  accentColor: string;
+  showUnderline: boolean;
+  isDark: boolean;
+}) {
   const [active, setActive] = React.useState(false);
   const color = showUnderline ? fg : active ? accentColor : fg;
   return (
@@ -58,7 +70,7 @@ function FooterLinkItem({ link, fg, accentColor, showUnderline }: { link: Footer
       onMouseLeave={() => setActive(false)}
       onFocus={() => setActive(true)}
       onBlur={() => setActive(false)}
-      className={cn("relative inline-flex w-fit pb-0.5 text-sm no-underline outline-none", !color && "text-[#f5f4f1]/60")}
+      className={cn("relative inline-flex w-fit pb-0.5 text-sm no-underline outline-none", !color && (isDark ? "text-[#f5f4f1]/60" : "text-[#0e0e0e]/60"))}
       style={{ color, boxShadow: active ? `0 0 0 2px ${accentColor}40` : "none", borderRadius: 2, transition: "color 200ms ease, box-shadow 150ms ease" }}
     >
       {link.label}
@@ -72,7 +84,7 @@ function FooterLinkItem({ link, fg, accentColor, showUnderline }: { link: Footer
   );
 }
 
-function CreatedByLink({ text, url, fg }: { text: string; url: string; fg?: string }) {
+function CreatedByLink({ text, url, fg, isDark }: { text: string; url: string; fg?: string; isDark: boolean }) {
   const [active, setActive] = React.useState(false);
   return (
     <a
@@ -81,7 +93,10 @@ function CreatedByLink({ text, url, fg }: { text: string; url: string; fg?: stri
       onMouseLeave={() => setActive(false)}
       onFocus={() => setActive(true)}
       onBlur={() => setActive(false)}
-      className={cn("text-[13px] no-underline outline-none", !fg && (active ? "text-[#f5f4f1]" : "text-[#f5f4f1]/60"))}
+      className={cn(
+        "text-[13px] no-underline outline-none",
+        !fg && (isDark ? (active ? "text-[#f5f4f1]" : "text-[#f5f4f1]/60") : active ? "text-[#0e0e0e]" : "text-[#0e0e0e]/60"),
+      )}
       style={{ color: fg, boxShadow: active ? `0 0 0 2px color-mix(in srgb, currentColor 19%, transparent)` : "none", borderRadius: 2, transition: "color 200ms ease, box-shadow 150ms ease" }}
     >
       {text}
@@ -90,7 +105,7 @@ function CreatedByLink({ text, url, fg }: { text: string; url: string; fg?: stri
 }
 
 export function FooterSection({
-  theme = "paper",
+  theme = "dark",
   customColors,
   columns = DEFAULT_COLUMNS,
   accentColor = "#c44b2b",
@@ -101,27 +116,16 @@ export function FooterSection({
   className,
 }: FooterSectionProps) {
   const isCustom = theme === "custom";
-  const isGlass = theme === "glass";
+  const isDark = theme === "dark";
   const cc = isCustom ? customColors : undefined;
 
   return (
     <footer
       role="contentinfo"
-      className={cn(
-        "relative w-full",
-        !isCustom && !isGlass && "bg-[#0e0e0e] text-[#f5f4f1]",
-        isGlass && "text-[#f5f4f1]",
-        className,
-      )}
+      className={cn("relative w-full", !isCustom && (isDark ? "bg-[#0e0e0e] text-[#f5f4f1]" : "bg-[#f5f4f1] text-[#0e0e0e]"), className)}
       style={{
         transition: "background-color 600ms cubic-bezier(0.16, 1, 0.3, 1), color 600ms cubic-bezier(0.16, 1, 0.3, 1)",
         ...(isCustom ? { background: customColors?.bg ?? "#1a1a2e", color: customColors?.fg ?? "#ffffff" } : undefined),
-        ...(isGlass && {
-          backgroundColor: "rgba(14,14,14,0.6)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          border: "1px solid rgba(245,244,241,0.08)",
-        }),
       }}
     >
       <div className="mx-auto max-w-[1280px] px-6 py-12 sm:px-12 sm:py-16">
@@ -134,7 +138,7 @@ export function FooterSection({
               <ul className="m-0 flex list-none flex-col gap-3.5 p-0">
                 {group.links.map((link, li) => (
                   <li key={li}>
-                    <FooterLinkItem link={link} fg={cc?.linkColor} accentColor={accentColor} showUnderline={hoverUnderline} />
+                    <FooterLinkItem link={link} fg={cc?.linkColor} accentColor={accentColor} showUnderline={hoverUnderline} isDark={isCustom ? true : isDark} />
                   </li>
                 ))}
               </ul>
@@ -142,14 +146,22 @@ export function FooterSection({
           ))}
         </nav>
 
-        <div className={cn("mt-12 flex flex-col items-start justify-between gap-2 border-t pt-6 sm:mt-14 sm:flex-row sm:items-center sm:gap-0", !isCustom && "border-[#f5f4f1]/8")} style={isCustom ? { borderColor: `${customColors?.fg ?? "#ffffff"}14` } : undefined}>
-          <span className={cn("text-[13px]", !cc?.copyrightColor && "text-[#f5f4f1]/45")} style={{ color: cc?.copyrightColor }}>
+        <div
+          className={cn(
+            "mt-12 flex flex-col items-start justify-between gap-2 border-t pt-6 sm:mt-14 sm:flex-row sm:items-center sm:gap-0",
+            !isCustom && (isDark ? "border-[#f5f4f1]/8" : "border-[#0e0e0e]/8"),
+          )}
+          style={isCustom ? { borderColor: `${customColors?.fg ?? "#ffffff"}14` } : undefined}
+        >
+          <span
+            className={cn("text-[13px]", !cc?.copyrightColor && (isDark ? "text-[#f5f4f1]/45" : "text-[#0e0e0e]/45"))}
+            style={{ color: cc?.copyrightColor }}
+          >
             {copyrightText}
           </span>
-          {createdByText && <CreatedByLink text={createdByText} url={createdByUrl} fg={cc?.createdByColor} />}
+          {createdByText && <CreatedByLink text={createdByText} url={createdByUrl} fg={cc?.createdByColor} isDark={isCustom ? true : isDark} />}
         </div>
       </div>
-
-          </footer>
+    </footer>
   );
 }

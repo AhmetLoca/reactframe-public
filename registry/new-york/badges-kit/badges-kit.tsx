@@ -13,7 +13,7 @@ function cn(...inputs: ClassValue[]) {
 export type BadgeTone = "neutral" | "success" | "error" | "warning" | "info" | "purple" | "orange" | "indigo" | "custom";
 type BadgePaletteTone = Exclude<BadgeTone, "custom">;
 export type BadgeIconType = "none" | "check" | "cross" | "minus" | "dot" | "spinner" | "custom";
-export type BadgeSize = "sm" | "md" | "lg";
+export type BadgeSize = "sm" | "md" | "lg" | "xl" | "2xl";
 export type BadgeTheme = "light" | "dark";
 
 interface ColorSet {
@@ -53,6 +53,8 @@ const SIZE_PRESETS: Record<BadgeSize, { height: number; fontSize: number; paddin
   sm: { height: 22, fontSize: 11, paddingX: 9, iconSize: 11, gap: 4 },
   md: { height: 27, fontSize: 12.5, paddingX: 11, iconSize: 12.5, gap: 5 },
   lg: { height: 33, fontSize: 14, paddingX: 14, iconSize: 14, gap: 6 },
+  xl: { height: 46, fontSize: 19, paddingX: 20, iconSize: 19, gap: 8 },
+  "2xl": { height: 62, fontSize: 26, paddingX: 28, iconSize: 26, gap: 11 },
 };
 
 const ICON_PATHS: Record<"check" | "cross" | "minus", string> = {

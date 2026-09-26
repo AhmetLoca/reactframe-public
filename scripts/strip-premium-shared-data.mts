@@ -24,9 +24,11 @@
 
 import { readFileSync, writeFileSync, readdirSync, statSync, rmSync, existsSync } from "node:fs";
 import path from "node:path";
-import { components } from "../src/lib/catalog-data.ts";
+import { allComponents } from "../src/lib/catalog-data.ts";
 
-const premiumSlugs = new Set(components.filter((c) => !c.free).map((c) => c.slug));
+// Premium and hidden, same set as scripts/list-premium-slugs.mts: hidden entries are left out of
+// `components`, so filtering that list would miss a hidden premium component.
+const premiumSlugs = new Set(allComponents.filter((c) => !c.free || c.hidden).map((c) => c.slug));
 
 function read(p: string): string {
   return readFileSync(p, "utf8");
@@ -253,6 +255,19 @@ function stripRegistryPreview(content: string): string {
     })
     .join("\n");
 
+  // 1a. Multi-line `import { A,\n  B,\n} from "../../registry/new-york/<premium>/...";` blocks.
+  content = content.replace(
+    /^import (?:type )?\{[^}]*\} from "\.\.\/\.\.\/registry\/new-york\/([a-z0-9-]+)\/[a-z0-9-]+";\n/gm,
+    (block, slug: string) => (premiumSlugs.has(slug) ? "" : block),
+  );
+
+  // 1b. The previews are code-split now: drop `const X = dynamic(() => import("../../registry/new-york/<premium>/..."))`
+  // declarations (single- or multi-line; each ends at the first `);` line end).
+  content = content.replace(
+    /^const \w+ = dynamic\(\(\) =>\s*import\("\.\.\/\.\.\/registry\/new-york\/([a-z0-9-]+)\/[a-z0-9-]+"\)[\s\S]*?\);\n/gm,
+    (block, slug: string) => (premiumSlugs.has(slug) ? "" : block),
+  );
+
   // 2. Strip premium entries from both preview maps.
   for (const marker of [
     "export const registryPreviews: Record<string, () => React.ReactNode> = {",
@@ -261,16 +276,25 @@ function stripRegistryPreview(content: string): string {
     const i0 = content.indexOf(marker);
     if (i0 === -1) continue; // tolerate either map moving/renaming later
     const objStart = i0 + marker.length;
-    const keyRe = /"([a-z0-9-]+)":\s*/;
+    // Keys are quoted slugs ("carousel-3d":) or bare identifiers for slugs without a hyphen (tooltip:).
+    const keyRe = /^(?:"([a-z0-9-]+)"|([a-z][a-z0-9]*))\s*:\s*/;
     const spans: { start: number; end: number; slug: string }[] = [];
     let i = objStart;
     while (i < content.length) {
       while (i < content.length && /\s/.test(content[i])) i += 1;
       if (content[i] === "}") break;
+      if (content.startsWith("//", i)) {
+        i = content.indexOf("\n", i) + 1;
+        continue;
+      }
+      if (content.startsWith("/*", i)) {
+        i = content.indexOf("*/", i) + 2;
+        continue;
+      }
       const m = keyRe.exec(content.slice(i, i + 200));
       if (!m) throw new Error(`registry-preview: unexpected content at ${i}: ${JSON.stringify(content.slice(i, i + 80))}`);
       const lineStart = content.lastIndexOf("\n", i) + 1;
-      const slug = m[1];
+      const slug = m[1] ?? m[2];
       const valueStart = i + m[0].length;
       const end = findEntryEnd(content, valueStart);
       let j = end;
@@ -448,9 +472,32 @@ console.log(`- Stripping premium data from shared files (${premiumSlugs.size} pr
 const leftoverFolders = deletePremiumRegistryFolders(root);
 if (leftoverFolders.length) console.log(`  - removed ${leftoverFolders.length} premium registry/new-york folder(s) rsync missed`);
 
-const codeVariantsPath = path.join(root, "src/lib/code-variants.ts");
-write(codeVariantsPath, stripCodeVariants(read(codeVariantsPath)));
-console.log("  - filtered src/lib/code-variants.ts");
+// Alternate Code-tab sources (JS/CSS variants) are one JSON file per slug in registry-code-variants/
+// (src/lib/code-variants.ts only reads them now); a premium file there is the premium source itself.
+{
+  const variantsDir = path.join(root, "registry-code-variants");
+  let removed = 0;
+  if (existsSync(variantsDir)) {
+    for (const file of readdirSync(variantsDir)) {
+      if (premiumSlugs.has(file.replace(/\.json$/, ""))) {
+        rmSync(path.join(variantsDir, file));
+        removed += 1;
+      }
+    }
+    const left = readdirSync(variantsDir).filter((file) => premiumSlugs.has(file.replace(/\.json$/, "")));
+    if (left.length) throw new Error(`registry-code-variants: premium files survived: ${left.join(", ")}`);
+  }
+  console.log(`  - removed ${removed} premium file(s) from registry-code-variants/`);
+}
+// Older layout kept every variant inline in src/lib/code-variants.ts; filter it if that's still the case.
+{
+  const codeVariantsPath = path.join(root, "src/lib/code-variants.ts");
+  const content = read(codeVariantsPath);
+  if (content.includes("export const codeVariants")) {
+    write(codeVariantsPath, stripCodeVariants(content));
+    console.log("  - filtered src/lib/code-variants.ts");
+  }
+}
 
 const usageExamplesPath = path.join(root, "src/lib/usage-examples.ts");
 write(usageExamplesPath, stripUsageExamples(read(usageExamplesPath)));

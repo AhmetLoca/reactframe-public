@@ -417,23 +417,31 @@ function JumpIcon() {
 }
 
 export interface GlowJumpWidgetProps extends Omit<React.ComponentPropsWithoutRef<"div">, "children"> {
+  asPopup?: boolean;
   position?: PopupPosition;
   defaultOpen?: boolean;
 }
 
-export function GlowJumpWidget({ className, style, position = "bottom-right", defaultOpen = false, ...props }: GlowJumpWidgetProps) {
+export function GlowJumpWidget({ className, style, asPopup = false, position = "bottom-right", defaultOpen = false, ...props }: GlowJumpWidgetProps) {
   const [isOpen, setIsOpen] = React.useState(defaultOpen);
   const [levelNumber, setLevelNumber] = React.useState(1);
   const [statusText, setStatusText] = React.useState("");
+  const [prevAsPopup, setPrevAsPopup] = React.useState(asPopup);
+
+  if (asPopup !== prevAsPopup) {
+    setPrevAsPopup(asPopup);
+    if (asPopup) setIsOpen(defaultOpen);
+  }
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const panelRef = React.useRef<HTMLDivElement>(null);
   const keysRef = React.useRef<Keys>({ left: false, up: false, right: false });
   const statusTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const instanceId = React.useId();
+  const active = !asPopup || isOpen;
 
   React.useEffect(() => {
-    if (!isOpen || !containerRef.current) return;
+    if (!active || !containerRef.current) return;
 
     const container = containerRef.current;
     let stopAnimation: number | null = null;
@@ -491,7 +499,7 @@ export function GlowJumpWidget({ className, style, position = "bottom-right", de
       container.innerHTML = "";
       keysRef.current = { left: false, up: false, right: false };
     };
-  }, [isOpen]);
+  }, [active]);
 
   const refocusPanel = () => {
     panelRef.current?.focus({ preventScroll: true });
@@ -522,7 +530,7 @@ export function GlowJumpWidget({ className, style, position = "bottom-right", de
     <div
       data-gj={instanceId}
       className={cn("relative", className)}
-      style={{ width: 420, height: 480, fontFamily: "Inter, system-ui, sans-serif", ...style }}
+      style={{ width: "100%", maxWidth: 640, height: 480, fontFamily: "Inter, system-ui, sans-serif", ...style }}
       {...props}
     >
       <style>{`
@@ -577,6 +585,14 @@ export function GlowJumpWidget({ className, style, position = "bottom-right", de
         [data-gj="${instanceId}"] .gj-panel.gj-open {
           opacity: 1;
           transform: scale(1) translateY(0);
+          pointer-events: auto;
+        }
+        [data-gj="${instanceId}"] .gj-panel.gj-inline {
+          position: static;
+          width: 100%;
+          height: 100%;
+          opacity: 1;
+          transform: none;
           pointer-events: auto;
         }
 
@@ -748,20 +764,31 @@ export function GlowJumpWidget({ className, style, position = "bottom-right", de
         }
       `}</style>
 
-      <button className={`gj-fab ${position} ${isOpen ? "gj-hidden" : ""}`} onClick={() => setIsOpen(true)} aria-label="Open Glow Jump game">
-        <JumpIcon />
-      </button>
+      {asPopup && (
+        <button className={`gj-fab ${position} ${isOpen ? "gj-hidden" : ""}`} onClick={() => setIsOpen(true)} aria-label="Open Glow Jump game">
+          <JumpIcon />
+        </button>
+      )}
 
-      <div className={`gj-panel ${position} ${isOpen ? "gj-open" : ""}`} ref={panelRef} tabIndex={0} onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} onMouseDown={refocusPanel}>
+      <div
+        className={asPopup ? `gj-panel ${position} ${isOpen ? "gj-open" : ""}` : "gj-panel gj-inline"}
+        ref={panelRef}
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyUp}
+        onMouseDown={refocusPanel}
+      >
         <div className="gj-header">
           <span className="gj-title">
             Glow Jump · Level {levelNumber}/{LEVELS.length}
           </span>
-          <div className="flex items-center gap-2">
-            <button className="gj-close-btn" onClick={() => setIsOpen(false)} aria-label="Close Glow Jump game">
-              ×
-            </button>
-          </div>
+          {asPopup && (
+            <div className="flex items-center gap-2">
+              <button className="gj-close-btn" onClick={() => setIsOpen(false)} aria-label="Close Glow Jump game">
+                ×
+              </button>
+            </div>
+          )}
         </div>
 
         {statusText && <div className="gj-status-banner">{statusText}</div>}

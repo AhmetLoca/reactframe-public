@@ -70,7 +70,7 @@ export function GlowCard({
     <div
       ref={rootRef}
       className={cn("relative isolate flex h-full w-full overflow-hidden", className_, className)}
-      style={{ alignItems, justifyContent, borderRadius: radius, padding, backgroundColor }}
+      style={{ alignItems, justifyContent, borderRadius: radius, clipPath: `inset(0 round ${radius}px)`, padding, backgroundColor }}
     >
       {backgroundImage && (
         <>
@@ -78,6 +78,7 @@ export function GlowCard({
           <div className="pointer-events-none absolute inset-0" style={{ zIndex: 1, backgroundColor, opacity: overlayOpacity, mixBlendMode: "multiply" }} />
         </>
       )}
+      <div aria-hidden className={`${className_}-glow`} />
       <p
         className="relative m-0"
         style={{ zIndex: 3, textAlign, color: textColor, fontSize, fontWeight: 600, lineHeight: "1.25em", letterSpacing: "-0.01em", textWrap: "balance" }}
@@ -93,17 +94,27 @@ export function GlowCard({
         @keyframes glow-spin-${uid} {
           to { --glow-angle-${uid}: 1turn; }
         }
-        .${className_}::before {
+        .${className_}-glow {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          pointer-events: none;
+          filter: blur(${glowBlur}px);
+        }
+        /* A ring that follows the card's corner radius, so the glow stays inside the shape. */
+        .${className_}-glow::before {
           content: '';
           position: absolute;
-          z-index: 2;
           inset: -${glowWidth * 0.8}px;
-          border: solid ${glowWidth}px;
-          border-image: conic-gradient(from var(--glow-angle-${uid}), ${gradientStops}) 1;
-          filter: blur(${glowBlur}px);
+          padding: ${glowWidth}px;
+          border-radius: ${radius + glowWidth * 0.8}px;
+          background: conic-gradient(from var(--glow-angle-${uid}), ${gradientStops});
+          -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          -webkit-mask-composite: xor;
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask-composite: exclude;
           animation: glow-spin-${uid} ${duration}s linear infinite;
           animation-play-state: ${isVisible ? "running" : "paused"};
-          pointer-events: none;
         }
       `}</style>
     </div>

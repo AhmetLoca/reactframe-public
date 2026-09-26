@@ -243,6 +243,9 @@ export function MessengerWidget({
 
   const isRight = position !== "bottom-left";
   const chatOrigin = isRight ? "bottom right" : "bottom left";
+  // Never wider than the viewport: leave the corner offset on both sides when fixed,
+  // and a bit more slack when inline (the surrounding layout may add its own padding).
+  const panelMaxWidth = fixed ? "calc(100vw - 3rem)" : "calc(100vw - 5rem)";
 
   return (
     <div
@@ -253,7 +256,7 @@ export function MessengerWidget({
         <div
           onClick={handleOpen}
           className={cn("absolute bottom-[76px] w-[300px] cursor-pointer overflow-hidden rounded-[20px] bg-white shadow-[0_16px_48px_rgba(0,0,0,0.16),0_4px_16px_rgba(0,0,0,0.08)]", isRight ? "right-0" : "left-0")}
-          style={{ animation: "msn-popup-in 0.42s cubic-bezier(0.34,1.56,0.64,1) forwards" }}
+          style={{ maxWidth: panelMaxWidth, animation: "msn-popup-in 0.42s cubic-bezier(0.34,1.56,0.64,1) forwards" }}
         >
           <div className="flex items-center gap-2.5 px-3.5 py-3" style={{ background: headerGradient }}>
             <div className="relative shrink-0">
@@ -284,8 +287,10 @@ export function MessengerWidget({
       )}
 
       <div
-        className={cn("absolute bottom-[76px] w-[360px] overflow-hidden rounded-[20px] bg-white", isRight ? "right-0" : "left-0")}
+        className={cn("absolute bottom-[76px] flex w-[360px] flex-col overflow-hidden rounded-[20px] bg-white", isRight ? "right-0" : "left-0")}
         style={{
+          maxWidth: panelMaxWidth,
+          maxHeight: "calc(100dvh - 100px)",
           boxShadow: isOpen ? "0 24px 72px rgba(0,0,0,0.2), 0 8px 24px rgba(0,0,0,0.1)" : "none",
           transformOrigin: chatOrigin,
           transform: isOpen ? "scale(1) translateY(0px)" : "scale(0.72) translateY(24px)",
@@ -337,7 +342,7 @@ export function MessengerWidget({
           </div>
         )}
 
-        <div className="flex max-h-[320px] min-h-[220px] flex-col gap-2.5 overflow-y-auto px-3.5 py-4" style={{ backgroundImage: MSN_BG, backgroundSize: "cover" }}>
+        <div className="flex max-h-[320px] min-h-[min(220px,calc(100dvh-330px))] flex-col gap-2.5 overflow-y-auto px-3.5 py-4" style={{ backgroundImage: MSN_BG, backgroundSize: "cover" }}>
           {showTyping && (
             <div className="flex items-end gap-2">
               <MsgAvatar src={agentAvatar} isOffline={isOffline} accentColor={accentColor} gradientEnd={gradientEnd} />

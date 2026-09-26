@@ -87,10 +87,10 @@ export function TogglePro({
   width = 52,
   height = 30,
   padding = 3,
-  trackOnColor = "#0A0A0A",
+  trackOnColor = "#f59e0b",
   trackOffColor = "#D1D5DB",
   thumbColor = "#FFFFFF",
-  ringColor = "rgba(10,10,10,0.25)",
+  ringColor = "rgba(245,158,11,0.25)",
   ringWidth = 3,
   duration = 0.35,
   squish = 0.35,
@@ -100,6 +100,8 @@ export function TogglePro({
   const [internalChecked, setInternalChecked] = React.useState(defaultChecked);
   const isOn = isControlled ? checked : internalChecked;
   const [focused, setFocused] = React.useState(false);
+  const labelSize = height * (14 / 30);
+  const helperSize = height * (13 / 30);
 
   const handleToggle = () => {
     if (disabled) return;
@@ -111,11 +113,12 @@ export function TogglePro({
   return (
     <label
       className={cn(
-        "inline-flex items-center gap-2.5 select-none",
+        "inline-flex items-center select-none",
         disabled ? "cursor-default" : "cursor-pointer",
         labelPosition === "left" && "flex-row-reverse",
         className,
       )}
+      style={{ gap: height / 3 }}
     >
       <span className="relative shrink-0" style={{ width, height }}>
         <input
@@ -149,11 +152,11 @@ export function TogglePro({
 
       {label && (
         <span className="flex flex-col gap-1">
-          <span className="text-sm font-semibold text-[#f5f4f1]" style={{ fontFamily }}>
+          <span className="font-semibold text-foreground" style={{ fontFamily, fontSize: labelSize }}>
             {label}
           </span>
           {helperText && (
-            <span className="text-[13px] leading-snug text-[#f5f4f1]/60" style={{ fontFamily }}>
+            <span className="leading-snug text-foreground/60" style={{ fontFamily, fontSize: helperSize }}>
               {helperText}
             </span>
           )}

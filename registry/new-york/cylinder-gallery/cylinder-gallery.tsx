@@ -27,14 +27,18 @@ export interface CylinderGalleryProps extends Omit<React.ComponentPropsWithoutRe
 }
 
 const DEFAULT_IMAGES: CylinderGalleryImage[] = [
-  { src: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&q=80" },
-  { src: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=600&q=80" },
-  { src: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&q=80" },
-  { src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80" },
-  { src: "https://images.unsplash.com/photo-1500534623283-312aade485b7?w=600&q=80" },
-  { src: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=80" },
-  { src: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=600&q=80" },
-  { src: "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=600&q=80" },
+  { src: "/demo/23.webp" },
+  { src: "/demo/24.webp" },
+  { src: "/demo/25.webp" },
+  { src: "/demo/26.webp" },
+  { src: "/demo/27.webp" },
+  { src: "/demo/28.webp" },
+  { src: "/demo/29.webp" },
+  { src: "/demo/30.webp" },
+  { src: "/demo/31.webp" },
+  { src: "/demo/32.webp" },
+  { src: "/demo/33.webp" },
+  { src: "/demo/34.webp" },
 ];
 
 export function CylinderGallery({

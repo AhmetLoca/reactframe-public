@@ -57,13 +57,16 @@ function pointOnCircle(cx: number, cy: number, r: number, angle: number) {
 }
 
 const DEFAULT_SLICES: PieChartSlice[] = [
-  { visible: true, label: "Enterprise", color: "#FB7C66", arr: 437500, accounts: 85, avgContract: 5147 },
-  { visible: true, label: "Scale", color: "#D97706", arr: 325000, accounts: 210, avgContract: 1548 },
-  { visible: true, label: "Growth", color: "#EC4899", arr: 214000, accounts: 146, avgContract: 1466 },
-  { visible: true, label: "Partner", color: "#8B5CF6", arr: 125000, accounts: 60, avgContract: 2083 },
-  { visible: true, label: "Starter", color: "#38BDF8", arr: 87500, accounts: 175, avgContract: 500 },
-  { visible: true, label: "Legacy", color: "#34D399", arr: 61000, accounts: 40, avgContract: 1525 },
+  { visible: true, label: "Enterprise", color: "#C4F26B", arr: 437500, accounts: 85, avgContract: 5147 },
+  { visible: true, label: "Scale", color: "#F2A841", arr: 325000, accounts: 210, avgContract: 1548 },
+  { visible: true, label: "Growth", color: "#FF7A6B", arr: 214000, accounts: 146, avgContract: 1466 },
+  { visible: true, label: "Partner", color: "#8FB8FF", arr: 125000, accounts: 60, avgContract: 2083 },
+  { visible: true, label: "Starter", color: "#FF7DB8", arr: 87500, accounts: 175, avgContract: 500 },
+  { visible: true, label: "Legacy", color: "#4DD6E8", arr: 61000, accounts: 40, avgContract: 1525 },
 ];
+
+const LIGHT_SLICE_COLORS = ["#65A30D", "#D9822B", "#E5484D", "#3B6FD8", "#DB2777", "#0891B2"];
+const LIGHT_SLICES: PieChartSlice[] = DEFAULT_SLICES.map((s, i) => ({ ...s, color: LIGHT_SLICE_COLORS[i] }));
 
 export function PieChart({
   theme = "dark",
@@ -75,7 +78,7 @@ export function PieChart({
   outerRadius = 150,
   innerRadiusRatio = 0.5,
   gapDeg = 6,
-  slices = DEFAULT_SLICES,
+  slices = theme === "light" ? LIGHT_SLICES : DEFAULT_SLICES,
   enableHover = true,
   className,
 }: PieChartProps) {
@@ -99,7 +102,7 @@ export function PieChart({
   const effectiveHeight = containerWidth > 0 ? Math.min(chartHeight, containerWidth * (VB_H / VB_W)) : chartHeight;
 
   const palette = {
-    cardBg: isDark ? "#15161b" : "#ffffff",
+    cardBg: isDark ? "#0E0E0E" : "#ffffff",
     cardBorder: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
     textPrimary: isDark ? "#f4f5f7" : "#111317",
     textSub: isDark ? "rgba(255,255,255,0.55)" : "rgba(17,19,23,0.55)",
@@ -186,7 +189,7 @@ export function PieChart({
 
         {arcs.map((a) => {
           if (a.fraction <= 0) return null;
-          const pos = pointOnCircle(cx, cy, outerRadius + 22, a.mid);
+          const pos = pointOnCircle(cx, cy, outerRadius + 34, a.mid);
           return (
             <div
               key={`pct-${a.i}`}
@@ -234,7 +237,7 @@ export function PieChart({
               left: `${(pointOnCircle(cx, cy, outerRadius + 40, hovered.mid).x / VB_W) * 100}%`,
               top: `${(pointOnCircle(cx, cy, outerRadius + 40, hovered.mid).y / VB_H) * 100}%`,
               transform: `translate(${Math.cos(hovered.mid) >= 0 ? "0%" : "-100%"}, -50%)`,
-              backgroundColor: isDark ? "rgba(10,10,14,0.94)" : "rgba(255,255,255,0.97)",
+              backgroundColor: isDark ? "rgba(14,14,14,0.96)" : "rgba(255,255,255,0.97)",
               border: `1px solid ${palette.badgeBorder}`,
               boxShadow: isDark ? "0 10px 28px rgba(0,0,0,0.5)" : "0 6px 20px rgba(0,0,0,0.12)",
             }}

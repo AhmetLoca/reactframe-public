@@ -40,9 +40,9 @@ const VARIANTS: Record<MotionGalleryAnimation, Variants> = {
   scale: { hidden: { opacity: 0, scale: 0.94 }, show: { opacity: 1, scale: 1 } },
 };
 
-const DEFAULT_ITEMS: MotionGalleryItem[] = Array.from({ length: 12 }).map((_, i) => ({
-  image: `https://images.unsplash.com/photo-${["1461896836934-ffe607ba8211", "1517649763962-0c623066013b", "1500530855697-b586d89ba3ee", "1518611012118-696072aa579a", "1552674605-db6ffd4facb5", "1571019613454-1cb2f99b2d8b", "1519861531473-9200262188bf", "1517836357463-d25dfeac3438", "1541534741688-6078c6bfb5c5", "1546519638-68e109498ffc", "1483721310020-03333e577078", "1465101162946-4377e57745c3"][i % 12]}?w=600&q=80`,
-}));
+const DEFAULT_ITEMS: MotionGalleryItem[] = [
+  "101", "102", "104", "105", "108", "109", "110", "111", "11", "12", "23", "109",
+].map((n) => ({ image: `/demo/${n}.webp` }));
 
 const NOISE_BG = `url("data:image/svg+xml,${encodeURIComponent(
   `<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(#n)'/></svg>`,

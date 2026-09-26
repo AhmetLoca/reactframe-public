@@ -172,10 +172,10 @@ export function DiscordChatWidget({
   inviteCode,
   availability = "online",
   showBoostBadge = false,
-  offlineMessage = "We're currently offline. Join the server and leave a message — we'll get back to you!",
+  offlineMessage = "We're currently offline. Join the server and leave a message, we'll get back to you!",
   greeting = "Welcome! 👾\n\nNeed help? Our team is here.\nJoin the server or send us a message!",
   quickReplies = DEFAULT_QUICK_REPLIES,
-  popupMessage = "👾 Hey! Join our Discord server — we're online and ready to help.",
+  popupMessage = "👾 Hey! Join our Discord server, we're online and ready to help.",
   theme = "dark",
   accentColor = D_BLURPLE,
   fontFamily = "'gg sans', 'Noto Sans', Whitney, 'Helvetica Neue', Helvetica, Arial, sans-serif",
@@ -302,6 +302,9 @@ export function DiscordChatWidget({
 
   const isRight = position !== "bottom-left";
   const chatOrigin = isRight ? "bottom right" : "bottom left";
+  // Never wider than the viewport: leave the corner offset on both sides when fixed,
+  // and a bit more slack when inline (the surrounding layout may add its own padding).
+  const panelMaxWidth = fixed ? "calc(100vw - 3rem)" : "calc(100vw - 5rem)";
 
   return (
     <div
@@ -313,6 +316,7 @@ export function DiscordChatWidget({
           onClick={handleOpen}
           className={cn("absolute bottom-[76px] w-[300px] cursor-pointer overflow-hidden border", isRight ? "right-0" : "left-0")}
           style={{
+            maxWidth: panelMaxWidth,
             background: panelBg,
             borderColor: border,
             borderRadius: widgetBorderRadius + 4,
@@ -371,8 +375,10 @@ export function DiscordChatWidget({
       )}
 
       <div
-        className={cn("absolute bottom-[76px] w-[380px] overflow-hidden border", isRight ? "right-0" : "left-0")}
+        className={cn("absolute bottom-[76px] flex w-[380px] flex-col overflow-hidden border", isRight ? "right-0" : "left-0")}
         style={{
+          maxWidth: panelMaxWidth,
+          maxHeight: "calc(100dvh - 100px)",
           background: panelBg,
           borderColor: border,
           borderRadius: widgetBorderRadius + 4,
@@ -438,11 +444,11 @@ export function DiscordChatWidget({
         {isDnd && (
           <div className="flex items-center gap-1.5 border-b px-3.5 py-2" style={{ background: isDark ? "rgba(237,66,69,0.12)" : "#fef2f2", borderColor: isDark ? "rgba(237,66,69,0.2)" : "#fca5a5", color: isDark ? "#f87171" : "#b91c1c", fontSize: greetingFontSize - 1.5 }}>
             <span className="text-[13px]">🔴</span>
-            <span>Do Not Disturb — responses may be delayed.</span>
+            <span>Do Not Disturb, responses may be delayed.</span>
           </div>
         )}
 
-        <div className="flex max-h-[320px] min-h-[220px] flex-col gap-0.5 overflow-y-auto px-4 py-4" style={{ background: chatBg }}>
+        <div className="flex max-h-[320px] min-h-[min(220px,calc(100dvh-330px))] flex-col gap-0.5 overflow-y-auto px-4 py-4" style={{ background: chatBg }}>
           {showTyping && (
             <div className="flex items-start gap-3 py-1" style={{ animation: "dc-msg-in 0.28s ease forwards" }}>
               <BotAvatar avatarSrc={serverAvatar} accentColor={accentColor} />

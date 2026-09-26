@@ -67,10 +67,10 @@ export interface BarChartProps {
 
 const VB_W = 1200;
 const VB_H = 560;
-const PAD_LEFT = 58;
+const PAD_LEFT = 72;
 const PAD_RIGHT = 150;
 const PAD_TOP = 26;
-const PAD_BOTTOM = 44;
+const PAD_BOTTOM = 58;
 
 function clamp(n: number, min: number, max: number) {
   return Math.min(max, Math.max(min, n));
@@ -94,11 +94,16 @@ function makeGeometry(count: number, plotTop: number, yMin: number, yMax: number
   return { plotLeft, plotRight, plotTop, plotBottom, plotWidth, plotHeight, xAt, yAt };
 }
 
-const DEFAULT_SERIES1: Required<BarChartSeries> = { visible: true, label: "Critical", color: "#f87171" };
-const DEFAULT_SERIES2: Required<BarChartSeries> = { visible: true, label: "Migration", color: "#8b5cf6" };
-const DEFAULT_SERIES3: Required<BarChartSeries> = { visible: true, label: "Product", color: "#38bdf8" };
-const DEFAULT_SERIES4: Required<BarChartSeries> = { visible: true, label: "Onboarding", color: "#fbbf24" };
-const DEFAULT_SERIES5: Required<BarChartSeries> = { visible: true, label: "Deflected", color: "#34d399" };
+const DARK_SERIES1: Required<BarChartSeries> = { visible: true, label: "Critical", color: "#FF7A6B" };
+const DARK_SERIES2: Required<BarChartSeries> = { visible: true, label: "Migration", color: "#F5F4F1" };
+const DARK_SERIES3: Required<BarChartSeries> = { visible: true, label: "Product", color: "#87FFE3" };
+const DARK_SERIES4: Required<BarChartSeries> = { visible: true, label: "Onboarding", color: "#F2A841" };
+const DARK_SERIES5: Required<BarChartSeries> = { visible: true, label: "Deflected", color: "#8FB8FF" };
+const LIGHT_SERIES1: Required<BarChartSeries> = { ...DARK_SERIES1, color: "#E5484D" };
+const LIGHT_SERIES2: Required<BarChartSeries> = { ...DARK_SERIES2, color: "#0A0A0A" };
+const LIGHT_SERIES3: Required<BarChartSeries> = { ...DARK_SERIES3, color: "#0E9F80" };
+const LIGHT_SERIES4: Required<BarChartSeries> = { ...DARK_SERIES4, color: "#D9822B" };
+const LIGHT_SERIES5: Required<BarChartSeries> = { ...DARK_SERIES5, color: "#3B6FD8" };
 
 const DEFAULT_DATA: BarChartDataPoint[] = [
   { label: "01", note: "", v1: 16, v2: 25, v3: 28, v4: 17, v5: 32 },
@@ -127,7 +132,7 @@ const DEFAULT_DATA: BarChartDataPoint[] = [
   { label: "24", note: "", v1: 34, v2: 54, v3: 60, v4: 36, v5: 69 },
 ];
 
-const DEFAULT_REF_LINE: Required<BarChartReferenceLine> = { visible: true, value: 205, label: "Escalation desk", color: "#9ca3af" };
+const DEFAULT_REF_LINE: Required<BarChartReferenceLine> = { visible: false, value: 205, label: "", color: "#9ca3af" };
 const DEFAULT_ANNOTATION: Required<BarChartAnnotation> = { visible: true, label: "Peak", atIndex: 23, value: 253, suffix: "cases", color: "#9ca3af" };
 
 export function BarChart({
@@ -141,11 +146,11 @@ export function BarChart({
   yStep = 80,
   gapPx = 5,
   widthRatio = 0.46,
-  series1 = DEFAULT_SERIES1,
-  series2 = DEFAULT_SERIES2,
-  series3 = DEFAULT_SERIES3,
-  series4 = DEFAULT_SERIES4,
-  series5 = DEFAULT_SERIES5,
+  series1 = theme === "light" ? LIGHT_SERIES1 : DARK_SERIES1,
+  series2 = theme === "light" ? LIGHT_SERIES2 : DARK_SERIES2,
+  series3 = theme === "light" ? LIGHT_SERIES3 : DARK_SERIES3,
+  series4 = theme === "light" ? LIGHT_SERIES4 : DARK_SERIES4,
+  series5 = theme === "light" ? LIGHT_SERIES5 : DARK_SERIES5,
   dataPoints = DEFAULT_DATA,
   referenceLine = DEFAULT_REF_LINE,
   annotation = DEFAULT_ANNOTATION,
@@ -170,13 +175,17 @@ export function BarChart({
   // below the viewBox's natural aspect ratio we shrink the box to match it.
   const effectiveHeight = containerWidth > 0 ? Math.min(chartHeight, containerWidth * (VB_H / VB_W)) : chartHeight;
 
+  // Keep axis labels a readable ~13px on screen regardless of how far the viewBox is scaled down.
+  const viewScale = containerWidth > 0 ? Math.min(containerWidth / VB_W, effectiveHeight / VB_H) : 0.5;
+  const axisFontSize = Math.min(26, Math.max(12, 13 / viewScale));
+
   const palette = {
-    cardBg: isDark ? "#15161b" : "#ffffff",
+    cardBg: isDark ? "#0E0E0E" : "#ffffff",
     cardBorder: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
     textPrimary: isDark ? "#f4f5f7" : "#111317",
     textSub: isDark ? "rgba(255,255,255,0.55)" : "rgba(17,19,23,0.55)",
     gridLine: isDark ? "rgba(255,255,255,0.07)" : "rgba(17,19,23,0.08)",
-    axisText: isDark ? "rgba(255,255,255,0.45)" : "rgba(17,19,23,0.45)",
+    axisText: isDark ? "rgba(255,255,255,0.7)" : "rgba(17,19,23,0.7)",
     badgeBorder: isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.08)",
   };
 
@@ -273,22 +282,22 @@ export function BarChart({
           {yTicks.map((v) => (
             <g key={v}>
               <line x1={geo.plotLeft} x2={geo.plotRight} y1={geo.yAt(v)} y2={geo.yAt(v)} stroke={palette.gridLine} strokeWidth={1} />
-              <text x={geo.plotLeft - 14} y={geo.yAt(v) + 4} textAnchor="end" fontSize={12} fill={palette.axisText}>
+              <text x={geo.plotLeft - 14} y={geo.yAt(v) + axisFontSize * 0.35} textAnchor="end" fontSize={axisFontSize} fill={palette.axisText}>
                 {v}
               </text>
             </g>
           ))}
 
           {dataPoints.map((d, i) => (
-            <text key={i} x={geo.xAt(i)} y={geo.plotBottom + 26} textAnchor="middle" fontSize={11.5} fill={palette.axisText}>
+            <text key={i} x={geo.xAt(i)} y={geo.plotBottom + 12 + axisFontSize} textAnchor="middle" fontSize={axisFontSize} fill={palette.axisText}>
               {d.label}
             </text>
           ))}
 
           {referenceLine.visible && (
             <>
-              <line x1={geo.plotLeft} x2={geo.plotRight} y1={geo.yAt(referenceLine.value)} y2={geo.yAt(referenceLine.value)} stroke={referenceLine.color} strokeWidth={1.3} strokeDasharray="6 5" opacity={0.7} />
-              <text x={geo.plotLeft + 4} y={geo.yAt(referenceLine.value) - 8} fontSize={11.5} fill={referenceLine.color}>
+              <line x1={geo.plotLeft} x2={geo.plotRight} y1={geo.yAt(referenceLine.value)} y2={geo.yAt(referenceLine.value)} stroke={palette.gridLine} strokeWidth={1} />
+              <text x={geo.plotLeft + 4} y={geo.yAt(referenceLine.value) - 28} fontSize={axisFontSize} fill={referenceLine.color}>
                 {referenceLine.label}
               </text>
             </>
@@ -303,12 +312,12 @@ export function BarChart({
 
         {annotation.visible && (
           <div
-            className="absolute right-0 overflow-hidden text-ellipsis rounded-lg px-3 py-1.5 text-[12.5px] font-bold whitespace-nowrap"
+            className="absolute rounded-lg px-3 py-1.5 text-[12.5px] font-bold whitespace-nowrap"
             style={{
               left: `${(annotationX / VB_W) * 100}%`,
               top: `${(annotationY / VB_H) * 100}%`,
-              transform: "translate(8px, -100%)",
-              backgroundColor: isDark ? "rgba(10,10,14,0.92)" : "rgba(255,255,255,0.96)",
+              transform: "translate(calc(-100% + 14px), calc(-100% - 6px))",
+              backgroundColor: isDark ? "rgba(14,14,14,0.94)" : "rgba(255,255,255,0.96)",
               border: `1px solid ${annotation.color}55`,
               boxShadow: isDark ? "0 10px 28px rgba(0,0,0,0.5)" : "0 6px 20px rgba(0,0,0,0.12)",
               color: palette.textPrimary,
@@ -325,7 +334,7 @@ export function BarChart({
               left: `${(geo.xAt(clamp(hoverIndex, 0, nBar - 1)) / VB_W) * 100}%`,
               top: `${(hover.topY / VB_H) * 100}%`,
               transform: "translate(-30%, -100%)",
-              backgroundColor: isDark ? "rgba(10,10,14,0.94)" : "rgba(255,255,255,0.97)",
+              backgroundColor: isDark ? "rgba(14,14,14,0.96)" : "rgba(255,255,255,0.97)",
               border: `1px solid ${palette.badgeBorder}`,
               boxShadow: isDark ? "0 10px 28px rgba(0,0,0,0.5)" : "0 6px 20px rgba(0,0,0,0.12)",
             }}

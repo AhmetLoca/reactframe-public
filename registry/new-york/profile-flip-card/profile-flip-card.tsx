@@ -146,6 +146,18 @@ export function ProfileFlipCard({
         pointerEvents: flipped ? "auto" : "none",
       };
 
+  // schema.org Person markup (JSON-LD) for search engines, skipped while the placeholder profile shows.
+  const jsonLd = name === "Takahashi Aya"
+    ? null
+    : JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name,
+        ...(role ? { jobTitle: role } : {}),
+        ...(bio ? { description: bio } : {}),
+        ...(src ? { image: src } : {}),
+      }).replace(/</g, "\\u003c");
+
   return (
     <div
       ref={containerRef}
@@ -156,6 +168,7 @@ export function ProfileFlipCard({
       className={cn("flex h-full w-full items-stretch gap-3 outline-none", isMobile ? "flex-col" : "flex-row", className)}
       {...props}
     >
+      {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />}
       <div
         className="order-1 flex-1 cursor-pointer"
         style={{ perspective: is3D ? "1200px" : "none" }}

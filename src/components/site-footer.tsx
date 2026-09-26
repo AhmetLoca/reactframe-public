@@ -6,8 +6,11 @@ const columns = [
     heading: "Products",
     links: [
       { label: "Components", href: "/components" },
-      { label: "Templates", href: "/templates" },
-      { label: "Dashboards", href: "/dashboards" },
+      // HIDDEN-UNTIL-LAUNCH (templates, dashboards)
+      // { label: "Templates", href: "/templates" },
+      // { label: "Dashboards", href: "/dashboards" },
+      { label: "Kits", href: "/kits" },
+      { label: "Collections", href: "/collections" },
       { label: "Premium", href: "/premium" },
     ],
   },
@@ -15,6 +18,8 @@ const columns = [
     heading: "Resources",
     links: [
       { label: "Blog", href: "/blog" },
+      { label: "Build with AI", href: "/docs/ai" },
+      { label: "Compare", href: "/compare" },
       { label: "Support", href: "/support" },
       { label: "Changelog", href: "/changelog" },
     ],
@@ -42,7 +47,7 @@ export function SiteFooter() {
             <p className="mt-3 max-w-xs text-sm text-foreground/60">Free and premium React components for design engineers.</p>
             <div className="mt-4 flex gap-4">
               <a
-                href="https://github.com/AhmetLoca/reactframe"
+                href="https://github.com/AhmetLoca/reactframe-public"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub"

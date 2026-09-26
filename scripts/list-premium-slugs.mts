@@ -1,8 +1,9 @@
-// Prints premium (free: false) component slugs, one per line. Used by
+// Prints the slugs that must stay out of the public mirror — premium (free: false)
+// and hidden (unpublished) components — one per line. Used by
 // publish-public-mirror.sh to know which registry/new-york/<slug> folders
 // must never be copied into the public mirror repo.
-import { components } from "../src/lib/catalog-data.ts";
+import { allComponents } from "../src/lib/catalog-data.ts";
 
-for (const c of components) {
-  if (!c.free) console.log(c.slug);
+for (const c of allComponents) {
+  if (!c.free || c.hidden) console.log(c.slug);
 }

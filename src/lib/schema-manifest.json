@@ -1,0 +1,210 @@
+{
+ "testimonial-slider": [
+  "Review",
+  "Person",
+  "Organization"
+ ],
+ "team-drawer": [
+  "Person"
+ ],
+ "hover-scan-card": [
+  "Product",
+  "Offer"
+ ],
+ "eternal-glow-card": [
+  "Product",
+  "Offer"
+ ],
+ "testimonial-wall": [
+  "Review",
+  "Person",
+  "Organization"
+ ],
+ "testimonial-spotlight": [
+  "Review",
+  "Person",
+  "Organization"
+ ],
+ "testimonial-video-wall": [
+  "Review",
+  "Person",
+  "Organization"
+ ],
+ "team-list": [
+  "ItemList"
+ ],
+ "profile-flip-card": [
+  "Person"
+ ],
+ "team-carousel": [
+  "Person"
+ ],
+ "meet-the-team": [
+  "Person"
+ ],
+ "blog-card-horizontal": [
+  "BlogPosting",
+  "Person"
+ ],
+ "blog-card-vertical": [
+  "BlogPosting",
+  "Person"
+ ],
+ "breadcrumb": [
+  "BreadcrumbList"
+ ],
+ "product-list": [
+  "Product",
+  "Offer",
+  "ItemList"
+ ],
+ "product-detail": [
+  "AggregateRating",
+  "Product",
+  "Offer"
+ ],
+ "tech-stack-section": [
+  "ItemList"
+ ],
+ "case-study-section": [
+  "ItemList"
+ ],
+ "product-grid-section": [
+  "Product",
+  "Offer",
+  "ItemList"
+ ],
+ "process-spotlight": [
+  "ItemList"
+ ],
+ "ai-voice-03": [
+  "SoftwareApplication"
+ ],
+ "ai-voice-04": [
+  "SoftwareApplication"
+ ],
+ "ai-voice-05": [
+  "SoftwareApplication"
+ ],
+ "ai-image-loader-01": [
+  "ImageObject"
+ ],
+ "ai-image-loader-02": [
+  "ImageObject"
+ ],
+ "ai-dynamic-island-02": [
+  "SoftwareApplication"
+ ],
+ "ai-answer-01": [
+  "QAPage"
+ ],
+ "ai-answer-03": [
+  "QAPage"
+ ],
+ "ai-chat-prompt": [
+  "WebApplication"
+ ],
+ "fullpage-photos": [
+  "ImageGallery",
+  "ImageObject"
+ ],
+ "service-list-cursor-preview": [
+  "Service",
+  "ItemList"
+ ],
+ "process-steps-rail": [
+  "HowTo"
+ ],
+ "expanding-panel-gallery": [
+  "Person"
+ ],
+ "review-gallery": [
+  "Review",
+  "Person",
+  "Organization"
+ ],
+ "review-showcase": [
+  "Review",
+  "Person",
+  "Organization"
+ ],
+ "testimonial-bento": [
+  "Review",
+  "AggregateRating",
+  "Product",
+  "Person",
+  "Organization",
+  "ItemList"
+ ],
+ "business-hours": [
+  "LocalBusiness"
+ ],
+ "carousel-slider": [
+  "ImageObject",
+  "ItemList"
+ ],
+ "google-reviews": [
+  "Review",
+  "AggregateRating",
+  "Person",
+  "Organization"
+ ],
+ "airbnb-reviews": [
+  "Review",
+  "AggregateRating",
+  "Person",
+  "Organization"
+ ],
+ "app-store-reviews": [
+  "Review",
+  "AggregateRating",
+  "Person",
+  "Organization"
+ ],
+ "ebay-reviews": [
+  "Review",
+  "AggregateRating",
+  "Person",
+  "Organization"
+ ],
+ "etsy-reviews": [
+  "Review",
+  "AggregateRating",
+  "Person",
+  "Organization"
+ ],
+ "facebook-reviews": [
+  "Review",
+  "AggregateRating",
+  "Person",
+  "Organization"
+ ],
+ "team-cards-expand": [
+  "Person"
+ ],
+ "timeline-milestones": [
+  "ItemList"
+ ],
+ "blog-article-cards": [
+  "BlogPosting"
+ ],
+ "review-card-portrait": [
+  "Review",
+  "Person",
+  "Organization"
+ ],
+ "social-post-testimonial-wall": [
+  "Review",
+  "Person",
+  "Organization"
+ ],
+ "side-marquee-pricing-cta": [
+  "Product",
+  "Offer"
+ ],
+ "review-marquee-wall": [
+  "Review",
+  "Person",
+  "Organization"
+ ]
+}

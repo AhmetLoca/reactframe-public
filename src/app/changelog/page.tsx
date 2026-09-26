@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { changelog } from "@/lib/changelog-data";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/changelog" },
   title: "Changelog",
-  description: "What's new in ReactFrame — new components, features, and site updates.",
+  description: "What's new in ReactFrame, new components, features, and site updates.",
 };
 
 function formatDate(date: string) {
@@ -31,7 +32,7 @@ export default function ChangelogPage() {
               <ul className="mt-3 flex flex-col gap-2 text-sm text-foreground/60">
                 {entry.items.map((item, i) => (
                   <li key={i} className="flex gap-2">
-                    <span className="text-foreground/25">—</span>
+                    <span className="text-foreground/25">-</span>
                     <span>{item}</span>
                   </li>
                 ))}

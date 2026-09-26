@@ -35,11 +35,11 @@ export default function Image() {
         </div>
 
         <div style={{ display: "flex", marginTop: 36, fontSize: 68, fontWeight: 700, color: "#ffffff", lineHeight: 1.15, maxWidth: 920 }}>
-          UI library for Design Engineers
+          UI for the AI era.
         </div>
 
         <div style={{ display: "flex", marginTop: 28, fontSize: 28, color: "rgba(255,255,255,0.55)", maxWidth: 820 }}>
-          251+ free and premium React + Tailwind components. Copy, paste, own the code.
+          Animated React components you can copy, prompt, or install.
         </div>
       </div>
     ),

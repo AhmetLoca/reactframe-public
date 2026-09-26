@@ -49,6 +49,12 @@ export function BlogContent({ content }: { content: string }) {
 
             return <td className="border-b border-border px-4 py-3 align-top text-foreground/70">{children}</td>;
           },
+          pre: ({ children }) => (
+            <pre className="mt-6 overflow-x-auto rounded-xl border border-border bg-card px-4 py-3.5 font-mono text-[13px] leading-relaxed text-foreground/85">{children}</pre>
+          ),
+          // Fenced blocks carry a language-* class and are styled by <pre> above; everything else is inline code.
+          code: ({ className, children }) =>
+            className ? <code className={className}>{children}</code> : <code className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[0.86em]">{children}</code>,
           blockquote: ({ children }) => <blockquote className="mt-5 border-l-2 border-border pl-4 text-foreground/60">{children}</blockquote>,
         }}
       >

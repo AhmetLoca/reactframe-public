@@ -5,7 +5,6 @@ import { SiteChrome } from "@/components/site-chrome";
 import { Nav } from "@/components/nav";
 import { SiteFooter } from "@/components/site-footer";
 import { CookieConsent } from "@/components/cookie-consent";
-import { components } from "@/lib/catalog-data";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,14 +18,15 @@ const geistMono = Geist_Mono({
 });
 
 const siteUrl = "https://reactframe.com";
-const title = "ReactFrame — UI library for Design Engineers";
-const description = `${components.length}+ free and premium React components and effects built with React, TypeScript, Tailwind CSS and Motion. Ships in shadcn/ui's registry format — copy, paste, own the code.`;
+const title = "ReactFrame: Animated React Components for Tailwind & shadcn/ui";
+const description =
+  "Animated React components for Tailwind CSS and shadcn/ui. Copy the code, install with the shadcn CLI, or prompt your AI assistant. Free and premium.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: title,
-    template: "%s — ReactFrame",
+    template: "%s, ReactFrame",
   },
   description,
   keywords: [

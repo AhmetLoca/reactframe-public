@@ -371,7 +371,7 @@ export function TearableReveal({
   autoStartTear = false,
   autoStartDelay = 2,
   showHint = true,
-  hintText = "Drag — it tears easily",
+  hintText = "Drag, it tears easily",
   resetLabel = "Reset",
   showResetButton = true,
   onFullyTorn,

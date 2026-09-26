@@ -25,6 +25,12 @@ const INDUSTRIES = [
   "Video",
   "Restaurants & Food",
   "Travel & Tourism",
+  "Artificial Intelligence",
+  "Fintech",
+  "Cybersecurity",
+  "Health Tech",
+  "Agri Tech",
+  "Sports Tech",
 ];
 
 type TemplateItem = {
@@ -60,6 +66,36 @@ const TEMPLATES: TemplateItem[] = [
 const freeCount = TEMPLATES.filter((t) => t.free).length;
 const premiumCount = TEMPLATES.length - freeCount;
 
+// Placeholder names for the industries that don't have a real, built
+// template yet — same idea as DASHBOARD_GROUPS on the Dashboards page:
+// gives every Industry filter a non-zero, realistic-looking count to
+// browse into instead of a bare 0. Business and Health & Wellness already
+// have one real template each, so only 2 placeholders are listed there to
+// land on the same total of 3 as everywhere else.
+const INDUSTRY_PLACEHOLDERS: Record<string, string[]> = {
+  Business: ["Northgate Consulting", "Vantage Advisory Group"],
+  Industrial: ["Ironclad Manufacturing", "Forge & Foundry Works", "Meridian Industrial Group"],
+  "Health & Wellness": ["Solace Therapy Studio", "Pulse Recovery Clinic"],
+  Events: ["Lumen Event Co.", "Gather Occasions", "Marquee Productions"],
+  Education: ["Brightpath Academy", "Cortex Learning Lab", "Scholaris Online"],
+  Communities: ["The Common Room", "Kinfolk Collective", "Circle Membership Club"],
+  "Fashion & Style": ["Atelier Noir", "Thread & Form Studio", "Muse Fashion House"],
+  "Beauty & Hair": ["Lumière Beauty Bar", "Gloss & Grain Salon", "Bare Skin Studio"],
+  Design: ["Studio Formwork", "Blueprint Creative Co.", "Anchor Design House"],
+  Photography: ["Silver Halide Studio", "Frame & Focus Co.", "Lucid Lens Photography"],
+  Music: ["Wavelength Records", "Static & Sound Studio", "Echo Chamber Collective"],
+  "Creative Arts": ["Palette House Studio", "The Canvas Collective", "Open Studio Arts"],
+  Video: ["Reel House Productions", "Framewise Studio", "Motion Foundry"],
+  "Restaurants & Food": ["Ember & Oak Kitchen", "The Copper Table", "Harvest & Hearth"],
+  "Travel & Tourism": ["Wayfarer Travel Co.", "Northbound Expeditions", "Drift Travel Studio"],
+  "Artificial Intelligence": ["Cortex AI Labs", "Nexus Intelligence", "Synapse AI Studio"],
+  Fintech: ["Ledger Financial", "Vaultstream Payments", "Northstar Capital"],
+  Cybersecurity: ["Sentinel Security Labs", "Ironwall Defense", "Cipherguard Systems"],
+  "Health Tech": ["Vital Health Platform", "Carepoint Digital Clinic", "Pulse Diagnostics"],
+  "Agri Tech": ["Greenfield Precision Farms", "Harvest IQ", "Rootstock Agri Systems"],
+  "Sports Tech": ["Apex Performance Lab", "Trackside Analytics", "Momentum Sports Tech"],
+};
+
 export function TemplatesPage() {
   // Type and Industry are independent, combinable facets (pick a Type
   // AND an Industry at once) — unlike Price, which is a separate,
@@ -90,7 +126,10 @@ export function TemplatesPage() {
   };
 
   const typeItems: HookSidebarItem[] = TYPES.map((t) => ({ label: t, count: TEMPLATES.filter((tpl) => tpl.type === t).length }));
-  const industryItems: HookSidebarItem[] = INDUSTRIES.map((ind) => ({ label: ind, count: TEMPLATES.filter((tpl) => tpl.industry === ind).length }));
+  const industryItems: HookSidebarItem[] = INDUSTRIES.map((ind) => ({
+    label: ind,
+    count: TEMPLATES.filter((tpl) => tpl.industry === ind).length + (INDUSTRY_PLACEHOLDERS[ind]?.length ?? 0),
+  }));
 
   const typeLabel = activeType !== null ? TYPES[activeType] : null;
   const industryLabel = activeIndustry !== null ? INDUSTRIES[activeIndustry] : null;
@@ -113,11 +152,21 @@ export function TemplatesPage() {
     });
   }, [typeLabel, industryLabel, price, q]);
 
+  // Placeholder names only make sense while browsing a single Industry —
+  // they aren't real templates, so a Type filter or a price bucket
+  // (neither of which they have a real answer for) hides them rather than
+  // guessing.
+  const placeholderNames = React.useMemo(() => {
+    if (!industryLabel || typeLabel || price !== "all") return [];
+    const names = INDUSTRY_PLACEHOLDERS[industryLabel] ?? [];
+    return q ? names.filter((n) => n.toLowerCase().includes(q) || industryLabel.toLowerCase().includes(q)) : names;
+  }, [industryLabel, typeLabel, price, q]);
+
   return (
     <div className="mx-auto max-w-6xl px-6 py-16">
       <h1 className="text-3xl font-semibold tracking-tight">Templates</h1>
       <p className="mt-3 max-w-xl text-foreground/60">
-        Complete, themed landing page builds — built end to end from ReactFrame components.
+        Complete, themed landing page builds, built end to end from ReactFrame components.
       </p>
 
       <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-[220px_1fr]">
@@ -133,10 +182,13 @@ export function TemplatesPage() {
         <main className="min-w-0">
           <h2 className="text-xl font-semibold tracking-tight">{heading}</h2>
 
-          {results.length > 0 ? (
+          {results.length > 0 || placeholderNames.length > 0 ? (
             <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
               {results.map((template) => (
                 <TemplateCard key={template.slug} template={template} />
+              ))}
+              {placeholderNames.map((name) => (
+                <PlaceholderTemplateCard key={name} name={name} industry={industryLabel as string} />
               ))}
             </div>
           ) : (
@@ -145,7 +197,7 @@ export function TemplatesPage() {
                 Coming Soon
               </span>
               <p className="mt-3 max-w-md text-sm text-foreground/50">
-                We&apos;re still building this section — check back soon.
+                We&apos;re still building this section, check back soon.
               </p>
             </>
           )}
@@ -186,5 +238,22 @@ function TemplateCard({ template }: { template: TemplateItem }) {
         </div>
       </div>
     </Link>
+  );
+}
+
+// Same footprint as a real TemplateCard (so the grid doesn't jump when a
+// real build eventually replaces one) but with no thumbnail and no link —
+// there's nothing to preview yet.
+function PlaceholderTemplateCard({ name, industry }: { name: string; industry: string }) {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-dashed border-border bg-card/40">
+      <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-background/60">
+        <span className="shrink-0 rounded-full border border-border px-2.5 py-1 text-[10px] font-medium tracking-wide text-foreground/35 uppercase">Soon</span>
+      </div>
+      <div className="px-4 py-3.5">
+        <div className="font-mono text-sm font-semibold text-foreground/70">{name}</div>
+        <div className="mt-1 text-xs text-foreground/40">{industry}</div>
+      </div>
+    </div>
   );
 }

@@ -2,32 +2,29 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { hasThumbnailImage, hasThumbnailVideo } from "@/lib/thumbnails";
 
-// Prefer a static thumbnail (public/thumbnails/<slug>.webp) over mounting the
-// live registry preview — grid cards otherwise run canvas loops, WebGL
-// contexts, and rAF-driven motion for every visible card at once, which pegs
-// the CPU as you scroll a catalog of 150+ components. Falls back to the real
-// live preview automatically when no thumbnail file exists yet for a slug,
-// so thumbnails can be rolled out incrementally without code changes.
+// Every card shows a static thumbnail (public/thumbnails/<slug>.webp) rather
+// than mounting the live registry preview — grid cards otherwise run canvas
+// loops, WebGL contexts, and rAF-driven motion for every visible card at
+// once, which pegs the CPU as you scroll a catalog of 150+ components, and
+// pulls the entire registry (4MB+ of source across every component) into the
+// bundle of whatever page renders the grid. Slugs without a thumbnail file
+// yet show a plain placeholder icon instead — thumbnails are rolled out
+// incrementally, no code change needed here as they land.
+//
+// hasThumbnailImage/hasThumbnailVideo come from a build-time manifest (see
+// scripts/generate-thumbnail-manifest.mts) rather than just trying the <img>/
+// <video> and catching the error — a catalog page mounts 100+ of these at
+// once, and firing a doomed request per missing file for each of them was
+// what made /components' load event take ~2.5s instead of a few hundred ms.
 export function ComponentCardMedia({
   slug,
-  render,
-  lazy = false,
-  previewScaleClassName,
   previewWrapperClassName,
   hovering = false,
 }: {
   slug: string;
-  render: () => React.ReactNode;
-  lazy?: boolean;
-  /**
-   * Applied only around the live-preview fallback, not the thumbnail image —
-   * live registry previews render at their natural (often ~480px+) width and
-   * need a `w-[…] scale-[…]` wrapper to shrink into a card. The thumbnail
-   * itself always fills the panel edge-to-edge via object-cover instead.
-   */
-  previewScaleClassName?: string;
-  /** Padding/centering classes for the live-preview fallback's outer box. */
+  /** Padding/centering classes for the no-thumbnail-yet placeholder's outer box. */
   previewWrapperClassName?: string;
   /**
    * Controlled from the parent card, not tracked internally — the card's
@@ -37,29 +34,17 @@ export function ComponentCardMedia({
    */
   hovering?: boolean;
 }) {
+  const knownImage = hasThumbnailImage(slug);
+  const knownVideo = hasThumbnailVideo(slug);
+
   const [thumbnailFailed, setThumbnailFailed] = React.useState(false);
   const [videoFailed, setVideoFailed] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
   const imgRef = React.useRef<HTMLImageElement>(null);
   const videoRef = React.useRef<HTMLVideoElement>(null);
-  const [visible, setVisible] = React.useState(!lazy);
 
   React.useEffect(() => {
-    if (!lazy || visible) return;
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setVisible(true);
-      },
-      { rootMargin: "200px 0px", threshold: 0.01 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [lazy, visible]);
-
-  React.useEffect(() => {
-    if (thumbnailFailed) return;
+    if (!knownImage || thumbnailFailed) return;
     const img = imgRef.current;
     if (!img) return;
     // Bound imperatively (not via the JSX onError prop) — React's synthetic
@@ -71,7 +56,7 @@ export function ComponentCardMedia({
     const handleError = () => setThumbnailFailed(true);
     img.addEventListener("error", handleError);
     return () => img.removeEventListener("error", handleError);
-  }, [thumbnailFailed, slug]);
+  }, [knownImage, thumbnailFailed, slug]);
 
   // A hover-preview clip (public/thumbnails/<slug>.mp4) is optional, same
   // incremental-rollout deal as the static thumbnail: try it, and if it
@@ -79,26 +64,26 @@ export function ComponentCardMedia({
   // needed elsewhere. preload="metadata" keeps the fallback cheap — the
   // clip's body is never fetched unless this specific card is hovered.
   React.useEffect(() => {
-    if (videoFailed) return;
+    if (!knownVideo || videoFailed) return;
     const video = videoRef.current;
     if (!video) return;
     const handleError = () => setVideoFailed(true);
     video.addEventListener("error", handleError);
     return () => video.removeEventListener("error", handleError);
-  }, [videoFailed, slug]);
+  }, [knownVideo, videoFailed, slug]);
 
   React.useEffect(() => {
     const video = videoRef.current;
-    if (!video || videoFailed) return;
+    if (!video || !knownVideo || videoFailed) return;
     if (hovering) {
       video.currentTime = 0;
       video.play().catch(() => {});
     } else {
       video.pause();
     }
-  }, [hovering, videoFailed]);
+  }, [hovering, knownVideo, videoFailed]);
 
-  if (!thumbnailFailed) {
+  if (knownImage && !thumbnailFailed) {
     return (
       <div ref={ref} className="absolute inset-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -106,9 +91,11 @@ export function ComponentCardMedia({
           ref={imgRef}
           src={`/thumbnails/${slug}.webp`}
           alt=""
+          loading="lazy"
+          decoding="async"
           className="h-full w-full object-cover"
         />
-        {!videoFailed && (
+        {knownVideo && !videoFailed && (
           <video
             ref={videoRef}
             muted
@@ -128,26 +115,21 @@ export function ComponentCardMedia({
     );
   }
 
+  // No thumbnail yet for this slug. Previously this fell back to mounting
+  // the real live registry preview (canvas loops, WebGL, rAF motion) right
+  // in the grid card, which pegs the CPU once enough cards are on screen at
+  // once. Thumbnails are supplied for every slug as they're ready, so this
+  // is just an inert placeholder in the meantime.
   return (
     <div
       ref={ref}
-      className={cn("pointer-events-none flex h-full w-full items-center justify-center overflow-hidden", previewWrapperClassName)}
-      // Some live previews (video-scroll-story, container-scroll-ipad,
-      // scroll-card-stack, discord-chat-widget, etc.) have their own
-      // internal overflow-y-auto scroll container for a scroll-jacked or
-      // chat-style demo. `pointer-events-none` is supposed to make this
-      // whole subtree untargetable, but wheel/trackpad events aren't
-      // reliably blocked by pointer-events across all browsers — when they
-      // aren't, the nested container hijacks the scroll gesture and the
-      // page appears to "freeze" mid-scroll. Intercept wheel in the capture
-      // phase (before it can reach any nested scrollable child) and forward
-      // it to the window directly, so this preview can never eat page scroll.
-      onWheelCapture={(e) => {
-        e.preventDefault();
-        window.scrollBy({ top: e.deltaY, left: e.deltaX });
-      }}
+      className={cn("pointer-events-none flex h-full w-full items-center justify-center overflow-hidden bg-[#080808]", previewWrapperClassName)}
     >
-      <div className={previewScaleClassName}>{visible ? render() : null}</div>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/15" aria-hidden="true">
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <circle cx="8.5" cy="8.5" r="1.5" />
+        <path d="m21 15-5-5L5 21" />
+      </svg>
     </div>
   );
 }

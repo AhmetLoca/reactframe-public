@@ -54,7 +54,6 @@ export interface GlassNavigationProps extends Omit<React.ComponentPropsWithoutRe
   darkTextColor?: string;
   badgeBackground?: string;
   badgeTextColor?: string;
-  glassBlur?: number;
   pillBorderRadius?: number;
   panelBorderRadius?: number;
   navFontSize?: number;
@@ -103,15 +102,14 @@ export function GlassNavigation({
   showTagline = true,
   socialLinks = DEFAULT_SOCIAL_LINKS,
   colorScheme = "auto",
-  glassBackground = "rgba(255,255,255,0.68)",
-  glassBorderColor = "rgba(255,255,255,0.6)",
+  glassBackground = "#ffffff",
+  glassBorderColor = "rgba(0,0,0,0.08)",
   textColor = "#111111",
-  darkGlassBackground = "rgba(14,14,20,0.85)",
+  darkGlassBackground = "#0a0a0f",
   darkGlassBorderColor = "rgba(255,255,255,0.08)",
   darkTextColor = "#f2f2f2",
   badgeBackground = "#6366f1",
   badgeTextColor = "#ffffff",
-  glassBlur = 20,
   pillBorderRadius = 20,
   panelBorderRadius = 28,
   navFontSize = 60,
@@ -187,8 +185,6 @@ export function GlassNavigation({
 
   const glassStyle: React.CSSProperties = {
     background: bg,
-    backdropFilter: `blur(${glassBlur}px) saturate(190%)`,
-    WebkitBackdropFilter: `blur(${glassBlur}px) saturate(190%)`,
     border: `1px solid ${border}`,
   };
 

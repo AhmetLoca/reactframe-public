@@ -1,12 +1,13 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { components } from "@/lib/catalog-data";
-import { ComponentsCatalog } from "@/components/components-catalog";
+import { ComponentsCatalog, ComponentsCatalogFallback } from "@/components/components-catalog";
 
 export const metadata: Metadata = {
-  title: "Components",
+  alternates: { canonical: "/components" },
+  title: "React Components for Tailwind & shadcn/ui",
   description:
-    "Browse the full ReactFrame component catalog — free, open-source, React + Tailwind + shadcn/ui compatible.",
+    "Browse the full ReactFrame component catalog, free, open-source, React + Tailwind + shadcn/ui compatible.",
 };
 
 export default function ComponentsPage() {
@@ -17,10 +18,10 @@ export default function ComponentsPage() {
       <h1 className="text-3xl font-semibold tracking-tight">Components</h1>
       <p className="mt-3 max-w-xl text-foreground/60">
         {catalogComponents.length} components and counting. Every component ships as
-        plain React + Tailwind CSS — no runtime dependency on ReactFrame itself.
+        plain React + Tailwind CSS, no runtime dependency on ReactFrame itself.
       </p>
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<ComponentsCatalogFallback components={catalogComponents} />}>
         <ComponentsCatalog components={catalogComponents} />
       </Suspense>
     </div>

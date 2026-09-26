@@ -98,13 +98,23 @@ const DEFAULT_COLUMNS: DataTableColumn[] = [
 ];
 
 const DEFAULT_BADGE_COLORS: DataTableBadgeRule[] = [
-  { value: "Active", background: "rgba(34,197,94,0.12)", text: "#22c55e", dot: true },
-  { value: "Inactive", background: "rgba(161,161,170,0.16)", text: "#a1a1aa", dot: true },
-  { value: "Paused", background: "rgba(245,158,11,0.12)", text: "#f59e0b", dot: true },
-  { value: "Stopped", background: "rgba(239,68,68,0.12)", text: "#ef4444", dot: true },
-  { value: "Admin", background: "rgba(99,102,241,0.14)", text: "#818cf8", dot: false },
-  { value: "Moderator", background: "rgba(168,85,247,0.14)", text: "#c084fc", dot: false },
-  { value: "User", background: "rgba(161,161,170,0.16)", text: "#a1a1aa", dot: false },
+  { value: "Active", background: "rgba(135,255,227,0.12)", text: "#87FFE3", dot: true },
+  { value: "Inactive", background: "rgba(255,255,255,0.08)", text: "rgba(255,255,255,0.6)", dot: true },
+  { value: "Paused", background: "rgba(242,168,65,0.12)", text: "#F2A841", dot: true },
+  { value: "Stopped", background: "rgba(255,122,107,0.12)", text: "#FF7A6B", dot: true },
+  { value: "Admin", background: "rgba(143,184,255,0.14)", text: "#8FB8FF", dot: false },
+  { value: "Moderator", background: "rgba(184,166,255,0.14)", text: "#B8A6FF", dot: false },
+  { value: "User", background: "rgba(255,255,255,0.08)", text: "rgba(255,255,255,0.6)", dot: false },
+];
+
+const LIGHT_BADGE_COLORS: DataTableBadgeRule[] = [
+  { value: "Active", background: "rgba(14,159,128,0.12)", text: "#0E9F80", dot: true },
+  { value: "Inactive", background: "rgba(17,19,23,0.06)", text: "rgba(17,19,23,0.6)", dot: true },
+  { value: "Paused", background: "rgba(217,130,43,0.12)", text: "#D9822B", dot: true },
+  { value: "Stopped", background: "rgba(229,72,77,0.12)", text: "#E5484D", dot: true },
+  { value: "Admin", background: "rgba(59,111,216,0.12)", text: "#3B6FD8", dot: false },
+  { value: "Moderator", background: "rgba(124,92,224,0.12)", text: "#7C5CE0", dot: false },
+  { value: "User", background: "rgba(17,19,23,0.06)", text: "rgba(17,19,23,0.6)", dot: false },
 ];
 
 const DEFAULT_ACTION_BUTTONS: DataTableActionButton[] = [
@@ -112,29 +122,38 @@ const DEFAULT_ACTION_BUTTONS: DataTableActionButton[] = [
   { icon: "refresh", label: "Restart" },
 ];
 
-const AVATAR_COLORS = ["#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981", "#06b6d4", "#3b82f6", "#ef4444"];
+const AVATAR_COLORS = ["#87FFE3", "#F2A841", "#FF7A6B", "#8FB8FF", "#B8A6FF", "#F5F4F1", "#F59EC5", "#C4F26B"];
 
 const DARK_PALETTE = {
-  backgroundColor: "#18181b",
-  borderColor: "#27272a",
-  headerTextColor: "#a1a1aa",
-  textColor: "#e4e4e7",
-  mutedTextColor: "#71717a",
+  backgroundColor: "#0E0E0E",
+  borderColor: "rgba(255,255,255,0.08)",
+  headerTextColor: "rgba(255,255,255,0.6)",
+  textColor: "#f4f5f7",
+  mutedTextColor: "rgba(255,255,255,0.45)",
   hoverColor: "rgba(255,255,255,0.035)",
-  accentColor: "#6366f1",
-  selectedRowColor: "rgba(99,102,241,0.08)",
+  accentColor: "#87FFE3",
+  selectedRowColor: "rgba(135,255,227,0.07)",
 };
 
 const LIGHT_PALETTE = {
   backgroundColor: "#ffffff",
-  borderColor: "#e4e4e7",
-  headerTextColor: "#71717a",
-  textColor: "#18181b",
-  mutedTextColor: "#a1a1aa",
+  borderColor: "rgba(0,0,0,0.06)",
+  headerTextColor: "rgba(17,19,23,0.55)",
+  textColor: "#111317",
+  mutedTextColor: "rgba(17,19,23,0.45)",
   hoverColor: "rgba(0,0,0,0.035)",
-  accentColor: "#6366f1",
-  selectedRowColor: "rgba(99,102,241,0.06)",
+  accentColor: "#0E9F80",
+  selectedRowColor: "rgba(14,159,128,0.07)",
 };
+
+function readableTextOn(hex: string): string {
+  const h = hex.replace("#", "");
+  const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  const r = parseInt(full.slice(0, 2), 16);
+  const g = parseInt(full.slice(2, 4), 16);
+  const b = parseInt(full.slice(4, 6), 16);
+  return 0.299 * r + 0.587 * g + 0.114 * b > 150 ? "#0A0A0A" : "#FFFFFF";
+}
 
 function getInitials(value: string): string {
   const parts = value.trim().split(/\s+/).filter(Boolean);
@@ -153,7 +172,7 @@ function hashString(value: string): number {
 }
 
 function formatCellValue(value: unknown, type: DataTableColumnType): string {
-  if (value === null || value === undefined || value === "") return "—";
+  if (value === null || value === undefined || value === "") return "-";
   if (type === "currency") {
     const num = typeof value === "number" ? value : parseFloat(String(value));
     if (isNaN(num)) return String(value);
@@ -340,8 +359,8 @@ function TableCheckbox({
       className="box-border flex h-4 w-4 shrink-0 cursor-pointer items-center justify-center rounded"
       style={{ border: `1.5px solid ${active ? accentColor : borderColor}`, background: active ? accentColor : "transparent", transition: "background 0.15s ease, border-color 0.15s ease" }}
     >
-      {checked && <CheckIcon size={10} color="#fff" />}
-      {!checked && indeterminate && <MinusIcon size={10} color="#fff" />}
+      {checked && <CheckIcon size={10} color={readableTextOn(accentColor)} />}
+      {!checked && indeterminate && <MinusIcon size={10} color={readableTextOn(accentColor)} />}
     </div>
   );
 }
@@ -407,7 +426,7 @@ function FilterPopover({
 export function DataTable({
   data = DEFAULT_DATA,
   columns = DEFAULT_COLUMNS,
-  badgeColors = DEFAULT_BADGE_COLORS,
+  badgeColors,
   actionButtons = DEFAULT_ACTION_BUTTONS,
 
   showTitle = true,
@@ -427,18 +446,18 @@ export function DataTable({
   fontSize = 13,
   cellPaddingX = 16,
   cellPaddingY = 12,
-  cornerRadius = 12,
+  cornerRadius = 20,
 
   theme = "dark",
 
-  backgroundColor: backgroundColorProp = "#18181b",
-  borderColor: borderColorProp = "#27272a",
-  headerTextColor: headerTextColorProp = "#a1a1aa",
-  textColor: textColorProp = "#e4e4e7",
-  mutedTextColor: mutedTextColorProp = "#71717a",
+  backgroundColor: backgroundColorProp = "#0E0E0E",
+  borderColor: borderColorProp = "rgba(255,255,255,0.08)",
+  headerTextColor: headerTextColorProp = "rgba(255,255,255,0.6)",
+  textColor: textColorProp = "#f4f5f7",
+  mutedTextColor: mutedTextColorProp = "rgba(255,255,255,0.45)",
   hoverColor: hoverColorProp = "rgba(255,255,255,0.035)",
-  accentColor: accentColorProp = "#6366f1",
-  selectedRowColor: selectedRowColorProp = "rgba(99,102,241,0.08)",
+  accentColor: accentColorProp = "#87FFE3",
+  selectedRowColor: selectedRowColorProp = "rgba(135,255,227,0.07)",
   className,
 }: DataTableProps) {
   const palette =
@@ -497,9 +516,9 @@ export function DataTable({
 
   const badgeMap = React.useMemo(() => {
     const map = new Map<string, DataTableBadgeRule>();
-    badgeColors.forEach((b) => map.set(b.value.toLowerCase(), b));
+    (badgeColors ?? (theme === "light" ? LIGHT_BADGE_COLORS : DEFAULT_BADGE_COLORS)).forEach((b) => map.set(b.value.toLowerCase(), b));
     return map;
-  }, [badgeColors]);
+  }, [badgeColors, theme]);
 
   const statusTabOptions = React.useMemo(() => {
     if (!showStatusTabs) return [];
@@ -642,7 +661,7 @@ export function DataTable({
         return (
           <span className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-[3px] text-[0.92em] font-semibold whitespace-nowrap" style={{ background: bg, color: fg }}>
             {rule?.dot && <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: fg }} />}
-            {str || "—"}
+            {str || "-"}
           </span>
         );
       }
@@ -652,10 +671,10 @@ export function DataTable({
         const idx = hashString(str) % AVATAR_COLORS.length;
         return (
           <div className="flex items-center gap-2.5">
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-white" style={{ background: AVATAR_COLORS[idx] }}>
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold" style={{ background: AVATAR_COLORS[idx], color: "#0A0A0A" }}>
               {getInitials(str)}
             </div>
-            <span>{str || "—"}</span>
+            <span>{str || "-"}</span>
           </div>
         );
       }
@@ -684,7 +703,7 @@ export function DataTable({
         return <span>{formatCellValue(value, col.type)}</span>;
 
       default:
-        return <span>{value === null || value === undefined || value === "" ? "—" : String(value)}</span>;
+        return <span>{value === null || value === undefined || value === "" ? "-" : String(value)}</span>;
     }
   }
 
@@ -738,7 +757,7 @@ export function DataTable({
                       style={{
                         fontSize: Math.max(11, fontSize - 1),
                         background: active ? accentColor : "transparent",
-                        color: active ? "#fff" : mutedTextColor,
+                        color: active ? readableTextOn(accentColor) : mutedTextColor,
                         border: `1px solid ${active ? accentColor : borderColor}`,
                         // Explicit "ease" (not Tailwind's transition-all default
                         // of cubic-bezier(0.4,0,0.2,1)) to match the source exactly.

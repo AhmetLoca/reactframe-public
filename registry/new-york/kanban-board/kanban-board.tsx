@@ -104,7 +104,7 @@ const DEFAULT_CARDS: KanbanCard[] = [
   { id: "c3", title: "Draft pricing page copy", tag: "Content", tagColor: "#6f7fbf", priority: "medium", columnId: "backlog" },
   { id: "c4", title: "Build settings panel", tag: "Engineering", tagColor: "#5fa874", priority: "urgent", columnId: "progress" },
   { id: "c5", title: "Migrate auth to new provider", tag: "Engineering", tagColor: "#5fa874", priority: "high", columnId: "progress" },
-  { id: "c6", title: "Usability test — checkout", tag: "Research", tagColor: "#bf6f8f", priority: "medium", columnId: "review" },
+  { id: "c6", title: "Usability test, checkout", tag: "Research", tagColor: "#bf6f8f", priority: "medium", columnId: "review" },
   { id: "c7", title: "Q3 roadmap deck", tag: "Strategy", tagColor: "#9a9a96", priority: "low", columnId: "review" },
   { id: "c8", title: "Launch waitlist landing page", tag: "Marketing", tagColor: "#c9603f", priority: "medium", columnId: "done" },
   { id: "c9", title: "Set up analytics events", tag: "Engineering", tagColor: "#5fa874", priority: "high", columnId: "done" },

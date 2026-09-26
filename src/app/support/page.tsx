@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { SupportForm } from "@/components/support-form";
 import { components } from "@/lib/catalog-data";
 
-const SUPPORT_EMAIL = "locaahmet@gmail.com";
+const SUPPORT_EMAIL = "support@reactframe.com";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/support" },
   title: "Support",
   description: "Stuck on a ReactFrame component? Email me directly and get a reply as soon as possible.",
 };
@@ -19,7 +20,7 @@ export default function SupportPage() {
       <h1 className="mx-auto mt-6 max-w-2xl text-4xl font-semibold tracking-tight md:text-6xl">Always here when you need it</h1>
 
       <p className="mx-auto mt-6 max-w-lg text-[17px] leading-relaxed text-foreground/60">
-        Stuck on a component, found a bug, or just have a question? Email me directly — no ticket system, no bot, just me reading it and getting back
+        Stuck on a component, found a bug, or just have a question? Email me directly, no ticket system, no bot, just me reading it and getting back
         to you as soon as possible.
       </p>
 

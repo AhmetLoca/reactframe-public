@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { LayoutPreview } from "@/components/layout-preview";
 
 export const metadata: Metadata = {
-  title: "Bloom Wellness Studio — Template Preview",
+  title: "Bloom Wellness Studio, Template Preview",
   description: "A Health & Wellness landing page template, composed entirely from ReactFrame components.",
 };
 

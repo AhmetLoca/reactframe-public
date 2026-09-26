@@ -32,6 +32,8 @@ export interface TestimonialPillsProps extends Omit<React.ComponentPropsWithoutR
   scrollReveal?: boolean;
   depthEffect?: boolean;
   depthIntensity?: number;
+  /** Blur the rows farther from the centre. Only applies while depthEffect is on. */
+  depthBlur?: boolean;
   hoverEnabled?: boolean;
   hoverScale?: number;
   /** "palette" cycles through `palette`; "solid" uses a single pillBg/pillTextColor for every pill. */
@@ -247,6 +249,7 @@ export function TestimonialPills({
   scrollReveal = true,
   depthEffect = true,
   depthIntensity = 0.6,
+  depthBlur = true,
   hoverEnabled = true,
   hoverScale = 1.08,
   colorMode = "palette",
@@ -294,6 +297,8 @@ export function TestimonialPills({
   const springX = useSpring(mouseX, { damping: 30, stiffness: 200, mass: 0.5 });
   const springY = useSpring(mouseY, { damping: 30, stiffness: 200, mass: 0.5 });
   const spotlightBg = useMotionTemplate`radial-gradient(${spotlightSize}px circle at ${springX}px ${springY}px, ${spotlightColor}, transparent 70%)`;
+  // The glow only shows while the pointer is over the rows, so it never sits at the corner on a dark background.
+  const [pointerInside, setPointerInside] = React.useState(false);
 
   const cfg: PillStyleConfig = {
     colorMode,
@@ -337,6 +342,8 @@ export function TestimonialPills({
       `}</style>
       <div
         ref={containerRef}
+        onMouseEnter={spotlight ? () => setPointerInside(true) : undefined}
+        onMouseLeave={spotlight ? () => setPointerInside(false) : undefined}
         onMouseMove={
           spotlight
             ? (e) => {
@@ -355,7 +362,7 @@ export function TestimonialPills({
           const depthFactor = depthEffect && centerIndex > 0 ? Math.abs(i - centerIndex) / centerIndex : 0;
           const rowScale = 1 - depthFactor * 0.12 * depthIntensity;
           const rowOpacity = 1 - depthFactor * 0.35 * depthIntensity;
-          const rowBlur = depthFactor * 2.5 * depthIntensity;
+          const rowBlur = depthBlur ? depthFactor * 2.5 * depthIntensity : 0;
           const revealX = rowDirection === "left" ? 60 : -60;
 
           return (
@@ -371,7 +378,7 @@ export function TestimonialPills({
           );
         })}
 
-        {spotlight && <motion.div className="pointer-events-none absolute inset-0 z-50" style={{ background: spotlightBg }} />}
+        {spotlight && <motion.div className="pointer-events-none absolute inset-0 z-50" style={{ background: spotlightBg, opacity: pointerInside ? 1 : 0, transition: "opacity 0.3s ease" }} />}
       </div>
     </div>
   );

@@ -1,12 +1,12 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { SmoothScroll } from "@/components/smooth-scroll";
+import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 
 // The /preview/[slug] route is an isolated iframe target used by the
 // component detail page's device switcher — it needs its own real
 // viewport (for sm:/md: breakpoints to respond to the iframe's actual
-// width) and none of the site chrome or scroll-jacking.
+// width) and none of the site chrome.
 //
 // /templates/preview/[slug]/view and /pages/preview/[slug]/view are the
 // same idea one level up: the isolated iframe target for a full template
@@ -23,6 +23,12 @@ export function isChromelessPath(pathname: string | null): boolean {
   return false;
 }
 
+// The whole site uses plain native scroll — no smooth-scroll library.
+// (It used to run everything through Lenis; that broke position: sticky
+// tracking for scroll-jacked components rendered live inline, and fought
+// with wheel-forwarding from catalog-card previews and preview iframes,
+// causing scroll to visibly stall partway down the page. Native scroll
+// has none of those failure modes.)
 export function SiteChrome({ nav, footer, children }: { nav: React.ReactNode; footer: React.ReactNode; children: React.ReactNode }) {
   const pathname = usePathname();
   const isPreview = isChromelessPath(pathname);
@@ -30,10 +36,11 @@ export function SiteChrome({ nav, footer, children }: { nav: React.ReactNode; fo
   if (isPreview) return <>{children}</>;
 
   return (
-    <SmoothScroll>
+    <>
       {nav}
       <main className="flex-1">{children}</main>
       {footer}
-    </SmoothScroll>
+      <ScrollToTopButton />
+    </>
   );
 }

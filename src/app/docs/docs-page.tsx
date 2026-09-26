@@ -11,10 +11,10 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
       <>
         <p>
           ReactFrame is a library of React components, blocks, pages, and templates, built with Tailwind CSS. There&apos;s no package to install and no
-          runtime dependency on ReactFrame itself — every piece ships as plain React source you copy into your own project and own from there.
+          runtime dependency on ReactFrame itself, every piece ships as plain React source you copy into your own project and own from there.
         </p>
         <p>
-          Free components are ready to use immediately. Premium ones require unlocking access to the source first — see{" "}
+          Free components are ready to use immediately. Premium ones require unlocking access to the source first, see{" "}
           <Link href="/license" className="underline decoration-foreground/20 underline-offset-4 hover:decoration-foreground">
             License
           </Link>{" "}
@@ -29,10 +29,28 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
       <>
         <p>
           Open any component&apos;s page and switch to the Code tab. You&apos;ll get the full source in TypeScript + Tailwind by default, with JavaScript
-          and plain-CSS variants available from the same panel — pick whichever matches your project, then copy and paste it in.
+          and plain-CSS variants available from the same panel, pick whichever matches your project, then copy and paste it in.
         </p>
         <p>Each component page also lists an Install command and a Usage example showing how it&apos;s typically wired up with props.</p>
-        <p>The only requirement is a React project with Tailwind CSS configured — no ReactFrame-specific setup, CLI, or config file needed.</p>
+        <p>The only requirement is a React project with Tailwind CSS configured, no ReactFrame-specific setup, CLI, or config file needed.</p>
+      </>
+    ),
+  },
+  {
+    title: "Build with AI",
+    body: (
+      <>
+        <p>
+          Ask Claude, ChatGPT, Cursor or any AI coding assistant to build a site from ReactFrame components. It installs the free ones, marks where
+          premium ones go, and ends with a price for them.
+        </p>
+        <p>
+          Setup takes one command, see{" "}
+          <Link href="/docs/ai" className="underline decoration-foreground/20 underline-offset-4 hover:decoration-foreground">
+            Build a site with your AI
+          </Link>
+          .
+        </p>
       </>
     ),
   },
@@ -45,7 +63,7 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
           <Link href="/components" className="underline decoration-foreground/20 underline-offset-4 hover:decoration-foreground">
             Components
           </Link>{" "}
-          catalog is the core of ReactFrame — individual, self-contained pieces (widgets, cards, charts, games, and more) organized by category, with a
+          catalog is the core of ReactFrame, individual, self-contained pieces (widgets, cards, charts, games, and more) organized by category, with a
           live interactive preview and a Free/Premium filter in the sidebar.
         </p>
         <p>Every component page shows the same three things: a live Preview across desktop/tablet/mobile widths, the Code tab, and a Usage example.</p>
@@ -57,7 +75,7 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
     body: (
       <>
         <p>
-          Blocks are larger, ready-to-compose sections — marketing sections, dashboard/application layouts, eCommerce, authentication, data tables, and
+          Blocks are larger, ready-to-compose sections, marketing sections, dashboard/application layouts, eCommerce, authentication, data tables, and
           AI/chat blocks. They&apos;re built from the same components but assembled into a section you&apos;d drop straight into a page.
         </p>
         <p>Browse them from the Blocks menu in the header, filtered by category, or jump straight to the free ones.</p>
@@ -68,11 +86,12 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
     title: "Pages",
     body: (
       <>
-        <p>Pages are full, multi-section layouts — a complete landing page or app screen built by combining several blocks and components together.</p>
+        <p>Pages are full, multi-section layouts, a complete landing page or app screen built by combining several blocks and components together.</p>
         <p>Use a Page as a starting point for a whole route in your project, then swap out individual blocks as needed.</p>
       </>
     ),
   },
+  /* HIDDEN-UNTIL-LAUNCH (templates): re-enable together with the /templates section
   {
     title: "Templates",
     body: (
@@ -84,12 +103,13 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
       </>
     ),
   },
+  */
   {
     title: "Elements",
     body: (
       <>
         <p>
-          Elements are the smallest building blocks — buttons, badges, inputs, and other primitives components and blocks are built from. Start here if
+          Elements are the smallest building blocks, buttons, badges, inputs, and other primitives components and blocks are built from. Start here if
           you&apos;re assembling something from scratch rather than starting from a pre-built component.
         </p>
       </>
@@ -106,7 +126,7 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
           <li>TypeScript + plain CSS</li>
           <li>JavaScript + plain CSS</li>
         </ul>
-        <p>All four render pixel-identically — pick whichever matches your project&apos;s language and styling setup.</p>
+        <p>All four render pixel-identically, pick whichever matches your project&apos;s language and styling setup.</p>
       </>
     ),
   },
@@ -116,7 +136,7 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
       <>
         <p>
           Free and premium components are both licensed for use in your own projects, personal or commercial, with no attribution required. Premium
-          access unlocks the source — it doesn&apos;t transfer ownership, and reselling or repackaging a component&apos;s source isn&apos;t covered.
+          access unlocks the source, it doesn&apos;t transfer ownership, and reselling or repackaging a component&apos;s source isn&apos;t covered.
         </p>
         <p>
           Full terms are on the{" "}
@@ -137,7 +157,7 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
           <Link href="/support" className="underline decoration-foreground/20 underline-offset-4 hover:decoration-foreground">
             Support
           </Link>{" "}
-          and email us directly — no ticket system, just a real reply.
+          and email us directly, no ticket system, just a real reply.
         </p>
         <p>
           For quick answers first, check the{" "}

@@ -2,12 +2,13 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useLenis } from "lenis/react";
-import { Lock } from "lucide-react";
+import { Check, Lock, Sparkles } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CodeSurface } from "@/components/code-block";
-import { CodeVariantToolbar, CopyButton, type CodeLang, type CodeStyle } from "@/components/code-toolbar";
+import { CodeVariantToolbar, CopyButton, DownloadButton, type CodeLang, type CodeStyle } from "@/components/code-toolbar";
 import { InstallCommand } from "@/components/install-command";
+import { BuyButton } from "@/components/buy-button";
+import { isCheckoutLive } from "@/lib/checkout-links";
 import { cn } from "@/lib/utils";
 
 export interface ComponentCode {
@@ -51,18 +52,12 @@ export function DeviceIcon({ device }: { device: Device }) {
 }
 
 // Every device size renders through an <iframe> onto /preview/[slug] rather
-// than mounting the component directly in this document. Two independent
-// reasons, both because an iframe is its own browsing context:
-// 1. sm:/md: utilities inside the previewed component are media queries
-//    against the top-level viewport, so a resized <div> in this document
-//    never actually triggers them — the iframe's viewport equals its own
-//    box, so breakpoints respond for real at tablet/mobile widths.
-// 2. This docs site uses Lenis for smooth scrolling, which breaks
-//    position: sticky for any element scrolled through it (verified: a
-//    plain sticky div stops tracking scroll under Lenis). Components that
-//    use scroll-linked sticky sections (e.g. card-stack) would silently
-//    misbehave if mounted inline even at "desktop" width. /preview/[slug]
-//    opts out of the site's SmoothScroll wrapper, so sticky works there.
+// than mounting the component directly in this document, because an iframe
+// is its own browsing context: sm:/md: utilities inside the previewed
+// component are media queries against the top-level viewport, so a resized
+// <div> in this document never actually triggers them — the iframe's
+// viewport equals its own box, so breakpoints respond for real at
+// tablet/mobile widths.
 // The iframe reports its content height back via postMessage so it can be
 // sized without an internal scrollbar — but only up to MAX_HEIGHT. Past
 // that it's capped and left to scroll internally (the iframe's default
@@ -83,9 +78,9 @@ const MAX_HEIGHT = 800;
 // fit instead of showing an internal scrollbar. Measured via a full scan of
 // every component's /preview/[slug] route at all three device widths.
 const TALL_PREVIEW_HEIGHTS: Record<string, number> = {
-  "about-founder-section": 940,
-  "ai-agent-wave": 940,
-  "ai-assistant-orb": 940,
+  "about-founder-section": 1260,
+  "ai-asistant": 940,
+  "living-orb-ai": 940,
   "arc-mood-carousel": 940,
   "aura-cursor": 960,
   "bar-chart": 940,
@@ -95,36 +90,27 @@ const TALL_PREVIEW_HEIGHTS: Record<string, number> = {
   "browser-mockup": 940,
   "cards-gallery-ring": 940,
   "case-study-section": 1140,
-  "circular-links-menu": 940,
-  "circular-spinning-text": 940,
   "compare-slider": 940,
   "data-table": 940,
-  "decision-tree-diagram": 940,
   "dot-image-loader": 940,
   "dot-image-slider": 940,
   "download-section-glass": 1280,
-  "dropdown-menu-pro": 940,
   "expand-card-grid": 940,
   "expanding-panel-gallery": 940,
-  "feature-card-illustrated": 940,
   "feature-grid-mosaic": 3080,
   "feature-showcase": 1620,
   "feature-showcase-video": 1320,
   "feature-split-section": 1800,
   "flowing-menu": 940,
-  "fluid-wave": 940,
   "footer-cta": 1100,
   "gallery-expand": 940,
   "gallery-reveal": 940,
   "glass-navigation": 940,
   "glide-carousel": 960,
   "glow-card": 940,
-  "hero-centered": 940,
   "hero-scroll-gallery": 1480,
   "hero-slider-carousel": 940,
-  "hero-video-glass": 940,
   "image-deck-3d": 960,
-  "image-hotspot": 940,
   "index-grid-section": 4300,
   "kanban-board": 940,
   "latency-trace-diagram": 940,
@@ -133,7 +119,6 @@ const TALL_PREVIEW_HEIGHTS: Record<string, number> = {
   "linen-drag-image": 940,
   "liquid-glass-video": 940,
   "liquid-text": 940,
-  "logo-grid": 940,
   "logo-marquee": 940,
   "marquee-hero-section": 1080,
   "neural-logic-graph": 940,
@@ -147,10 +132,9 @@ const TALL_PREVIEW_HEIGHTS: Record<string, number> = {
   "progress-circle-bars": 960,
   "radar-chart": 940,
   "range-area-chart": 940,
+  "rotary-card-carousel": 880,
   "rotate-carousel": 940,
-  "rotating-gallery": 940,
   "service-list-cursor-preview": 1020,
-  "skewed-page-scroller": 940,
   "social-proof-video-grid": 1620,
   "social-reels-grid": 940,
   "team-carousel": 940,
@@ -203,17 +187,6 @@ function DeviceFramePreview({ slug, width }: { slug: string; width: string }) {
   // reports in, the iframe eases into view on its own rather than the
   // frame popping straight to the loaded state.
   const [loaded, setLoaded] = React.useState(false);
-  const lenis = useLenis();
-
-  // Same stale-cache issue as the catalog's "Load More" (see components-catalog.tsx):
-  // this frame can jump from the 360px loading placeholder to a much taller
-  // real height once the iframe reports in (some components run well past
-  // 1000px), well after Lenis already measured the page. Without this, wheel
-  // scroll can get stuck at the old (shorter) boundary even though the page
-  // itself is now much taller.
-  React.useEffect(() => {
-    lenis?.resize();
-  }, [lenis, height]);
 
   React.useEffect(() => {
     function onMessage(e: MessageEvent) {
@@ -226,15 +199,14 @@ function DeviceFramePreview({ slug, width }: { slug: string; width: string }) {
       // The iframe forwards wheel input it can't use itself (its own
       // document is already at its top/bottom edge) — see preview/[slug]
       // for why a cross-document iframe can't just let that scroll the
-      // outer page on its own. Feed it through Lenis rather than a raw
-      // window.scrollBy so it doesn't desync Lenis's own virtual position.
-      if (e.data?.type === "loca-preview-wheel" && e.data.slug === slug && lenis) {
-        lenis.scrollTo(lenis.scroll + e.data.deltaY, { immediate: false });
+      // outer page on its own.
+      if (e.data?.type === "loca-preview-wheel" && e.data.slug === slug) {
+        window.scrollBy({ top: e.data.deltaY });
       }
     }
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
-  }, [slug, lenis]);
+  }, [slug]);
 
   // Reset to the loading state whenever the previewed component itself
   // changes (navigating between two component detail pages reuses this
@@ -275,7 +247,7 @@ function isVariantAvailable(code: ComponentCode, lang: CodeLang, style: CodeStyl
   return code.jsCss != null;
 }
 
-function CodeTab({ code }: { code: ComponentCode }) {
+export function CodeTab({ slug, code }: { slug: string; code: ComponentCode }) {
   const [lang, setLang] = React.useState<CodeLang>("ts");
   const [style, setStyle] = React.useState<CodeStyle>("tailwind");
   const [copied, setCopied] = React.useState(false);
@@ -293,11 +265,28 @@ function CodeTab({ code }: { code: ComponentCode }) {
     }
   }
 
+  function download() {
+    // .tsx/.jsx by language; the style (Tailwind vs CSS) goes in the filename too, so
+    // downloading more than one variant for the same component never overwrites the last one.
+    const ext = lang === "ts" ? "tsx" : "jsx";
+    const filename = `${slug}-${style}.${ext}`;
+    const blob = new Blob([activeCode], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="overflow-hidden rounded-xl border border-border bg-card">
       <div className="flex items-center justify-between px-4 py-3">
         <span className="text-sm font-semibold text-foreground">Code</span>
-        <CopyButton copied={copied} onCopy={copy} />
+        <div className="flex items-center gap-2">
+          <DownloadButton onDownload={download} />
+          <CopyButton copied={copied} onCopy={copy} />
+        </div>
       </div>
       {hasVariants && (
         <div className="border-t border-border px-4 py-3">
@@ -340,12 +329,42 @@ function UsageCard({ usage }: { usage: string }) {
   );
 }
 
+/** Sits in the Buy button's slot for free components that have a prompt —
+ *  copies an AI-assistant prompt for rebuilding/customizing the component
+ *  instead of linking to checkout. */
+function AiPromptButton({ prompt }: { prompt: string }) {
+  const [copied, setCopied] = React.useState(false);
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(prompt);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // Clipboard access can be denied (permissions, insecure context) —
+      // fail quietly rather than surface an unhandled rejection.
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={copy}
+      className="flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-85"
+    >
+      {copied ? <Check className="h-3.5 w-3.5" /> : <Sparkles className="h-3.5 w-3.5" />}
+      {copied ? "Copied!" : "Copy AI Prompt"}
+    </button>
+  );
+}
+
 export function ComponentPreview({
   slug,
   code,
   usage,
   free,
   checkout,
+  prompt,
 }: {
   slug: string;
   code: ComponentCode | null;
@@ -353,6 +372,8 @@ export function ComponentPreview({
   free: boolean;
   /** Set once this component has a real Lemon Squeezy product — swaps the generic "Get Premium" CTA for a real "Buy" link. */
   checkout?: { url: string; price?: string };
+  /** Free-components trial: shown in the Buy button's slot when there's no checkout. */
+  prompt?: string;
 }) {
   const [device, setDevice] = React.useState<Device>("desktop");
 
@@ -382,15 +403,10 @@ export function ComponentPreview({
               </button>
             ))}
           </div>
-          {checkout && (
-            <a
-              href={checkout.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-85"
-            >
-              {checkout.price ? `Buy for ${checkout.price}` : "Buy Now"}
-            </a>
+          {checkout ? (
+            <BuyButton checkout={checkout} />
+          ) : (
+            prompt && <AiPromptButton prompt={prompt} />
           )}
         </div>
 
@@ -415,7 +431,7 @@ export function ComponentPreview({
           </div>
         )}
         {code !== null ? (
-          <CodeTab code={code} />
+          <CodeTab slug={slug} code={code} />
         ) : (
           <div className="overflow-hidden rounded-xl border border-border bg-card">
             <div className="px-4 py-3">
@@ -430,17 +446,10 @@ export function ComponentPreview({
                   <Lock className="h-4 w-4" />
                 </div>
                 <p className="max-w-xs text-sm text-foreground/70">
-                  {checkout ? "This component's source code is available as a one-time purchase." : "This component's source code is Premium-only."}
+                  {checkout ? (isCheckoutLive(checkout) ? "This component's source code is available as a one-time purchase." : "This component's source code will be available as a one-time purchase soon.") : "This component's source code is Premium-only."}
                 </p>
                 {checkout ? (
-                  <a
-                    href={checkout.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-full bg-foreground px-4 py-2 text-xs font-semibold text-background transition-opacity hover:opacity-85"
-                  >
-                    {checkout.price ? `Buy for ${checkout.price}` : "Buy Now"}
-                  </a>
+                  <BuyButton checkout={checkout} size="sm" className="py-2" />
                 ) : (
                   <Link
                     href="/premium"

@@ -120,7 +120,7 @@ export function XTwitterWidget({
   offlineMessage = "We're not around right now. DM us and we'll reply soon.",
   greeting = "Hey there! 👋\n\nGot a question? We'd love to help.",
   quickReplies = DEFAULT_QUICK_REPLIES,
-  popupMessage = "👋 Hey! Drop us a message — we reply fast.",
+  popupMessage = "👋 Hey! Drop us a message, we reply fast.",
   theme = "light",
   accentColor = X_BLUE,
   fontFamily = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
@@ -264,6 +264,9 @@ export function XTwitterWidget({
   const hasInput = inputValue.trim().length > 0;
   const isRight = position !== "bottom-left";
   const chatOrigin = isRight ? "bottom right" : "bottom left";
+  // Never wider than the viewport: leave the corner offset on both sides when fixed,
+  // and a bit more slack when inline (the surrounding layout may add its own padding).
+  const panelMaxWidth = fixed ? "calc(100vw - 3rem)" : "calc(100vw - 5rem)";
 
   return (
     <div
@@ -274,7 +277,7 @@ export function XTwitterWidget({
         <div
           onClick={handleOpen}
           className={cn("absolute bottom-[76px] w-[300px] cursor-pointer overflow-hidden border shadow-[0_16px_48px_rgba(0,0,0,0.14),0_4px_16px_rgba(0,0,0,0.08)]", isRight ? "right-0" : "left-0")}
-          style={{ borderColor: border, borderRadius: widgetBorderRadius, animation: "xt-popup-in 0.42s cubic-bezier(0.34,1.56,0.64,1) forwards" }}
+          style={{ maxWidth: panelMaxWidth, borderColor: border, borderRadius: widgetBorderRadius, animation: "xt-popup-in 0.42s cubic-bezier(0.34,1.56,0.64,1) forwards" }}
         >
           <div className="flex items-center gap-2.5 px-3.5 py-3" style={{ background: X_BLACK }}>
             <div className="relative shrink-0">
@@ -311,8 +314,10 @@ export function XTwitterWidget({
       )}
 
       <div
-        className={cn("absolute bottom-[76px] w-[360px] overflow-hidden border", isRight ? "right-0" : "left-0")}
+        className={cn("absolute bottom-[76px] flex w-[360px] flex-col overflow-hidden border", isRight ? "right-0" : "left-0")}
         style={{
+          maxWidth: panelMaxWidth,
+          maxHeight: "calc(100dvh - 100px)",
           borderColor: border,
           borderRadius: widgetBorderRadius,
           background: isDark ? "#1E2732" : "#fff",
@@ -379,7 +384,7 @@ export function XTwitterWidget({
           </div>
         )}
 
-        <div className="flex max-h-[320px] min-h-[220px] flex-col gap-2.5 overflow-y-auto px-3.5 py-4" style={{ background: bg }}>
+        <div className="flex max-h-[320px] min-h-[min(220px,calc(100dvh-330px))] flex-col gap-2.5 overflow-y-auto px-3.5 py-4" style={{ background: bg }}>
           {showTyping && (
             <div className="flex items-end gap-2">
               <MsgAvatar src={agentAvatar} isDark={isDark} />

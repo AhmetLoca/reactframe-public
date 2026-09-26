@@ -96,7 +96,7 @@ function hexToRgb(hex: string): [number, number, number] {
 }
 
 export function NoiseBackground({
-  colorTheme = "cognac",
+  colorTheme = "slate",
   backgroundColor = "#060403",
   blobColor = "#c84010",
   blobX = 0.2,
@@ -107,7 +107,7 @@ export function NoiseBackground({
   noiseOpacity = 0.1,
   noiseSpeed = 24,
   grainSize = 150,
-  blendMode = "soft-light",
+  blendMode = "screen",
   vignetteEnabled = true,
   vignetteIntensity = 0.62,
   animateBlobs = false,

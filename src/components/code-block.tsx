@@ -50,15 +50,13 @@ export function CodeSurface({
       <pre
         ref={preRef}
         onScroll={updateScrollState}
-        data-lenis-prevent={expanded || undefined}
         style={{ maxHeight: expanded ? EXPANDED_HEIGHT : COLLAPSED_HEIGHT }}
         className={cn(
           "code-scrollbar p-4 text-[13px] leading-relaxed transition-[max-height] duration-300 ease-signature",
           // Collapsed: no scrolling at all — the chevron button is the only
           // way to reveal more, so a wheel/trackpad gesture over the short
           // box shouldn't silently scroll its hidden content. Only once
-          // expanded does it become a real scrollable box (and opt out of
-          // the page's Lenis smooth-scroll so wheel actually reaches it).
+          // expanded does it become a real scrollable box.
           expanded ? "overflow-auto" : "overflow-hidden",
           bare ? "rounded-b-xl border-t border-border" : "rounded-xl border border-border bg-card",
         )}

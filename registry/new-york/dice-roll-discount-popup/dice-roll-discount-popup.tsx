@@ -41,7 +41,7 @@ const THEMES: { [key: string]: ThemeConfig } = {
     buttonText: "Roll Dice",
     triggerText: "Roll for a Discount",
     glow: "rgba(255,255,255,0.16)",
-    background: "linear-gradient(160deg, #07080b 0%, #101319 100%)",
+    background: "#080808",
     lightBackground: "linear-gradient(160deg, #f4f6fa 0%, #dfe6f0 100%)",
     rewards: [
       { max: 4, label: "5% off", code: "DICE5" },
@@ -59,7 +59,7 @@ const THEMES: { [key: string]: ThemeConfig } = {
     buttonText: "Roll for Deal",
     triggerText: "Roll for a Deal",
     glow: "rgba(248,113,113,0.22)",
-    background: "linear-gradient(160deg, #0c0505 0%, #1a0808 100%)",
+    background: "#080808",
     lightBackground: "linear-gradient(160deg, #fff1f0 0%, #fecdd3 100%)",
     rewards: [
       { max: 4, label: "10% off", code: "SALE10" },
@@ -77,7 +77,7 @@ const THEMES: { [key: string]: ThemeConfig } = {
     buttonText: "Roll for Treat",
     triggerText: "Roll for a Treat",
     glow: "rgba(251,191,36,0.20)",
-    background: "linear-gradient(160deg, #0c0904 0%, #1a1206 100%)",
+    background: "#080808",
     lightBackground: "linear-gradient(160deg, #fff7ed 0%, #fde8cf 100%)",
     rewards: [
       { max: 4, label: "Free Coffee", code: "CAFE-COFFEE" },
@@ -95,7 +95,7 @@ const THEMES: { [key: string]: ThemeConfig } = {
     buttonText: "Roll Dice",
     triggerText: "Roll for a Discount",
     glow: "rgba(129,140,248,0.22)",
-    background: "linear-gradient(160deg, #06050c 0%, #100a1c 100%)",
+    background: "#080808",
     lightBackground: "linear-gradient(160deg, #eef2ff 0%, #e0e7ff 100%)",
     rewards: [
       { max: 4, label: "10% off", code: "SAAS10" },
@@ -113,7 +113,7 @@ const THEMES: { [key: string]: ThemeConfig } = {
     buttonText: "Roll for Bonus",
     triggerText: "Roll for a Bonus",
     glow: "rgba(45,212,191,0.20)",
-    background: "linear-gradient(160deg, #04080a 0%, #081619 100%)",
+    background: "#080808",
     lightBackground: "linear-gradient(160deg, #ecfeff 0%, #cffafe 100%)",
     rewards: [
       { max: 4, label: "5% off", code: "EVT5" },
@@ -170,10 +170,10 @@ function GiftIcon() {
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false" className="relative">
       <rect x="3.5" y="10" width="17" height="9.5" rx="1.5" fill="#0a0a0f" />
       <rect x="2.5" y="7" width="19" height="4" rx="1" fill="#0a0a0f" />
-      <rect x="10.4" y="7" width="3.2" height="12.5" fill="rgba(255,255,255,0.9)" />
+      <rect x="10.4" y="7" width="3.2" height="12.5" fill="#ffffff" />
       <path
         d="M12 7c-1.6 0-3-1-3.6-2.1C7.6 3.2 8.5 2 9.8 2c1.3 0 2.2 1.4 2.2 3 0-1.6.9-3 2.2-3 1.3 0 2.2 1.2 1.4 2.9C15 6 13.6 7 12 7z"
-        fill="rgba(255,255,255,0.9)"
+        fill="#0a0a0f"
       />
     </svg>
   );
@@ -289,6 +289,12 @@ export function DiceRollDiscountPopup({
   const [scrollTriggered, setScrollTriggered] = React.useState(false);
   const [widgetHover, setWidgetHover] = React.useState(false);
   const [widgetVisible, setWidgetVisible] = React.useState(true);
+  const [prevAsPopup, setPrevAsPopup] = React.useState(asPopup);
+
+  if (asPopup !== prevAsPopup) {
+    setPrevAsPopup(asPopup);
+    setPopupOpen(!asPopup || defaultOpen);
+  }
 
   const activeTheme = THEMES[theme] || THEMES.ecommerce;
   const widgetContainerRef = React.useRef<HTMLDivElement>(null);
@@ -482,7 +488,7 @@ export function DiceRollDiscountPopup({
           Result
         </div>
         <div className="font-serif text-[34px] font-normal" style={{ color: mode.ink }} aria-live="polite">
-          {total !== null ? total : "—"}
+          {total !== null ? total : "-"}
         </div>
       </div>
 
@@ -640,7 +646,7 @@ export function DiceRollDiscountPopup({
     <div ref={rootRef} className={cn("relative", className)} {...props}>
       <div
         ref={widgetContainerRef}
-        className="absolute bottom-6 z-[30] flex items-center gap-2.5"
+        className="fixed bottom-6 z-[9998] flex items-center gap-2.5"
         style={{ flexDirection: widgetOnRight ? "row-reverse" : "row", ...(widgetOnRight ? { right: 24 } : { left: 24 }) }}
       >
         <motion.button
@@ -652,11 +658,11 @@ export function DiceRollDiscountPopup({
           whileTap={{ scale: 0.94 }}
           aria-label={activeTheme.triggerText}
           className="relative flex h-14 w-14 shrink-0 cursor-pointer items-center justify-center rounded-full backdrop-blur-[10px]"
-          style={{ background: mode.chromeBg, border: `1px solid ${mode.chromeBorder}`, boxShadow: `0 8px 28px ${activeTheme.glow}, 0 4px 14px rgba(0,0,0,0.5)` }}
+          style={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.08)", boxShadow: `0 8px 28px ${activeTheme.glow}, 0 4px 14px rgba(0,0,0,0.5)` }}
         >
           <motion.span
             className="pointer-events-none absolute inset-0 rounded-full"
-            style={{ background: "rgba(255,255,255,0.7)" }}
+            style={{ background: "rgba(0,0,0,0.12)" }}
             animate={!widgetVisible ? undefined : { scale: [1, 1.7, 1.7], opacity: [0.4, 0, 0] }}
             transition={!widgetVisible ? { duration: 0 } : { duration: 2.2, repeat: Infinity, ease: "easeOut" }}
           />
@@ -689,7 +695,7 @@ export function DiceRollDiscountPopup({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 z-40 flex items-center justify-center p-5 backdrop-blur-[4px]"
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-5 backdrop-blur-[4px]"
             style={{ background: "rgba(0,0,0,0.7)" }}
           >
             <motion.div

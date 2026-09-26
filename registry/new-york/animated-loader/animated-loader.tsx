@@ -130,10 +130,10 @@ function renderLoader(variant: AnimatedLoaderVariant, color: string, trackColor:
 }
 
 export function AnimatedLoader({
-  variant = "lines",
+  variant = "dots",
   lineCount = 8,
-  color = "#7c3aed",
-  trackColor = "#e5e7eb",
+  color = "#F39C12",
+  trackColor = "color-mix(in srgb, currentColor 15%, transparent)",
   background = "rgba(0,0,0,0)",
   size = 56,
   thickness = 4,

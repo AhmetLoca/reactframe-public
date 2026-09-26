@@ -70,7 +70,7 @@ export function CheckboxVisual({ isChecked, disabled, ring, style, size, radius,
   return (
     <motion.div
       className="pointer-events-none absolute inset-0 box-border flex items-center justify-center"
-      style={{ borderRadius: radius, border: `${borderWidth}px solid`, opacity: disabled ? 0.45 : 1 }}
+      style={{ borderRadius: radius, borderWidth, borderStyle: "solid", opacity: disabled ? 0.45 : 1 }}
       initial={false}
       animate={{
         backgroundColor: isChecked ? accentColor : "rgba(0,0,0,0)",
@@ -112,13 +112,13 @@ export function AnimatedCheckbox({
   radius = 6,
   borderWidth = 1.5,
   borderColor = "#d1d5db",
-  accentColor = "#7c3aed",
+  accentColor = "#f59e0b",
   checkColor = "#ffffff",
-  labelColor = "#111111",
-  helperColor = "#6b7280",
-  mutedColor = "#9ca3af",
+  labelColor = "currentColor",
+  helperColor = "color-mix(in srgb, currentColor 60%, transparent)",
+  mutedColor = "color-mix(in srgb, currentColor 45%, transparent)",
   requiredColor = "#ef4444",
-  ringColor = "rgba(124,58,237,0.25)",
+  ringColor = "rgba(245,158,11,0.25)",
   ringWidth = 3,
   duration = 0.18,
   className,
@@ -127,6 +127,8 @@ export function AnimatedCheckbox({
   const [focused, setFocused] = React.useState(false);
   const isControlled = checked !== undefined;
   const isChecked = isControlled ? checked : internalChecked;
+  const labelSize = size * 0.7;
+  const helperSize = size * 0.65;
 
   const handleToggle = () => {
     if (disabled) return;
@@ -138,8 +140,8 @@ export function AnimatedCheckbox({
   return (
     <label
       aria-disabled={disabled}
-      className={cn("inline-flex select-none gap-2.5", disabled ? "cursor-default" : "cursor-pointer", label ? "items-start" : "items-center", className)}
-      style={{ fontFamily: "Inter, sans-serif" }}
+      className={cn("inline-flex select-none", disabled ? "cursor-default" : "cursor-pointer", label ? "items-start" : "items-center", className)}
+      style={{ fontFamily: "Inter, sans-serif", gap: size * 0.5 }}
     >
       <div className="relative shrink-0" style={{ width: size, height: size }}>
         <input
@@ -173,29 +175,29 @@ export function AnimatedCheckbox({
       </div>
 
       {label && (
-        <div className="flex flex-col gap-1" style={{ paddingTop: Math.max(0, (size - 18) / 2) }}>
+        <div className="flex flex-col gap-1" style={{ paddingTop: Math.max(0, (size - labelSize * 1.3) / 2) }}>
           <div className="flex items-center gap-1.5">
-            <span className="text-sm leading-[1.3] font-semibold tracking-[-0.01em]" style={{ color: labelColor }}>
+            <span className="leading-[1.3] font-semibold tracking-[-0.01em]" style={{ color: labelColor, fontSize: labelSize }}>
               {label}
             </span>
             {optionalText && (
-              <span className="text-sm font-normal" style={{ color: mutedColor }}>
+              <span className="font-normal" style={{ color: mutedColor, fontSize: labelSize }}>
                 (optional)
               </span>
             )}
             {required && (
-              <span className="text-sm font-semibold" style={{ color: requiredColor }}>
+              <span className="font-semibold" style={{ color: requiredColor, fontSize: labelSize }}>
                 *
               </span>
             )}
             {infoText && (
               <span title={infoText} className="flex">
-                <InfoIcon color={mutedColor} />
+                <InfoIcon color={mutedColor} size={labelSize} />
               </span>
             )}
           </div>
           {helperText && (
-            <span className="text-[13px] leading-[1.4]" style={{ color: helperColor }}>
+            <span className="leading-[1.4]" style={{ color: helperColor, fontSize: helperSize }}>
               {helperText}
             </span>
           )}

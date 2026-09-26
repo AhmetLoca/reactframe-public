@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <style>
+    .bg { fill: #ffffff; }
+    .a { stop-color: #494949; }
+    .b { stop-color: #3d3d3d; }
+    .c { stop-color: #050505; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #000000; }
+      .a { stop-color: #cccccc; }
+      .b { stop-color: #b4b4b4; }
+      .c { stop-color: #474747; }
+    }
+  </style>
+  <defs>
+    <linearGradient id="g" x1="0.35" y1="0" x2="0.65" y2="1">
+      <stop offset="0" class="a" />
+      <stop offset="0.35" class="a" />
+      <stop offset="0.5" class="b" />
+      <stop offset="1" class="c" />
+    </linearGradient>
+  </defs>
+  <rect class="bg" width="256" height="256" />
+  <rect x="32" y="32" width="64" height="64" fill="url(#g)" />
+  <rect x="160" y="32" width="64" height="64" fill="url(#g)" />
+  <rect x="96" y="96" width="64" height="64" fill="url(#g)" />
+  <rect x="32" y="160" width="64" height="64" fill="url(#g)" />
+  <rect x="160" y="160" width="64" height="64" fill="url(#g)" />
+</svg>

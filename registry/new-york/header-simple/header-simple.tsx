@@ -33,6 +33,7 @@ export interface HeaderSimpleProps extends Omit<React.ComponentPropsWithoutRef<"
   backgroundColor?: string;
   borderColor?: string;
   showBorder?: boolean;
+  borderRadius?: number;
   textColor?: string;
   navFontSize?: number;
   navGap?: number;
@@ -76,6 +77,7 @@ export function HeaderSimple({
   backgroundColor = "#f2f2f2",
   borderColor = "rgba(0,0,0,0.08)",
   showBorder = false,
+  borderRadius = 9999,
   textColor = "#161616",
   navFontSize = 15,
   navGap = 32,
@@ -151,8 +153,14 @@ export function HeaderSimple({
       {...props}
     >
       <div
-        className="relative z-[2] box-border flex items-center justify-between"
-        style={{ height: headerHeight, padding: `0 ${horizontalPadding}px`, background: backgroundColor, borderBottom: showBorder ? `1px solid ${borderColor}` : "none" }}
+        className="relative z-[2] box-border flex items-center justify-between overflow-hidden"
+        style={{
+          height: headerHeight,
+          padding: `0 ${horizontalPadding}px`,
+          background: backgroundColor,
+          borderRadius,
+          borderBottom: showBorder ? `1px solid ${borderColor}` : "none",
+        }}
       >
         <a href={logoUrl || "/"} onClick={close} className="flex shrink-0 items-center gap-2.5 no-underline">
           {logoImage && <img src={logoImage} alt={logoText || ""} className="block w-auto" style={{ height: logoSize }} />}
@@ -217,10 +225,10 @@ export function HeaderSimple({
       {showHamburger && (
         <motion.div
           initial={false}
-          animate={{ height: isOpen ? "auto" : 0 }}
+          animate={{ height: isOpen ? "auto" : 0, marginTop: isOpen ? 8 : 0 }}
           transition={PANEL_SPRING}
           className="relative z-[1] overflow-hidden"
-          style={{ background: menuBackground }}
+          style={{ background: menuBackground, borderRadius: Math.min(borderRadius, 24) }}
         >
           <AnimatePresence>
             {isOpen && (

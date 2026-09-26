@@ -13,11 +13,9 @@ import * as React from "react";
 // - "loca-preview-scroll-into" (parent → child): while the frame is the
 //   dominant thing in the outer viewport, LayoutPreview's DeviceFrame
 //   captures wheel input at the window level (not dependent on the
-//   cursor sitting exactly over the iframe box — Lenis eases the outer
-//   page's scroll for ~1s after the last tick, so the frame keeps
-//   drifting under a stationary cursor and precise hit-testing isn't
-//   reliable) and forwards it here. Apply as much of it as this document
-//   has room for.
+//   cursor sitting exactly over the iframe box, which isn't reliable once
+//   the frame has scrolled at all) and forwards it here. Apply as much of
+//   it as this document has room for.
 // - "loca-preview-wheel" (child → parent): whatever's left over after
 //   applying that — because this document is already at the edge in
 //   that direction — goes back to the parent, which is what actually

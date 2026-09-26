@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { LayoutPreview } from "@/components/layout-preview";
 
 export const metadata: Metadata = {
-  title: "Halstead & Partners — Template Preview",
+  title: "Halstead & Partners, Template Preview",
   description: "A Business consulting landing page template, composed entirely from ReactFrame components.",
 };
 

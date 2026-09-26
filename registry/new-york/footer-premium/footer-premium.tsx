@@ -25,7 +25,10 @@ export interface FooterColumn {
   links: FooterColumnLink[];
 }
 
+export type FooterPremiumTheme = "dark" | "light";
+
 export interface FooterPremiumProps extends Omit<React.ComponentPropsWithoutRef<"footer">, "children"> {
+  theme?: FooterPremiumTheme;
   backgroundColor?: string;
   textColor?: string;
   mutedColor?: string;
@@ -204,9 +207,10 @@ const DEFAULT_COLUMNS: FooterColumn[] = [
 ];
 
 export function FooterPremium({
-  backgroundColor = "#000000",
-  textColor = "#ffffff",
-  mutedColor = "rgba(255,255,255,0.55)",
+  theme = "dark",
+  backgroundColor,
+  textColor,
+  mutedColor,
   accentColor = "#7C5CFF",
   logoImage,
   logoUrl = "#",
@@ -231,10 +235,18 @@ export function FooterPremium({
   style,
   ...props
 }: FooterPremiumProps) {
+  const isDark = theme === "dark";
+  const bg = backgroundColor ?? (isDark ? "#000000" : "#ffffff");
+  const fg = textColor ?? (isDark ? "#ffffff" : "#0e0e0e");
+  const muted = mutedColor ?? (isDark ? "rgba(255,255,255,0.55)" : "rgba(14,14,14,0.55)");
+  const overlayBorder = isDark ? "border-white/[0.14]" : "border-black/[0.14]";
+  const overlayBg = isDark ? "bg-white/[0.04]" : "bg-black/[0.04]";
+  const socialBg = isDark ? "bg-white/[0.06] hover:bg-white/[0.12]" : "bg-black/[0.06] hover:bg-black/[0.12]";
+
   return (
     <footer
       className={cn("w-full", className)}
-      style={{ background: backgroundColor, fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif", ...style }}
+      style={{ background: bg, fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif", ...style }}
       {...props}
     >
       <div
@@ -247,7 +259,7 @@ export function FooterPremium({
               {logoImage ? (
                 <img src={logoImage} alt={logoLabel} draggable={false} className="block h-8 w-auto select-none" />
               ) : (
-                <span className="text-lg font-bold" style={{ color: textColor }}>
+                <span className="text-lg font-bold" style={{ color: fg }}>
                   {logoLabel}
                 </span>
               )}
@@ -259,8 +271,8 @@ export function FooterPremium({
           {showPill && (
             <a
               href={pillUrl}
-              className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/[0.14] bg-white/[0.04] px-4 py-2 text-[13px] font-semibold whitespace-nowrap no-underline"
-              style={{ color: textColor }}
+              className={cn("mt-5 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-semibold whitespace-nowrap no-underline", overlayBorder, overlayBg)}
+              style={{ color: fg }}
             >
               <FlashIcon size={13} color={accentColor} />
               {pillText}
@@ -268,7 +280,7 @@ export function FooterPremium({
           )}
 
           {description && (
-            <p className="mt-5 max-w-[280px] text-sm leading-[1.6]" style={{ color: mutedColor }}>
+            <p className="mt-5 max-w-[280px] text-sm leading-[1.6]" style={{ color: muted }}>
               {description}
             </p>
           )}
@@ -279,8 +291,8 @@ export function FooterPremium({
                 <a
                   key={i}
                   href={s.url}
-                  className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full bg-white/[0.06] transition-colors hover:bg-white/[0.12]"
-                  style={{ color: textColor }}
+                  className={cn("flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full transition-colors", socialBg)}
+                  style={{ color: fg }}
                 >
                   <SocialIcon platform={s.platform} />
                 </a>
@@ -289,7 +301,7 @@ export function FooterPremium({
           )}
 
           {copyrightText && (
-            <p className="mt-[22px] text-[13px]" style={{ color: mutedColor }}>
+            <p className="mt-[22px] text-[13px]" style={{ color: muted }}>
               {copyrightText}
             </p>
           )}
@@ -299,13 +311,13 @@ export function FooterPremium({
           {columns.map((col, ci) => (
             <div key={ci} className="min-w-[120px]">
               {col.title && (
-                <p className="m-0 text-[15px] font-bold" style={{ color: textColor }}>
+                <p className="m-0 text-[15px] font-bold" style={{ color: fg }}>
                   {col.title}
                 </p>
               )}
               <div className="mt-[18px] flex flex-col gap-3.5">
                 {col.links.map((l, li) => (
-                  <a key={li} href={l.url} className="text-sm no-underline transition-colors hover:opacity-80" style={{ color: mutedColor }}>
+                  <a key={li} href={l.url} className="text-sm no-underline transition-colors hover:opacity-80" style={{ color: muted }}>
                     {l.label}
                   </a>
                 ))}

@@ -1,11 +1,17 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
-import { PagesPage } from "./pages-page";
+import { PagesPage, PagesPageFallback } from "./pages-page";
 
 export const metadata: Metadata = {
-  title: "Pages",
+  alternates: { canonical: "/pages" },
+  title: "React Page Templates: Pricing, About, Blog & More",
   description: "Full, multi-section page layouts built by combining blocks and components together.",
 };
 
 export default function Page() {
-  return <PagesPage />;
+  return (
+    <Suspense fallback={<PagesPageFallback />}>
+      <PagesPage />
+    </Suspense>
+  );
 }

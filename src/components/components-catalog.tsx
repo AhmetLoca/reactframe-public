@@ -3,14 +3,15 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useLenis } from "lenis/react";
+import { sortCategories } from "@/lib/catalog-order";
+import { SchemaBadge } from "@/components/schema-badge";
 import type { ComponentMeta } from "@/lib/catalog-data";
-import { registryPreviews } from "@/registry-preview";
 import { checkoutLinks } from "@/lib/checkout-links";
 import { ComponentCardMedia } from "@/components/component-card-media";
 import { HookSidebar, type HookSidebarItem } from "@/components/ui/hook-sidebar";
 import { PriceFilter } from "@/components/ui/price-filter";
 import { CatalogSearchBox } from "@/components/ui/catalog-search-box";
+import { CategoryHeading, slugifyLabel } from "@/components/ui/category-heading";
 import { cn } from "@/lib/utils";
 
 const PAGE_SIZE = 24;
@@ -19,12 +20,23 @@ function isPriceFilter(value: string | null): value is "all" | "free" | "premium
   return value === "free" || value === "premium";
 }
 
+type SearchParamsLike = Pick<URLSearchParams, "get" | "toString">;
+const NO_SEARCH_PARAMS: SearchParamsLike = new URLSearchParams();
+
 export function ComponentsCatalog({ components }: { components: ComponentMeta[] }) {
-  const categories = React.useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const c of components) counts.set(c.category, (counts.get(c.category) ?? 0) + 1);
-    return Array.from(counts.entries()).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-  }, [components]);
+  const searchParams = useSearchParams();
+  return <ComponentsCatalogView components={components} searchParams={searchParams} />;
+}
+
+// The unfiltered view, rendered as the Suspense fallback so the static HTML
+// carries the full catalog (and its links) instead of an empty shell;
+// the live version above takes over once the URL's filters are readable.
+export function ComponentsCatalogFallback({ components }: { components: ComponentMeta[] }) {
+  return <ComponentsCatalogView components={components} searchParams={NO_SEARCH_PARAMS} />;
+}
+
+function ComponentsCatalogView({ searchParams, components }: { searchParams: SearchParamsLike; components: ComponentMeta[] }) {
+  const categories = React.useMemo(() => sortCategories(components), [components]);
 
   const categoryItems: HookSidebarItem[] = React.useMemo(
     () => [{ label: "All", count: components.length }, ...categories.map(([category, count]) => ({ label: category, count }))],
@@ -33,7 +45,6 @@ export function ComponentsCatalog({ components }: { components: ComponentMeta[] 
 
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   // Category/price/page-size are derived straight from the URL — not
   // buffered into their own useState — so there's a single source of
@@ -48,11 +59,9 @@ export function ComponentsCatalog({ components }: { components: ComponentMeta[] 
     categoryItems.findIndex((item) => (typeof item === "string" ? item : item.label) === active),
   );
   const priceParam = searchParams.get("price");
-  // Free is the default landing state (no ?price and no ?category in the
-  // URL yet) so visitors see free components first. Once a category is
-  // picked, price resets to "all" within that category rather than
-  // re-defaulting to free — see handleSelectCategory below.
-  const price: "all" | "free" | "premium" = isPriceFilter(priceParam) ? priceParam : categoryParam ? "all" : "free";
+  // "All" categories, no price filter, is the default landing state — Free
+  // is no longer auto-selected; visitors pick a price filter themselves.
+  const price: "all" | "free" | "premium" = isPriceFilter(priceParam) ? priceParam : "all";
   const visibleCount = (() => {
     const n = Number(searchParams.get("count"));
     return Number.isFinite(n) && n >= PAGE_SIZE ? n : PAGE_SIZE;
@@ -98,11 +107,28 @@ export function ComponentsCatalog({ components }: { components: ComponentMeta[] 
   const visible = filtered.slice(0, visibleCount);
   const remaining = filtered.length - visible.length;
 
-  const lenis = useLenis();
+  // Browsing "All" groups the catalog into "Category [count]" sections
+  // instead of one flat, uncategorized grid — picking a specific category
+  // still falls back to the flat, paginated list above.
+  const groupedSections = React.useMemo(() => {
+    if (active !== "All") return null;
+    const q = query.trim().toLowerCase();
+    return categories
+      .map(([category]) => {
+        const items = components.filter((c) => {
+          if (c.category !== category) return false;
+          if (price === "free" && !c.free) return false;
+          if (price === "premium" && c.free) return false;
+          if (q && !c.name.toLowerCase().includes(q) && !c.description.toLowerCase().includes(q)) return false;
+          return true;
+        });
+        return { category, items };
+      })
+      .filter((s) => s.items.length > 0);
+  }, [components, active, price, query, categories]);
 
   const scrollToTop = () => {
-    if (lenis) lenis.scrollTo(0, { immediate: false });
-    else window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Price and Categories are mutually exclusive in the UI: picking one
@@ -129,18 +155,6 @@ export function ComponentsCatalog({ components }: { components: ComponentMeta[] 
     updateParams({ count: String(visibleCount + PAGE_SIZE) });
   };
 
-  // Lenis (smooth-scroll) measures the document's scrollable height once and
-  // only re-measures on its own ResizeObserver signal — after "Load More"
-  // (or a category switch) adds/removes a whole page's worth of cards in one
-  // React commit, Lenis's cached scroll limit can end up stale, capping
-  // wheel-driven scroll well short of the page's real (now taller) bottom
-  // even though native window.scrollTo still works fine. Force a
-  // recalculation whenever the visible set changes so wheel scroll isn't
-  // left stuck at the old boundary.
-  React.useEffect(() => {
-    lenis?.resize();
-  }, [lenis, visible.length]);
-
   return (
     <div className="mt-10 flex flex-col gap-8 md:flex-row md:items-start">
       <nav className="shrink-0 md:sticky md:top-24 md:w-56">
@@ -161,21 +175,39 @@ export function ComponentsCatalog({ components }: { components: ComponentMeta[] 
       </nav>
 
       <div className="min-w-0 flex-1">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {visible.map((component) => (
-          <CatalogCard key={component.slug} component={component} filterQueryString={filterQueryString} />
-        ))}
-        </div>
-
-        {remaining > 0 && (
-          <div className="mt-8 flex justify-center">
-            <button
-              onClick={handleLoadMore}
-              className="rounded-full border border-border px-5 py-2.5 text-sm font-medium transition-colors duration-300 ease-signature hover:border-foreground/30 hover:bg-accent"
-            >
-              Load More ({remaining} remaining)
-            </button>
+        {groupedSections ? (
+          <div className="flex flex-col gap-10">
+            {groupedSections.map(({ category, items }) => (
+              <section key={category}>
+                <CategoryHeading id={slugifyLabel(category)} title={category} count={items.length} />
+                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {items.map((component) => (
+                    <CatalogCard key={component.slug} component={component} filterQueryString={filterQueryString} />
+                  ))}
+                </div>
+              </section>
+            ))}
+            {groupedSections.length === 0 && <p className="text-sm text-foreground/40">No matches.</p>}
           </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {visible.map((component) => (
+                <CatalogCard key={component.slug} component={component} filterQueryString={filterQueryString} />
+              ))}
+            </div>
+
+            {remaining > 0 && (
+              <div className="mt-8 flex justify-center">
+                <button
+                  onClick={handleLoadMore}
+                  className="rounded-full border border-border px-5 py-2.5 text-sm font-medium transition-colors duration-300 ease-signature hover:border-foreground/30 hover:bg-accent"
+                >
+                  Load More ({remaining} remaining)
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
@@ -192,7 +224,6 @@ export function CatalogCard({
   /** Set when this card is rendered outside /components (e.g. "/blocks", "/elements") — cross-listed components still link to /components/[slug], but "back" from there should return here, not to /components. */
   returnPath?: string;
 }) {
-  const preview = registryPreviews[component.slug];
   // Owns hover state itself (rather than each ComponentCardMedia tracking
   // its own mouseenter/mouseleave) because the click-through overlay <Link>
   // below sits above the media in z-order and would otherwise swallow the
@@ -233,16 +264,8 @@ export function CatalogCard({
             Pro
           </span>
         )} */}
-        {preview ? (
-          <ComponentCardMedia
-            slug={component.slug}
-            render={preview}
-            lazy
-            hovering={hovering}
-            previewWrapperClassName="p-4"
-            previewScaleClassName="w-[480px] max-w-none origin-center scale-[0.42] sm:scale-[0.5]"
-          />
-        ) : null}
+        <ComponentCardMedia slug={component.slug} hovering={hovering} previewWrapperClassName="p-4" />
+        <SchemaBadge slug={component.slug} className="pointer-events-none absolute top-2.5 left-2.5 z-20 border border-[#60A5FA]/30 bg-black/65 text-white/85 backdrop-blur-sm [&>svg]:text-[#7DB5FF]" />
       </div>
       <div className="flex items-center justify-between gap-3 px-4 pt-1 pb-4">
         <div className="truncate font-mono text-sm font-semibold">{component.name}</div>

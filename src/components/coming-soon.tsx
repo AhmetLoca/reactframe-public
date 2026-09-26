@@ -9,7 +9,7 @@ export function ComingSoon({ title, description }: { title: string; description:
 
       <p className="mx-auto mt-6 max-w-lg text-[17px] leading-relaxed text-foreground/60">{description}</p>
 
-      <p className="mx-auto mt-3 max-w-lg text-sm text-foreground/40">We&apos;re still building this section — check back soon.</p>
+      <p className="mx-auto mt-3 max-w-lg text-sm text-foreground/40">We&apos;re still building this section, check back soon.</p>
 
       <Link
         href="/components"

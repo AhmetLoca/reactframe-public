@@ -35,10 +35,10 @@ export interface ExpandCardGridProps extends Omit<React.ComponentPropsWithoutRef
 }
 
 const DEFAULT_ITEMS: ExpandCardGridItem[] = [
-  { title: "Section One", buttonText: "Explore Now" },
-  { title: "Section Two", buttonText: "Explore Now" },
-  { title: "Section Three", buttonText: "Explore Now" },
-  { title: "Section Four", buttonText: "Explore Now" },
+  { src: "/demo/105.webp", title: "Section One", buttonText: "Explore Now" },
+  { src: "/demo/102.webp", title: "Section Two", buttonText: "Explore Now" },
+  { src: "/demo/109.webp", title: "Section Three", buttonText: "Explore Now" },
+  { src: "/demo/111.webp", title: "Section Four", buttonText: "Explore Now" },
 ];
 
 const EASING = "cubic-bezier(0.4, 0, 0.2, 1)";

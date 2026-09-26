@@ -76,10 +76,19 @@ interface Pt {
 
 const VB_W = 1200;
 const VB_H = 560;
-const PAD_LEFT = 58;
-const PAD_RIGHT = 150;
+const PAD_LEFT = 72;
+const PAD_RIGHT = 190;
 const PAD_TOP = 26;
-const PAD_BOTTOM = 44;
+const PAD_BOTTOM = 58;
+
+function readableTextOn(hex: string): string {
+  const h = hex.replace("#", "");
+  const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  const r = parseInt(full.slice(0, 2), 16);
+  const g = parseInt(full.slice(2, 4), 16);
+  const b = parseInt(full.slice(4, 6), 16);
+  return 0.299 * r + 0.587 * g + 0.114 * b > 150 ? "#0A0A0A" : "#FFFFFF";
+}
 
 function clamp(n: number, min: number, max: number) {
   return Math.min(max, Math.max(min, n));
@@ -136,11 +145,42 @@ function smoothAreaPath(pts: Pt[], baseY: number): string {
   return `${line} L ${last.x} ${baseY} L ${first.x} ${baseY} Z`;
 }
 
-const DEFAULT_SERIES1: Required<LineChartSeries> = { visible: true, label: "Expansion ARR", color: "#8b5cf6", style: "solid", area: true, showBadge: true };
-const DEFAULT_SERIES2: Required<LineChartSeries> = { visible: true, label: "Activation rate", color: "#6366f1", style: "solid", area: false, showBadge: true };
-const DEFAULT_SERIES3: Required<LineChartSeries> = { visible: true, label: "Week 8 retention", color: "#34d399", style: "dashed", area: false, showBadge: true };
-const DEFAULT_SERIES4: Required<LineChartSeries> = { visible: true, label: "Support risk", color: "#f87171", style: "dotted", area: false, showBadge: true };
-
+const DARK_SERIES1: Required<LineChartSeries> = {
+  visible: true,
+  label: "Expansion ARR",
+  color: "#F5F4F1",
+  style: "solid",
+  area: true,
+  showBadge: true,
+};
+const DARK_SERIES2: Required<LineChartSeries> = {
+  visible: true,
+  label: "Activation rate",
+  color: "#87FFE3",
+  style: "solid",
+  area: false,
+  showBadge: true,
+};
+const DARK_SERIES3: Required<LineChartSeries> = {
+  visible: true,
+  label: "Week 8 retention",
+  color: "#F2A841",
+  style: "dashed",
+  area: false,
+  showBadge: true,
+};
+const DARK_SERIES4: Required<LineChartSeries> = {
+  visible: true,
+  label: "Support risk",
+  color: "#FF7A6B",
+  style: "dotted",
+  area: false,
+  showBadge: true,
+};
+const LIGHT_SERIES1: Required<LineChartSeries> = { ...DARK_SERIES1, color: "#0A0A0A" };
+const LIGHT_SERIES2: Required<LineChartSeries> = { ...DARK_SERIES2, color: "#0E9F80" };
+const LIGHT_SERIES3: Required<LineChartSeries> = { ...DARK_SERIES3, color: "#D9822B" };
+const LIGHT_SERIES4: Required<LineChartSeries> = { ...DARK_SERIES4, color: "#E5484D" };
 const DEFAULT_DATA: LineChartDataPoint[] = [
   { x: "2024", date: "Monday, Jan 1, 2024", v1: 100, v2: 100, v3: 100, v4: 100 },
   { x: "Mar 2024", date: "Friday, Mar 1, 2024", v1: 108, v2: 112, v3: 92, v4: 80 },
@@ -167,10 +207,10 @@ export function LineChart({
   yMin = 50,
   yMax = 350,
   yStep = 50,
-  series1 = DEFAULT_SERIES1,
-  series2 = DEFAULT_SERIES2,
-  series3 = DEFAULT_SERIES3,
-  series4 = DEFAULT_SERIES4,
+  series1 = theme === "light" ? LIGHT_SERIES1 : DARK_SERIES1,
+  series2 = theme === "light" ? LIGHT_SERIES2 : DARK_SERIES2,
+  series3 = theme === "light" ? LIGHT_SERIES3 : DARK_SERIES3,
+  series4 = theme === "light" ? LIGHT_SERIES4 : DARK_SERIES4,
   dataPoints = DEFAULT_DATA,
   zone = DEFAULT_ZONE,
   referenceLine = DEFAULT_REF_LINE,
@@ -197,14 +237,18 @@ export function LineChart({
   // below the viewBox's natural aspect ratio we shrink the box to match it.
   const effectiveHeight = containerWidth > 0 ? Math.min(chartHeight, containerWidth * (VB_H / VB_W)) : chartHeight;
 
+  // Keep axis labels a readable ~13px on screen regardless of how far the viewBox is scaled down.
+  const viewScale = containerWidth > 0 ? Math.min(containerWidth / VB_W, effectiveHeight / VB_H) : 0.5;
+  const axisFontSize = Math.min(26, Math.max(12, 13 / viewScale));
+
   const palette = {
-    cardBg: isDark ? "#15161b" : "#ffffff",
+    cardBg: isDark ? "#0E0E0E" : "#ffffff",
     cardBorder: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
     textPrimary: isDark ? "#f4f5f7" : "#111317",
     textSub: isDark ? "rgba(255,255,255,0.55)" : "rgba(17,19,23,0.55)",
     gridLine: isDark ? "rgba(255,255,255,0.07)" : "rgba(17,19,23,0.08)",
-    axisText: isDark ? "rgba(255,255,255,0.45)" : "rgba(17,19,23,0.45)",
-    zoneFill: isDark ? "rgba(99,102,241,0.08)" : "rgba(99,102,241,0.06)",
+    axisText: isDark ? "rgba(255,255,255,0.7)" : "rgba(17,19,23,0.7)",
+    zoneFill: isDark ? "rgba(255,255,255,0.04)" : "rgba(17,19,23,0.04)",
     refLine: isDark ? "rgba(255,255,255,0.35)" : "rgba(17,19,23,0.3)",
     hoverLine: isDark ? "rgba(255,255,255,0.55)" : "rgba(17,19,23,0.45)",
     badgeBg: isDark ? "rgba(28,30,38,0.85)" : "rgba(255,255,255,0.92)",
@@ -326,7 +370,7 @@ export function LineChart({
                 height={plotHeight}
                 fill={palette.zoneFill}
               />
-              <text x={(xAt(clamp(zone.startIndex, 0, n - 1)) + xAt(clamp(zone.endIndex, 0, n - 1))) / 2} y={plotTop + 18} textAnchor="middle" fontSize={12} fill={palette.axisText}>
+              <text x={(xAt(clamp(zone.startIndex, 0, n - 1)) + xAt(clamp(zone.endIndex, 0, n - 1))) / 2} y={plotTop + axisFontSize + 6} textAnchor="middle" fontSize={axisFontSize} fill={palette.axisText}>
                 {zone.label}
               </text>
             </>
@@ -335,14 +379,14 @@ export function LineChart({
           {yTicks.map((v) => (
             <g key={v}>
               <line x1={plotLeft} x2={plotRight} y1={yAt(v)} y2={yAt(v)} stroke={palette.gridLine} strokeWidth={1} />
-              <text x={plotLeft - 14} y={yAt(v) + 4} textAnchor="end" fontSize={12} fill={palette.axisText}>
+              <text x={plotLeft - 14} y={yAt(v) + axisFontSize * 0.35} textAnchor="end" fontSize={axisFontSize} fill={palette.axisText}>
                 {v}
               </text>
             </g>
           ))}
 
           {dataPoints.map((d, i) => (
-            <text key={i} x={xAt(i)} y={plotBottom + 26} textAnchor="middle" fontSize={12} fill={palette.axisText}>
+            <text key={i} x={xAt(i)} y={plotBottom + 12 + axisFontSize} textAnchor="middle" fontSize={axisFontSize} fill={palette.axisText}>
               {d.x}
             </text>
           ))}
@@ -350,14 +394,14 @@ export function LineChart({
           {referenceLine.visible && (
             <>
               <line x1={plotLeft} x2={plotRight} y1={yAt(referenceLine.value)} y2={yAt(referenceLine.value)} stroke={palette.refLine} strokeWidth={1.3} strokeDasharray="6 5" />
-              <text x={plotLeft + plotWidth * 0.5} y={yAt(referenceLine.value) + 16} textAnchor="middle" fontSize={11.5} fill={palette.axisText}>
+              <text x={plotLeft + plotWidth * 0.5} y={yAt(referenceLine.value) + axisFontSize + 4} textAnchor="middle" fontSize={axisFontSize} fill={palette.axisText}>
                 {referenceLine.label}
               </text>
             </>
           )}
 
           {startLabel.visible && (
-            <text x={plotLeft + 4} y={yAt(dataPoints[0]?.v1 ?? yMin) - 10} fontSize={11.5} fill={palette.axisText}>
+            <text x={plotLeft + 4} y={yAt(dataPoints[0]?.v1 ?? yMin) - 10} fontSize={axisFontSize} fill={palette.axisText}>
               {startLabel.text}
             </text>
           )}
@@ -387,10 +431,15 @@ export function LineChart({
         {badges.map((b) => (
           <div
             key={`badge-${b.i}`}
-            className="absolute right-0 flex items-center gap-1.5 overflow-hidden rounded-full py-1 pr-2.5 pl-2 backdrop-blur-[6px]"
+            className="absolute flex items-center gap-1.5 overflow-hidden rounded-full py-1 pr-2.5 pl-2 backdrop-blur-[6px]"
             style={{
               left: `${(xAt(n - 1) / VB_W) * 100}%`,
               top: `${(b.y / VB_H) * 100}%`,
+              // Reserve room out to the container's own right edge (not just PAD_RIGHT's
+              // viewBox share) so a narrower render still ellipsizes gracefully via the
+              // inner span's `truncate` instead of getting a hard mid-glyph clip from the
+              // card's overflow-hidden.
+              maxWidth: `calc(${100 - (xAt(n - 1) / VB_W) * 100}% - 8px)`,
               transform: "translate(8px, -50%)",
               backgroundColor: palette.badgeBg,
               border: `1px solid ${b.s.color}55`,
@@ -409,8 +458,8 @@ export function LineChart({
           hoverBadges.map((b) => (
             <div
               key={`hb-${b.i}`}
-              className="absolute rounded-[5px] px-[7px] py-0.5 text-[11px] font-bold whitespace-nowrap text-white"
-              style={{ left: `${(plotLeft / VB_W) * 100}%`, top: `${(b.y / VB_H) * 100}%`, transform: "translate(-100%, -50%)", backgroundColor: b.s.color }}
+              className="absolute rounded-[5px] px-[7px] py-0.5 text-[11px] font-bold whitespace-nowrap"
+              style={{ left: `${(plotLeft / VB_W) * 100}%`, top: `${(b.y / VB_H) * 100}%`, transform: "translate(-100%, -50%)", backgroundColor: b.s.color, color: readableTextOn(b.s.color) }}
             >
               {Math.round(b.value)}
             </div>

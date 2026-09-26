@@ -19,6 +19,8 @@ export interface TestimonialSpotlightItem {
 export type TestimonialSpotlightTransition = "crossfade" | "slide" | "iris";
 
 export interface TestimonialSpotlightProps extends Omit<React.ComponentPropsWithoutRef<"div">, "children"> {
+  /** Business or product these reviews are about, named in the schema.org Review markup search engines read. */
+  reviewSubject?: string;
   reviews?: TestimonialSpotlightItem[];
   sectionLabel?: string;
   autoPlay?: boolean;
@@ -36,21 +38,21 @@ const STAR_INDICES = [0, 1, 2, 3, 4];
 
 const DEFAULT_REVIEWS: TestimonialSpotlightItem[] = [
   {
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&q=80",
+    image: "/demo/51.webp",
     name: "James Harrington",
     role: "Founder, Vertex Studio",
     quote: "They work at full speed without losing form. Watching our vision come to life this fast, with this much precision, was something I didn't expect.",
     rating: 5,
   },
   {
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=1200&q=80",
+    image: "/demo/49.webp",
     name: "Elena Marsh",
     role: "Head of Product, Drift Labs",
     quote: "Steady, silent, unstoppable. Not a word wasted, not a move without purpose, just clean momentum toward the finish.",
     rating: 5,
   },
   {
-    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=1200&q=80",
+    image: "/demo/53.webp",
     name: "David Kolbe",
     role: "Creative Director, Altitude Brand",
     quote: "They carved through every challenge like it wasn't there. Sharp instincts, decisive execution, they made it look effortless.",
@@ -70,6 +72,7 @@ function useContainerWidth(ref: React.RefObject<HTMLDivElement | null>) {
 }
 
 export function TestimonialSpotlight({
+  reviewSubject,
   reviews = DEFAULT_REVIEWS,
   sectionLabel = "Reviews",
   autoPlay = false,
@@ -215,6 +218,22 @@ export function TestimonialSpotlight({
 
   if (count === 0) return null;
 
+  // schema.org Review markup (JSON-LD) for search engines, skipped while the placeholder reviews show.
+  const reviewsJsonLd = reviews === DEFAULT_REVIEWS
+    ? null
+    : JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": reviews
+          .filter((r) => r.quote && r.name)
+          .map((r) => ({
+            "@type": "Review",
+            reviewBody: r.quote,
+            author: { "@type": "Person", name: r.name },
+            ...(reviewSubject ? { itemReviewed: { "@type": "Organization", name: reviewSubject } } : {}),
+            ...(r.rating ? { reviewRating: { "@type": "Rating", ratingValue: r.rating, bestRating: 5 } } : {}),
+          })),
+      }).replace(/</g, "\\u003c");
+
   return (
     <div
       ref={containerRef}
@@ -226,6 +245,7 @@ export function TestimonialSpotlight({
       style={{ borderRadius }}
       {...props}
     >
+      {reviewsJsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: reviewsJsonLd }} />}
       <div className="relative min-h-0 flex-1 overflow-hidden">
         {reviews.map((r, i) => (
           <div key={i} style={getLayerStyle(i)}>
@@ -246,7 +266,7 @@ export function TestimonialSpotlight({
           </span>
           {showCounter && (
             <span className="text-white/40 tabular-nums" style={{ fontSize: isMobile ? 10 : 11, letterSpacing: "0.1em", fontFamily: "'Helvetica Neue', Arial, sans-serif" }}>
-              {String(active + 1).padStart(2, "0")} — {String(count).padStart(2, "0")}
+              {String(active + 1).padStart(2, "0")} {String(count).padStart(2, "0")}
             </span>
           )}
         </div>
@@ -289,7 +309,7 @@ export function TestimonialSpotlight({
             </span>
             {review.role && (
               <>
-                <span className="text-[11px] text-white/25">—</span>
+                <span className="text-[11px] text-white/25">-</span>
                 <span className="text-white/50" style={{ fontSize: isMobile ? 10 : 14, letterSpacing: "0.05em", fontFamily: "'Helvetica Neue', Arial, sans-serif" }}>
                   {review.role}
                 </span>

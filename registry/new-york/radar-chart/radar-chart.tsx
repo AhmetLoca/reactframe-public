@@ -59,9 +59,12 @@ function pointOnCircle(cx: number, cy: number, r: number, angle: number) {
   return { x: round(cx + r * Math.cos(angle)), y: round(cy + r * Math.sin(angle)) };
 }
 
-const DEFAULT_SERIES1: Required<RadarChartSeries> = { visible: true, label: "Launch build", color: "#8B5CF6", style: "solid", showMarkers: true };
-const DEFAULT_SERIES2: Required<RadarChartSeries> = { visible: true, label: "Target bar", color: "#2DD4BF", style: "dashed", showMarkers: false };
-const DEFAULT_SERIES3: Required<RadarChartSeries> = { visible: true, label: "Buyer benchmark", color: "#FBBF24", style: "solid", showMarkers: true };
+const DARK_SERIES1: Required<RadarChartSeries> = { visible: true, label: "Launch build", color: "#F5F4F1", style: "solid", showMarkers: true };
+const DARK_SERIES2: Required<RadarChartSeries> = { visible: true, label: "Target bar", color: "#87FFE3", style: "dashed", showMarkers: false };
+const DARK_SERIES3: Required<RadarChartSeries> = { visible: true, label: "Buyer benchmark", color: "#F2A841", style: "solid", showMarkers: true };
+const LIGHT_SERIES1: Required<RadarChartSeries> = { ...DARK_SERIES1, color: "#0A0A0A" };
+const LIGHT_SERIES2: Required<RadarChartSeries> = { ...DARK_SERIES2, color: "#0E9F80" };
+const LIGHT_SERIES3: Required<RadarChartSeries> = { ...DARK_SERIES3, color: "#D9822B" };
 
 const DEFAULT_AXES: RadarChartAxisPoint[] = [
   { label: "SSO", v1: 78, v2: 80, v3: 60 },
@@ -83,9 +86,9 @@ export function RadarChart({
   max = 100,
   rings = 4,
   outerRadius = 150,
-  series1 = DEFAULT_SERIES1,
-  series2 = DEFAULT_SERIES2,
-  series3 = DEFAULT_SERIES3,
+  series1 = theme === "light" ? LIGHT_SERIES1 : DARK_SERIES1,
+  series2 = theme === "light" ? LIGHT_SERIES2 : DARK_SERIES2,
+  series3 = theme === "light" ? LIGHT_SERIES3 : DARK_SERIES3,
   axes = DEFAULT_AXES,
   enableHover = true,
   className,
@@ -108,13 +111,17 @@ export function RadarChart({
   // below the viewBox's natural aspect ratio we shrink the box to match it.
   const effectiveHeight = containerWidth > 0 ? Math.min(chartHeight, containerWidth * (VB_H / VB_W)) : chartHeight;
 
+  // Keep axis labels a readable ~13px on screen regardless of how far the viewBox is scaled down.
+  const viewScale = containerWidth > 0 ? Math.min(containerWidth / VB_W, effectiveHeight / VB_H) : 0.5;
+  const axisFontSize = Math.min(36, Math.max(12, 13 / viewScale));
+
   const palette = {
-    cardBg: isDark ? "#15161b" : "#ffffff",
+    cardBg: isDark ? "#0E0E0E" : "#ffffff",
     cardBorder: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
     textPrimary: isDark ? "#f4f5f7" : "#111317",
     textSub: isDark ? "rgba(255,255,255,0.55)" : "rgba(17,19,23,0.55)",
     gridLine: isDark ? "rgba(255,255,255,0.07)" : "rgba(17,19,23,0.08)",
-    axisText: isDark ? "rgba(255,255,255,0.45)" : "rgba(17,19,23,0.45)",
+    axisText: isDark ? "rgba(255,255,255,0.7)" : "rgba(17,19,23,0.7)",
     badgeBorder: isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.08)",
   };
 
@@ -207,11 +214,11 @@ export function RadarChart({
           })}
 
           {axes.map((d, i) => {
-            const pos = pointOnCircle(cx, cy, outerRadius + 22, angleAt(i));
+            const pos = pointOnCircle(cx, cy, outerRadius + 10 + axisFontSize * 0.8, angleAt(i));
             const cosA = Math.cos(angleAt(i));
             const anchor = cosA > 0.3 ? "start" : cosA < -0.3 ? "end" : "middle";
             return (
-              <text key={`axislabel-${i}`} x={pos.x} y={pos.y} textAnchor={anchor} dominantBaseline="middle" fontSize={12} fill={palette.axisText}>
+              <text key={`axislabel-${i}`} x={pos.x} y={pos.y} textAnchor={anchor} dominantBaseline="middle" fontSize={axisFontSize} fill={palette.axisText}>
                 {d.label}
               </text>
             );

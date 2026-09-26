@@ -10,6 +10,9 @@ function cn(...inputs: ClassValue[]) {
 }
 
 type Cell = "EMPTY" | "CIRCLE" | "CROSS";
+export type TicTacToeDifficulty = "easy" | "medium" | "hard";
+export type TicTacToeTrigger = "manual" | "delay" | "scroll";
+export type TicTacToeWidgetPosition = "bottom-right" | "bottom-left";
 
 const LINES = [
   [0, 1, 2],
@@ -101,15 +104,52 @@ function Confetti({ colors }: { colors: string[] }) {
   );
 }
 
+function WidgetGlyph() {
+  return (
+    <span className="text-[13px] font-extrabold tracking-wider text-white" aria-hidden="true">
+      ✕○
+    </span>
+  );
+}
+
 export interface TicTacToeGameProps extends Omit<React.ComponentPropsWithoutRef<"div">, "children"> {
   circleColor?: string;
   crossColor?: string;
   boardColor?: string;
   squareColor?: string;
   enableAI?: boolean;
+  aiDifficulty?: TicTacToeDifficulty;
+  asPopup?: boolean;
+  trigger?: TicTacToeTrigger;
+  delaySeconds?: number;
+  widgetPosition?: TicTacToeWidgetPosition;
+  widgetIcon?: string;
+  title?: string;
 }
 
-export function TicTacToeGame({ circleColor = "#FF665C", crossColor = "#EC0B8E", boardColor = "#e0e0e0", squareColor = "#ffffff", enableAI = true, className, style, ...props }: TicTacToeGameProps) {
+export function TicTacToeGame({
+  circleColor = "#FF665C",
+  crossColor = "#EC0B8E",
+  boardColor = "#e0e0e0",
+  squareColor = "#ffffff",
+  enableAI = true,
+  aiDifficulty = "medium",
+  asPopup = false,
+  trigger = "manual",
+  delaySeconds = 4,
+  widgetPosition = "bottom-right",
+  widgetIcon,
+  title = "Tic Tac Toe",
+  className,
+  style,
+  ...props
+}: TicTacToeGameProps) {
+  const rootRef = React.useRef<HTMLDivElement>(null);
+  const popupCardRef = React.useRef<HTMLDivElement>(null);
+  const widgetTriggerRef = React.useRef<HTMLButtonElement>(null);
+  const delayTimerRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const wasPopupOpenRef = React.useRef(false);
+
   const [positions, setPositions] = React.useState<Cell[]>(Array(9).fill("EMPTY"));
   const [player, setPlayer] = React.useState<Cell>("CIRCLE");
   const [winner, setWinner] = React.useState<Cell | "tie" | null>(null);
@@ -117,6 +157,16 @@ export function TicTacToeGame({ circleColor = "#FF665C", crossColor = "#EC0B8E",
   const [scores, setScores] = React.useState({ circle: 0, cross: 0, ties: 0 });
   const [showConfetti, setShowConfetti] = React.useState(false);
   const [isAiThinking, setIsAiThinking] = React.useState(false);
+  const [popupOpen, setPopupOpen] = React.useState(!asPopup);
+  const [scrollTriggered, setScrollTriggered] = React.useState(false);
+  const [prevAsPopup, setPrevAsPopup] = React.useState(asPopup);
+
+  if (asPopup !== prevAsPopup) {
+    setPrevAsPopup(asPopup);
+    setPopupOpen(!asPopup);
+  }
+
+  const widgetOnRight = widgetPosition !== "bottom-left";
 
   const getAiMove = (board: Cell[]) => {
     const empty = board.map((v, i) => (v === "EMPTY" ? i : null)).filter((v): v is number => v !== null);
@@ -132,7 +182,7 @@ export function TicTacToeGame({ circleColor = "#FF665C", crossColor = "#EC0B8E",
     }
     if (board[4] === "EMPTY") return 4;
     const corners = [0, 2, 6, 8].filter((i) => board[i] === "EMPTY");
-    if (corners.length) return corners[Math.floor(Math.random() * corners.length)];
+    if (corners.length && aiDifficulty !== "easy") return corners[Math.floor(Math.random() * corners.length)];
     return empty[Math.floor(Math.random() * empty.length)];
   };
 
@@ -189,13 +239,44 @@ export function TicTacToeGame({ circleColor = "#FF665C", crossColor = "#EC0B8E",
     setIsAiThinking(false);
   };
 
+  React.useEffect(() => () => clearTimeout(delayTimerRef.current), []);
+
+  React.useEffect(() => {
+    if (!asPopup || trigger !== "delay") return;
+    clearTimeout(delayTimerRef.current);
+    delayTimerRef.current = setTimeout(() => setPopupOpen(true), delaySeconds * 1000);
+    return () => clearTimeout(delayTimerRef.current);
+  }, [asPopup, trigger, delaySeconds]);
+
+  React.useEffect(() => {
+    if (!asPopup || trigger !== "scroll" || !rootRef.current) return;
+    const el = rootRef.current;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !scrollTriggered) {
+          setScrollTriggered(true);
+          setPopupOpen(true);
+        }
+      },
+      { threshold: 0.4 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [asPopup, trigger, scrollTriggered]);
+
+  React.useEffect(() => {
+    if (!asPopup) return;
+    if (popupOpen) popupCardRef.current?.focus();
+    else if (wasPopupOpenRef.current) widgetTriggerRef.current?.focus();
+    wasPopupOpenRef.current = popupOpen;
+  }, [asPopup, popupOpen]);
+
   const lineCoords = winningLine ? LINE_COORDS[winningLine.join(",")] : null;
 
-  return (
+  const gameCard = (
     <div
-      className={cn("relative box-border flex w-full flex-col items-center justify-center overflow-hidden rounded-[24px] p-5", className)}
-      style={{ background: "linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%)", fontFamily: "'Montserrat', system-ui, sans-serif", ...style }}
-      {...props}
+      className="relative box-border flex w-full flex-col items-center justify-center overflow-hidden rounded-[24px] p-5"
+      style={{ background: "linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%)", fontFamily: "'Montserrat', system-ui, sans-serif" }}
     >
       <div className="mb-3 flex items-center gap-7">
         <div className="flex flex-col items-center gap-0.5" style={{ color: circleColor }}>
@@ -240,11 +321,93 @@ export function TicTacToeGame({ circleColor = "#FF665C", crossColor = "#EC0B8E",
         </AnimatePresence>
       </div>
 
-      <motion.button className="mt-5.5 cursor-pointer rounded-full border-none bg-[#111] px-8 py-3 text-[15px] font-bold text-white" style={{ letterSpacing: "0.5px" }} onClick={reset} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+      <motion.button className="mt-5.5 cursor-pointer rounded-full border-none bg-[#111] px-8 py-3 text-[15px] font-bold text-white" style={{ letterSpacing: "0.5px" }} onClick={reset} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} aria-label="Start a new tic tac toe game">
         New Game
       </motion.button>
 
       <AnimatePresence>{showConfetti && <Confetti colors={[circleColor, crossColor, "#FFD700", "#00E5FF"]} />}</AnimatePresence>
+    </div>
+  );
+
+  if (!asPopup) {
+    return (
+      <div ref={rootRef} className={cn("w-full", className)} style={style} {...props}>
+        {gameCard}
+      </div>
+    );
+  }
+
+  return (
+    <div ref={rootRef} className={cn("relative w-full", className)} style={style} {...props}>
+      <div className={cn("flex", widgetOnRight ? "justify-end" : "justify-start")}>
+        <motion.button
+          ref={widgetTriggerRef}
+          type="button"
+          onClick={() => setPopupOpen(true)}
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.97 }}
+          aria-label={`Open ${title}`}
+          aria-haspopup="dialog"
+          aria-expanded={popupOpen}
+          className="flex items-center gap-3 rounded-full border border-[rgba(23,26,33,0.08)] bg-white py-1.5 pr-5 pl-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
+          style={{ fontFamily: "'Montserrat', system-ui, sans-serif" }}
+        >
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#121212]">
+            {widgetIcon ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={widgetIcon} alt="" className="h-6 w-6 rounded-full object-cover" />
+            ) : (
+              <WidgetGlyph />
+            )}
+          </span>
+          <span className="flex flex-col gap-0.5 text-left">
+            <span className="text-[9px] font-bold tracking-[0.1em] whitespace-nowrap text-[rgba(23,26,33,0.4)] uppercase">Mini Game</span>
+            <span className="text-[13px] font-bold tracking-[0.02em] whitespace-nowrap text-[#171a21]">{title}</span>
+          </span>
+        </motion.button>
+      </div>
+
+      <AnimatePresence>
+        {popupOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setPopupOpen(false);
+            }}
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-5"
+            style={{ background: "rgba(0,0,0,0.45)" }}
+          >
+            <motion.div
+              ref={popupCardRef}
+              initial={{ opacity: 0, scale: 0.94, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              role="dialog"
+              aria-modal="true"
+              aria-label={title}
+              tabIndex={-1}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") setPopupOpen(false);
+              }}
+              className="relative w-full max-w-[420px] overflow-auto rounded-[24px] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.18)]"
+              style={{ maxHeight: "90vh" }}
+            >
+              {gameCard}
+              <button
+                type="button"
+                onClick={() => setPopupOpen(false)}
+                aria-label="Close game"
+                className="absolute top-2.5 right-2.5 z-[100] flex h-8 w-8 items-center justify-center rounded-full border border-[rgba(23,26,33,0.1)] bg-white text-[17px] text-[#111]"
+              >
+                ×
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { posts, formatPostDate } from "@/lib/blog-data";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog" },
   title: "Blog",
   description: "Component breakdowns, build notes, and updates from the ReactFrame library.",
 };
@@ -16,7 +17,7 @@ export default function BlogPage() {
 
       <div className="mt-12">
         {posts.length === 0 ? (
-          <p className="py-16 text-center text-sm text-foreground/50">No posts yet — check back soon.</p>
+          <p className="py-16 text-center text-sm text-foreground/50">No posts yet, check back soon.</p>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (

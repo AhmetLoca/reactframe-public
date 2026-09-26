@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/faq" },
   title: "FAQ",
   description: "Common questions about ReactFrame's components, licensing, and support.",
 };
@@ -10,18 +11,18 @@ const FAQS: { question: string; answer: React.ReactNode }[] = [
   {
     question: "What's the difference between Free and Premium components?",
     answer:
-      "Both are the same quality and get the same fidelity checks — Premium components require unlocking access to the source before you can copy the code. Free ones are ready to install immediately, no unlock step.",
+      "Both are the same quality and get the same fidelity checks, Premium components require unlocking access to the source before you can copy the code. Free ones are ready to install immediately, no unlock step.",
   },
   {
     question: "Do components depend on ReactFrame at runtime?",
     answer:
-      "No. Every component ships as plain React and Tailwind CSS — you copy the source into your own project and it's yours from there, with no package to install and no ongoing dependency on this site.",
+      "No. Every component ships as plain React and Tailwind CSS, you copy the source into your own project and it's yours from there, with no package to install and no ongoing dependency on this site.",
   },
   {
     question: "Can I use components in commercial or client projects?",
     answer: (
       <>
-        Yes — see the{" "}
+        Yes, see the{" "}
         <Link href="/license" className="underline decoration-foreground/20 underline-offset-4 hover:decoration-foreground">
           License
         </Link>{" "}
@@ -32,7 +33,7 @@ const FAQS: { question: string; answer: React.ReactNode }[] = [
   {
     question: "Can I customize a component after copying it?",
     answer:
-      "Yes, fully. Once it's in your project it's just React and Tailwind — restyle it, extend its props, strip out what you don't need.",
+      "Yes, fully. Once it's in your project it's just React and Tailwind, restyle it, extend its props, strip out what you don't need.",
   },
   {
     question: "Do I need a specific framework to use these?",
@@ -40,14 +41,14 @@ const FAQS: { question: string; answer: React.ReactNode }[] = [
       "Components are built for React with Tailwind CSS and work in any React setup (Next.js, Vite, etc.). Each component page shows the exact code you'll copy, so you can see the dependencies before you commit.",
   },
   {
-    question: "Something isn't working the way the docs describe — what do I do?",
+    question: "Something isn't working the way the docs describe, what do I do?",
     answer: (
       <>
         That&apos;s a{" "}
         <Link href="/support" className="underline decoration-foreground/20 underline-offset-4 hover:decoration-foreground">
           Support
         </Link>{" "}
-        question, not a FAQ one — email us directly from that page and we&apos;ll take a look.
+        question, not a FAQ one, email us directly from that page and we&apos;ll take a look.
       </>
     ),
   },

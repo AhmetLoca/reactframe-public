@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, ChevronDown, Copy } from "lucide-react";
+import { Check, ChevronDown, Copy, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export type CodeLang = "ts" | "js";
@@ -138,6 +138,21 @@ export function CodeVariantToolbar({
         )}
       />
     </div>
+  );
+}
+
+/** Same shape/classes as CopyButton — sits to its left in the Code tab header, downloads the active variant as a file. */
+export function DownloadButton({ onDownload }: { onDownload: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onDownload}
+      aria-label="Download"
+      className="flex h-8 shrink-0 items-center gap-2 rounded-lg border border-border bg-card px-3 text-sm text-foreground/80 transition-colors duration-300 ease-signature hover:border-foreground/30 hover:text-foreground"
+    >
+      Download
+      <Download className="h-3.5 w-3.5" />
+    </button>
   );
 }
 

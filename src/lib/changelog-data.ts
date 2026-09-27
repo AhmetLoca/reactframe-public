@@ -9,6 +9,18 @@ export interface ChangelogEntry {
 // /changelog page and signals that the catalog is actively maintained.
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-09-27",
+    title: "Hover previews for AI and Gallery components, and a refreshed homepage",
+    items: [
+      "Hovering a component card now plays a short clip for 28 more components: the whole AI group (AI Assistant, AI Voice 01–05, AI Image Loader 01–04, AI Dynamic Island 01–02, AI Answer 01–03, AI Chat Prompt, AI Chat, and AI Edit Review) and the first ten Gallery components, from Image Showcase to Dot Image Slider.",
+      "Mood Gallery and Gallery Flow now scroll at the same speed on every screen. Before, they ran twice as fast on 120 Hz displays.",
+      "Gallery Reveal keeps its three columns inside scaled containers, such as a zooming modal. Before, it could drop to two.",
+      "YouTube Gallery now picks its column count from its own width instead of the window's, so it fits in sidebars and narrow columns. Its preview is now dark to match the site.",
+      "Skew Scroll Gallery ships with 15 images instead of 9, so there is enough to scroll and the skew effect shows in the preview.",
+      "The homepage has a cleaner headline and one subline: Animated components you can copy, prompt, or install. Faster. The stack logos under the button now lift on hover, and Featured Components is a hand-picked set of six with uncropped previews.",
+    ],
+  },
+  {
     date: "2026-09-26",
     title: "ReactFrame is live on reactframe.com",
     items: [

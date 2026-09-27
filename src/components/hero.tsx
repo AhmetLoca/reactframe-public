@@ -19,21 +19,17 @@ export function Hero() {
           </span>
         </Link>
 
-        <h1 className="animate-rise mx-auto mt-7 [animation-delay:80ms]">
-          <span className="block bg-gradient-to-b from-foreground from-50% to-foreground/75 bg-clip-text text-[24px] leading-[1.08] font-semibold tracking-[-0.025em] text-transparent uppercase sm:text-[32px] md:text-[44px]">
-            Creative React Components
+        <h1 className="animate-rise mx-auto mt-8 [animation-delay:80ms]">
+          <span className="block text-[36px] leading-[1.02] font-semibold tracking-[-0.035em] text-balance text-foreground sm:text-[48px] md:text-[64px]">
+            Creative React <span className="text-foreground/45">Components</span>
           </span>
-          <span className="mt-4 block text-xl font-medium tracking-tight text-foreground/65 sm:text-2xl md:mt-5 md:text-[32px]">
-            Build beautiful interfaces.{" "}
-            <span className="bg-gradient-to-r from-[#F2A841] to-[#FF7A45] bg-clip-text font-semibold text-transparent">Faster.</span>
+          <span className="mx-auto mt-5 block max-w-2xl text-lg font-medium tracking-[-0.01em] text-balance text-foreground/80 sm:text-xl md:mt-6 md:text-[22px]">
+            Animated components you can copy, prompt, or install.{" "}
+            <span className="bg-gradient-to-r from-[#F2A841] to-[#FF7A45] bg-clip-text text-transparent">Faster.</span>
           </span>
         </h1>
 
-        <p className="animate-rise mx-auto mt-6 max-w-lg text-[17px] leading-relaxed text-foreground/60 [animation-delay:140ms]">
-          Animated React components you can copy, prompt, or install.
-        </p>
-
-        <div className="animate-rise mt-8 flex flex-wrap items-center justify-center gap-4 [animation-delay:200ms]">
+        <div className="animate-rise mt-10 flex flex-wrap items-center justify-center gap-4 [animation-delay:200ms]">
           <Link
             href="/components"
             className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-3 text-sm font-medium text-primary-foreground transition-opacity duration-300 ease-signature hover:opacity-80"
@@ -50,13 +46,13 @@ export function Hero() {
           */}
         </div>
 
-        <ul className="animate-rise mt-14 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 [animation-delay:260ms]">
+        <ul className="animate-rise mt-16 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-foreground [animation-delay:260ms]">
           {STACK_ICONS.map((icon) => (
             <li key={icon.name} className="group relative">
               <span
                 tabIndex={0}
                 aria-label={icon.name}
-                className="flex h-6 w-6 items-center justify-center rounded opacity-80 outline-none transition-opacity duration-300 ease-signature focus-visible:ring-2 focus-visible:ring-foreground/40 group-hover:opacity-100"
+                className="flex h-6 w-6 items-center justify-center rounded opacity-80 outline-none transition-[opacity,transform] duration-300 ease-signature focus-visible:ring-2 focus-visible:ring-foreground/40 group-hover:-translate-y-0.5 group-hover:scale-110 group-hover:opacity-100 group-focus-within:-translate-y-0.5 group-focus-within:scale-110 group-focus-within:opacity-100"
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true" className="h-full w-full" fill={icon.mono ? "currentColor" : icon.color}>
                   <path d={icon.path} />

@@ -280,7 +280,7 @@ export function TelegramWidget({
               <div className="text-[11px] text-white/80">@{cleanUsername}</div>
             </div>
             <button
-              onClick={handleDismissPopup}
+              aria-label="Dismiss notification" onClick={handleDismissPopup}
               className="flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-full bg-white/[0.18] transition-colors hover:bg-white/[0.32]"
             >
               <CloseIcon size={13} />
@@ -333,7 +333,7 @@ export function TelegramWidget({
             </div>
           </div>
           <button
-            onClick={handleClose}
+            aria-label="Close chat" onClick={handleClose}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/[0.18] transition-all hover:scale-110 hover:bg-white/30"
           >
             <CloseIcon />
@@ -410,7 +410,7 @@ export function TelegramWidget({
 
         <div className="flex items-center gap-2 border-t border-[#eef2f7] bg-white px-3 py-2.5">
           <div className="shrink-0 cursor-default select-none text-[22px] transition-transform hover:scale-[1.2]">😊</div>
-          <input
+          <input aria-label="Type a message"
             ref={inputRef}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
@@ -421,7 +421,7 @@ export function TelegramWidget({
             onBlur={(e) => (e.currentTarget.style.borderColor = "#eef2f7")}
           />
           <button
-            onClick={handleSend}
+            aria-label="Send message" onClick={handleSend}
             className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full transition-transform"
             style={{
               background: inputValue.trim() ? `linear-gradient(135deg, ${accentColor}, ${gradientEnd})` : "#e4e9ef",
@@ -452,7 +452,7 @@ export function TelegramWidget({
 
       <div className="relative inline-flex">
         <button
-          onClick={isOpen ? handleClose : handleOpen}
+          aria-label={isOpen ? "Close chat" : "Open chat"} onClick={isOpen ? handleClose : handleOpen}
           className="relative flex h-[60px] w-[60px] items-center justify-center overflow-hidden rounded-full transition-transform hover:scale-110"
           style={{
             background: isOpen ? "linear-gradient(135deg, #ff6b6b, #ee5a24)" : isOffline ? "linear-gradient(135deg, #6b7280, #4b5563)" : `linear-gradient(135deg, ${accentColor}, ${gradientEnd})`,

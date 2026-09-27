@@ -339,8 +339,10 @@ export function WheelSpinDiscountPopup({
   };
 
   const suffix = storageKey.trim() ? `-${storageKey.trim()}` : "";
-  const spinsKey = `spin-spins-left${suffix}`;
-  const rewardsKey = `spin-rewards${suffix}`;
+  // Its own keys: Spin to Win Wheel uses spin-*, and sharing them let a spin on one wheel use up
+  // the other's spins on the same site.
+  const spinsKey = `wheel-spin-spins-left${suffix}`;
+  const rewardsKey = `wheel-spin-rewards${suffix}`;
 
   React.useEffect(() => {
     const savedSpins = localStorage.getItem(spinsKey);

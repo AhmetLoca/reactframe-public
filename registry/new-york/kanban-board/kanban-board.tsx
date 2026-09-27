@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -194,6 +195,9 @@ export function KanbanBoard({
 
   const boardRef = React.useRef<HTMLDivElement>(null);
   const dragLayerRef = React.useRef<HTMLDivElement>(null);
+  // Screen px per layout px of the board (below 1 when an ancestor scales it down), so the ghost,
+  // which lives on <body>, matches the card it was lifted from.
+  const dragScaleRef = React.useRef(1);
   const columnRefs = React.useRef<Record<string, HTMLDivElement | null>>({});
   const cardElRefs = React.useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -234,7 +238,10 @@ export function KanbanBoard({
     if (!layer || !d.cardId) return;
     const x = d.pointerX - d.offsetX;
     const y = d.pointerY - d.offsetY;
-    layer.style.transform = `translate3d(${x}px, ${y}px, 0px) rotate(${d.tilt}deg) scale(${DRAG_LIFT_SCALE})`;
+    const s = dragScaleRef.current;
+    const hw = layer.offsetWidth / 2;
+    const hh = layer.offsetHeight / 2;
+    layer.style.transform = `translate3d(${x}px, ${y}px, 0px) scale(${s}) translate(${hw}px, ${hh}px) rotate(${d.tilt}deg) scale(${DRAG_LIFT_SCALE}) translate(${-hw}px, ${-hh}px)`;
   }, []);
 
   const findDropTarget = React.useCallback(
@@ -298,7 +305,8 @@ export function KanbanBoard({
     };
     lastMoveRef.current.x = e.clientX;
     lastMoveRef.current.t = performance.now();
-    setDragWidth(rect.width);
+    dragScaleRef.current = cardEl.offsetWidth ? rect.width / cardEl.offsetWidth : 1;
+    setDragWidth(cardEl.offsetWidth);
     setDragCardId(card.id);
     try {
       (e.target as HTMLElement).setPointerCapture(e.pointerId);
@@ -585,8 +593,11 @@ export function KanbanBoard({
         })}
       </div>
 
-      {draggedCard && (
-        <div ref={dragLayerRef} className="pointer-events-none fixed top-0 left-0 z-[9999]" style={{ width: dragWidth || 290 - 16, willChange: "transform" }}>
+      {/* Portalled to <body>: position: fixed is relative to any transformed ancestor, which left the
+          ghost offset from the pointer inside scaled or animated containers. */}
+      {draggedCard &&
+        createPortal(
+        <div ref={dragLayerRef} className="pointer-events-none fixed top-0 left-0 z-[9999]" style={{ width: dragWidth || 290 - 16, willChange: "transform", transformOrigin: "0 0", fontFamily: '"Helvetica Neue","Inter",-apple-system,BlinkMacSystemFont,Arial,sans-serif' }}>
           <div className="rounded-[10px]" style={{ background: surfaceColor, padding: "0.85em 0.95em", boxShadow: `0 ${DRAG_SHADOW_LIFT}px 40px -16px rgba(0,0,0,0.35)` }}>
             {(draggedCard.tag || draggedCard.priority) && (
               <div className="mb-2.5 flex items-center justify-between">
@@ -612,8 +623,9 @@ export function KanbanBoard({
               {draggedCard.title}
             </p>
           </div>
-        </div>
-      )}
+        </div>,
+          document.body,
+        )}
     </div>
   );
 }

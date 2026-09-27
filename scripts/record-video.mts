@@ -60,12 +60,48 @@ try {
   const page = await context.newPage();
   await page.addInitScript(() => localStorage.setItem("reactframe-cookie-consent", "declined"));
   await page.clock.install({ time: Date.now() });
-  const res = await page.goto(`${base}/preview/video/${slug}`, { waitUntil: "load" });
-  if (!res?.ok()) throw new Error(`Stage /preview/video/${slug} returned ${res?.status()} (dev server running? stage registered?)`);
+  // Routes other than a video stage have no drawn cursor (the stage renders one), so inject the
+  // same arrow, following the mouse events Playwright dispatches.
+  if (scene.url) {
+    await page.addInitScript(() => {
+      document.addEventListener("DOMContentLoaded", () => {
+        const ns = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(ns, "svg");
+        svg.setAttribute("width", "22");
+        svg.setAttribute("height", "26");
+        svg.setAttribute("viewBox", "0 0 22 26");
+        svg.style.cssText = "position:fixed;z-index:2147483647;left:-100px;top:-100px;opacity:0;pointer-events:none;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))";
+        const path = document.createElementNS(ns, "path");
+        path.setAttribute("d", "M3 2v19l5-4.6 3.4 7.3 3.2-1.5-3.3-7.1H18z");
+        path.setAttribute("fill", "#fff");
+        path.setAttribute("stroke", "#000");
+        path.setAttribute("stroke-width", "1.4");
+        path.setAttribute("stroke-linejoin", "round");
+        svg.appendChild(path);
+        document.body.appendChild(svg);
+        const move = (e: MouseEvent) => {
+          svg.style.left = `${e.clientX - 3}px`;
+          svg.style.top = `${e.clientY - 2}px`;
+          svg.style.opacity = "1";
+        };
+        window.addEventListener("mousemove", move, true);
+        window.addEventListener("pointermove", move, true);
+      });
+    });
+  }
+  // A scene can point at any route (e.g. a full page preview) instead of its video stage.
+  const target = scene.url ?? `/preview/video/${slug}`;
+  const res = await page.goto(`${base}${target}`, { waitUntil: "load" });
+  if (!res?.ok()) throw new Error(`${target} returned ${res?.status()} (dev server running? stage registered?)`);
   await page.addStyleTag({ content: "nextjs-portal{display:none!important}" });
   // Real-time wait so lazy images are fetched before the fake clock drives the animation.
   await page.waitForLoadState("networkidle");
   await page.waitForTimeout(1200);
+  // Freeze the fake clock so only runFor() moves it. Left running, it also advances in real time,
+  // and screenshots make every frame slow, so timers and rAF-timed animations (game ticks,
+  // progress bars) ran 3-4x too fast in the clip.
+  // A little ahead of the page's clock, which keeps ticking until the pause lands.
+  await page.clock.pauseAt((await page.evaluate(() => Date.now())) + 200);
   await page.clock.runFor(2500);
 
   const total = Math.round((scene.duration + (scene.loopBlend ?? 0)) * FPS);

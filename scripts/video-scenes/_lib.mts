@@ -28,6 +28,8 @@ export interface Scene {
    * Keep the cursor hidden in the first and last `loopBlend` seconds, or it ghosts.
    */
   loopBlend?: number;
+  /** Route to record instead of /preview/video/<slug>, e.g. "/pages/preview/about-us/view". */
+  url?: string;
 }
 
 export const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -67,6 +69,8 @@ export async function stepWebAnimations(page: Page, fps: number) {
   await page.evaluate((dt) => {
     for (const a of document.getAnimations()) {
       if (a.playState === "finished") continue;
+      // Scroll- and view-driven animations run on their scroll timeline, not on time; leave them.
+      if (a.timeline && !(a.timeline instanceof DocumentTimeline)) continue;
       const end = Number(a.effect?.getComputedTiming().endTime ?? 0);
       const next = Math.max(0, Number(a.currentTime ?? 0)) + dt;
       if (a.playState !== "paused") a.pause();

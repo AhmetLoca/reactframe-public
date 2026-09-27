@@ -35,6 +35,11 @@ fi
 # Filter the list itself (not rsync --exclude, whose directory rules don't reliably catch individually
 # listed files) so no premium component path is ever handed to rsync.
 PREMIUM_RE="$(echo "$PREMIUM_SLUGS" | sed '/^$/d' | sed 's#.*#^registry/new-york/&/|^registry-code-variants/&\\.json$#' | paste -sd'|' -)"
+# Premium full pages ship their whole source in src/app/pages/preview/<slug>/, so they are dropped too.
+PREMIUM_PAGES="$(node scripts/list-premium-pages.mts 2>/dev/null)"
+echo "$PREMIUM_PAGES" | sed '/^$/d' | sed 's/^/  - excluding page: /'
+PAGES_RE="$(echo "$PREMIUM_PAGES" | sed '/^$/d' | sed 's#.*#^src/app/pages/preview/&/#' | paste -sd'|' -)"
+if [ -n "$PAGES_RE" ]; then PREMIUM_RE="${PREMIUM_RE:+$PREMIUM_RE|}$PAGES_RE"; fi
 FILE_LIST="$(mktemp)"
 git ls-files | grep -v '^public/r/' | { if [ -n "$PREMIUM_RE" ]; then grep -Ev "$PREMIUM_RE"; else cat; fi; } > "$FILE_LIST"
 if [ -n "$PREMIUM_RE" ] && grep -Eq "$PREMIUM_RE" "$FILE_LIST"; then

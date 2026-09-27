@@ -189,6 +189,8 @@ export function DiagonalCarousel({
         }}
       >
         <button
+          type="button"
+          aria-label="Previous slide"
           onClick={toPrev}
           className="flex items-center justify-center rounded-md border-none bg-transparent px-2.5 py-1.5 transition-opacity duration-200"
           // Source's "opacity 200ms ease" needs an explicit ease override —
@@ -202,10 +204,13 @@ export function DiagonalCarousel({
 
         <div className="flex items-center gap-1.5 px-1">
           {effectiveSlides.map((_, i) => (
-            <div
+            <button
               key={i}
+              type="button"
+              aria-label={`Go to slide ${i + 1}`}
+              aria-current={activeIndex === i}
               onClick={() => toSlide(i)}
-              className="h-1.75 shrink-0 cursor-pointer rounded-full"
+              className="h-1.75 shrink-0 cursor-pointer rounded-full border-none p-0"
               style={{
                 width: activeIndex === i ? 24 : 7,
                 backgroundColor: activeIndex === i ? fg : fgFaint,
@@ -216,6 +221,8 @@ export function DiagonalCarousel({
         </div>
 
         <button
+          type="button"
+          aria-label="Next slide"
           onClick={toNext}
           className="flex items-center justify-center rounded-md border-none bg-transparent px-2.5 py-1.5 transition-opacity duration-200"
           style={{

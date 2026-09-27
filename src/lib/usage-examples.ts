@@ -1503,7 +1503,7 @@ const [bio, setBio] = React.useState("");
 `,
   "footer-premium": `import { FooterPremium } from "@/components/footer-premium";
 
-<FooterPremium logoLabel="Loca" description="Premium, shadcn-compatible components for your next project." />
+<FooterPremium logoLabel="Studio" description="Premium, shadcn-compatible components for your next project." />
 `,
   "footer-section": `import { FooterSection } from "@/components/footer-section";
 
@@ -1953,7 +1953,7 @@ const [bio, setBio] = React.useState("");
 `,
   "infinite-marquee": `import { InfiniteMarquee } from "@/components/infinite-marquee";
 
-<InfiniteMarquee text="Welcome to Framer" separator="✦" fontSize={32} />
+<InfiniteMarquee text="ReactFrame" separator="✦" fontSize={32} />
 `,
   "toggle-pro": `import * as React from "react";
 import { TogglePro } from "@/components/toggle-pro";

@@ -175,15 +175,20 @@ export function GalleryFlow({
   }, [cw, ch, count, items]);
 
   React.useEffect(() => {
-    const animate = () => {
+    // Scale each step by elapsed time (in 60 Hz frames) so the drift runs at the same speed on
+    // 60 Hz and 120 Hz screens.
+    let last = 0;
+    const animate = (now: number) => {
+      const dt = last ? Math.min((now - last) / (1000 / 60), 3) : 1;
+      last = now;
       if (!galleryPausedRef.current) {
         offsetsRef.current = offsetsRef.current.map((off, i) => {
           if (pauseOnHover && hoveredIdxRef.current === i) return off;
           const item = items[i];
           const itemW = item.w * cw;
           const itemH = item.h * ch;
-          let nx = off.x + item.dirX * speed * item.speedMult * 0.4;
-          let ny = off.y + item.dirY * speed * item.speedMult * 0.4;
+          let nx = off.x + item.dirX * speed * item.speedMult * 0.4 * dt;
+          let ny = off.y + item.dirY * speed * item.speedMult * 0.4 * dt;
 
           if (cursorMode !== "none" && cursorRef.current) {
             const cx = cursorRef.current.x;

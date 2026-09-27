@@ -4,13 +4,12 @@ import type { CatalogKitEntry } from "@/lib/llms-content";
 // A kit's cover: one large thumbnail on the left, two stacked on the right, taken from the kit's `cover`
 // slugs. Static images only (like catalog cards), so a grid of kits stays cheap to render.
 export function KitCard({ kit, cover }: { kit: CatalogKitEntry; cover: [string, string, string] }) {
-  const total = kit.freeCount + kit.premiumCount;
   return (
     <Link
       href={`/kits/${kit.slug}`}
       className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-colors duration-300 ease-signature hover:border-foreground/20"
     >
-      <div className="m-3 grid h-[188px] grid-cols-[3fr_2fr] grid-rows-2 gap-2">
+      <div className="m-3 grid h-[168px] grid-cols-[3fr_2fr] grid-rows-2 gap-2">
         {cover.map((slug, i) => (
           <div key={slug} className={`overflow-hidden rounded-xl bg-background/60 ${i === 0 ? "row-span-2" : ""}`}>
             <img
@@ -24,17 +23,13 @@ export function KitCard({ kit, cover }: { kit: CatalogKitEntry; cover: [string, 
           </div>
         ))}
       </div>
-      <div className="flex flex-1 flex-col px-5 pt-2 pb-5">
+      {/* Same footer as the component cards (name left, green free count right), plus the kit's tagline. */}
+      <div className="flex flex-1 flex-col px-4 pt-1 pb-4">
         <div className="flex items-center justify-between gap-3">
-          <h3 className="text-[15px] font-semibold tracking-tight">{kit.name}</h3>
-          <span aria-hidden className="text-foreground/40 transition-transform duration-300 ease-signature group-hover:translate-x-0.5">
-            &rarr;
-          </span>
+          <h3 className="truncate font-mono text-sm font-semibold">{kit.name}</h3>
+          <span className="shrink-0 text-sm font-semibold text-[#00A92A]">{kit.premiumCount === 0 ? "Free" : `${kit.freeCount} free`}</span>
         </div>
         <p className="mt-1.5 text-sm leading-relaxed text-foreground/60">{kit.tagline}</p>
-        <p className="mt-auto pt-4 text-xs text-foreground/45">
-          {total} components · {kit.premiumCount === 0 ? "all free" : `${kit.freeCount} free`}
-        </p>
       </div>
     </Link>
   );

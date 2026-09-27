@@ -193,7 +193,7 @@ export default async function ComponentPage({
           </h2>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((c) => (
-              <CatalogCard key={c.slug} component={c} />
+              <CatalogCard key={c.slug} component={c} mediaClassName="aspect-[4/3]" />
             ))}
           </div>
         </section>

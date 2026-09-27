@@ -147,10 +147,14 @@ export function DinoRunnerGame({
     const canvas = canvasRef.current;
     if (!canvas) return;
     const g = gameRef.current;
-    const rect = wrap?.getBoundingClientRect();
-    const w = Math.max(320, Math.floor(rect?.width || wrap?.clientWidth || 640));
-    canvas.width = w;
-    canvas.height = CANVAS_H;
+    // Layout width (offsetWidth ignores CSS transforms, so a scaled container can't squash the
+    // course), and a backing store at the device pixel ratio so the pixel art stays sharp on
+    // high-density screens. The game itself keeps drawing in CSS px.
+    const w = Math.max(320, Math.floor(wrap?.offsetWidth || 640));
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(CANVAS_H * dpr);
+    canvas.getContext("2d")?.setTransform(dpr, 0, 0, dpr, 0, 0);
     g.width = w;
     g.height = CANVAS_H;
     g.groundY = CANVAS_H - 48;
@@ -163,8 +167,8 @@ export function DinoRunnerGame({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     const g = gameRef.current;
-    const w = canvas.width || 640;
-    const h = canvas.height || CANVAS_H;
+    const w = g.width || 640;
+    const h = g.height || CANVAS_H;
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, w, h);
     ctx.strokeStyle = "#e0e0e0";

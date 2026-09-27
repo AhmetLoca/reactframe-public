@@ -51,6 +51,9 @@ export function SpaceInvadersGame({
   const widgetTriggerRef = React.useRef<HTMLButtonElement>(null);
   const delayTimerRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const isVisibleRef = React.useRef(true);
+  // The wave waits for the first move or shot, so the board doesn't play itself to "You lost"
+  // before anyone has touched it.
+  const startedRef = React.useRef(false);
   const wasPopupOpenRef = React.useRef(false);
   const keysRef = React.useRef({ left: false, right: false, space: false });
 
@@ -106,7 +109,10 @@ export function SpaceInvadersGame({
   React.useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    const ro = new ResizeObserver(([entry]) => setIsMobile(entry.contentRect.width < 900));
+    // Touch controls for touch screens (and very narrow boards), not for every desktop column
+    // under 900px.
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    const ro = new ResizeObserver(([entry]) => setIsMobile(coarse || entry.contentRect.width < 520));
     ro.observe(el);
     return () => ro.disconnect();
   }, [popupOpen]);
@@ -156,6 +162,7 @@ export function SpaceInvadersGame({
       setPopupOpen(false);
       return;
     }
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight" || e.key === " ") startedRef.current = true;
     if (e.key === "ArrowLeft") {
       keysRef.current.left = true;
       e.preventDefault();
@@ -378,6 +385,11 @@ export function SpaceInvadersGame({
           screen!.font = "600 11px 'Helvetica Neue', Helvetica, Arial, sans-serif";
           screen!.fillStyle = mode.inkFaint;
           screen!.fillText(`POINTS  ${kills}`, gameSize.width / 2, gameSize.height / 2 + 18);
+        } else if (!startedRef.current) {
+          screen!.font = "600 11px 'Helvetica Neue', Helvetica, Arial, sans-serif";
+          screen!.textAlign = "center";
+          screen!.fillStyle = mode.inkFaint;
+          screen!.fillText("PRESS SPACE OR AN ARROW KEY TO START", gameSize.width / 2, gameSize.height - 70);
         } else {
           screen!.font = "700 10px 'Helvetica Neue', Helvetica, Arial, sans-serif";
           screen!.textAlign = "right";
@@ -395,8 +407,14 @@ export function SpaceInvadersGame({
       if (width > 1000) gameSize = { width: 980, height: 480 };
       else if (width > 700) gameSize = { width: Math.max(320, width - 40), height: 440 };
       else gameSize = { width: Math.max(280, width - 24), height: 360 };
-      canvas!.width = gameSize.width;
-      canvas!.height = gameSize.height;
+      // Backing store at the device pixel ratio (sharp sprites on high-density screens); the game
+      // keeps drawing in CSS px.
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas!.width = Math.round(gameSize.width * dpr);
+      canvas!.height = Math.round(gameSize.height * dpr);
+      canvas!.style.width = `${gameSize.width}px`;
+      canvas!.style.height = `${gameSize.height}px`;
+      screen!.setTransform(dpr, 0, 0, dpr, 0, 0);
       kills = 0;
       game = new Game();
       game.draw();
@@ -406,12 +424,13 @@ export function SpaceInvadersGame({
     function loop() {
       if (isDestroyed) return;
       if (isVisibleRef.current) {
-        game.update();
+        if (startedRef.current) game.update();
         game.draw();
       }
       rafId = requestAnimationFrame(loop);
     }
 
+    startedRef.current = false;
     initGame();
     rafId = requestAnimationFrame(loop);
 
@@ -430,6 +449,7 @@ export function SpaceInvadersGame({
 
   const handleTouch = (type: "left" | "right" | "space", active: boolean) => {
     keysRef.current[type] = active;
+    if (active) startedRef.current = true;
   };
 
   const gameCard = (

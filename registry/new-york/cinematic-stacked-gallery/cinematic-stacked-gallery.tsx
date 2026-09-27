@@ -179,9 +179,12 @@ export function CinematicStackedGallery({
           --gs-duration: 0.85s;
           --gs-ease: cubic-bezier(0.22, 1, 0.36, 1);
           font-family: system-ui, -apple-system, sans-serif;
+          /* A size container: the stacked thumbnails are placed in cqw/cqh (the gallery's own box),
+             not vw/vh, which put them in the wrong spot whenever the gallery wasn't full-screen. */
+          container-type: size;
         }
-        @media (max-width: 640px) {
-          .${scopeClass} { --gs-scale: 0.16; --gs-gap: 10px; --gs-bottom: 20px; }
+        @container (max-width: 640px) {
+          .${scopeClass} .gs-track { --gs-scale: 0.16; --gs-gap: 10px; --gs-bottom: 20px; }
         }
         .${scopeClass} .gs-track { height: 100%; overflow: visible !important; position: relative; }
         .${scopeClass} .gs-item { inset: 0 !important; margin: 0 !important; pointer-events: none !important; position: absolute !important; transform: none !important; width: auto !important; }
@@ -196,7 +199,7 @@ export function CinematicStackedGallery({
         .${scopeClass} .gs-item[data-active="false"] .gs-slide {
           border-radius: 48px;
           filter: brightness(0.62) blur(var(--depth-blur));
-          transform: translate(calc(var(--offset) * (var(--gs-scale) * 100vw + var(--gs-gap))), calc((50vh - var(--gs-scale) * 50vh) - var(--gs-bottom))) scale(var(--gs-scale));
+          transform: translate(calc(var(--offset) * (var(--gs-scale) * 100cqw + var(--gs-gap))), calc((50cqh - var(--gs-scale) * 50cqh) - var(--gs-bottom))) scale(var(--gs-scale));
         }
         .${scopeClass} .gs-item[data-active="false"] .gs-slide:hover { filter: brightness(1) blur(0); }
         .${scopeClass} .gs-image-wrap { position: absolute; inset: -4%; width: 108%; height: 108%; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform; }
@@ -212,7 +215,7 @@ export function CinematicStackedGallery({
           display: flex; flex-direction: column; gap: 1.75rem; inset: 0 auto 0 0;
           justify-content: center; max-width: min(520px, 70%); padding: 0 3.5rem 0 3rem; pointer-events: none; position: absolute; z-index: 5;
         }
-        @media (max-width: 640px) {
+        @container (max-width: 640px) {
           .${scopeClass} .gs-rail { max-width: 90%; padding: 0 1.5rem; }
         }
         .${scopeClass} .gs-content { animation: ${scopeClass}-content-in 0.65s var(--gs-ease) calc(var(--gs-duration) * 0.35) backwards; display: flex; flex-direction: column; gap: 0.85rem; }
@@ -277,7 +280,7 @@ export function CinematicStackedGallery({
                     />
                   </div>
                   {!isActive && (
-                    <button type="button" className="gs-thumb-btn" onClick={() => goTo(index)}>
+                    <button aria-label={`Go to slide ${index + 1}`} type="button" className="gs-thumb-btn" onClick={() => goTo(index)}>
                       <span className="gs-sr-only">Show {item.title}</span>
                     </button>
                   )}
@@ -315,7 +318,7 @@ export function CinematicStackedGallery({
               <button
                 type="button"
                 className="gs-nav"
-                onClick={() => goTo(thumbOrder.length ? thumbOrder[thumbOrder.length - 1] : activeIndex)}
+                onClick={() => goTo((activeIndex - 1 + total) % total)}
                 aria-label="Previous"
                 disabled={total < 2}
               >
@@ -326,7 +329,7 @@ export function CinematicStackedGallery({
               <button
                 type="button"
                 className="gs-nav"
-                onClick={() => goTo(thumbOrder.length ? thumbOrder[0] : activeIndex)}
+                onClick={() => goTo((activeIndex + 1) % total)}
                 aria-label="Next"
                 disabled={total < 2}
               >

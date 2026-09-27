@@ -203,7 +203,9 @@ export function CoinFlipGame({
   }, [asPopup, trigger, scrollTriggered]);
 
   React.useEffect(() => {
-    if (!asPopup || popupOpen) gameRootRef.current?.focus();
+    // Only a popup takes focus as it opens; the inline widget must not grab focus (and scroll the
+    // page to itself) just by mounting.
+    if (asPopup && popupOpen) gameRootRef.current?.focus();
     else if (wasPopupOpenRef.current) widgetTriggerRef.current?.focus();
     wasPopupOpenRef.current = popupOpen;
   }, [asPopup, popupOpen]);

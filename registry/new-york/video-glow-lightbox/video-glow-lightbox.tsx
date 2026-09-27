@@ -37,45 +37,8 @@ const CloseIcon = React.memo(function CloseIcon() {
   );
 });
 
-type DemoSourceType = "youtube" | "vimeo" | "file";
 
-const DEMO_SWITCHER_OPTIONS: { key: DemoSourceType; label: string }[] = [
-  { key: "youtube", label: "Youtube" },
-  { key: "vimeo", label: "Vimeo" },
-  { key: "file", label: "Upload" },
-];
 
-const DemoSwitcher = React.memo(function DemoSwitcher({ active, onChange }: { active: DemoSourceType; onChange: (type: DemoSourceType) => void }) {
-  return (
-    <div className="inline-flex items-center rounded-full border border-white/[0.08] px-6.5 py-3.5 shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-[20px] backdrop-saturate-[180%]" style={{ background: "rgba(28,28,30,0.55)" }}>
-      {DEMO_SWITCHER_OPTIONS.map((opt, i) => {
-        const isActive = active === opt.key;
-        return (
-          <div key={opt.key} className="flex items-center">
-            {i > 0 && <div aria-hidden="true" className="mx-[22px] h-[30px] w-px bg-white/10" />}
-            <button
-              type="button"
-              aria-pressed={isActive}
-              onClick={(e) => {
-                e.stopPropagation();
-                onChange(opt.key);
-              }}
-              className="flex flex-col items-center gap-2.5 border-none bg-transparent p-0"
-            >
-              <span className="text-[10px] font-semibold tracking-[0.14em] text-white/45 uppercase">{opt.label}</span>
-              <div className="relative h-[22px] w-10 rounded-full transition-colors" style={{ background: isActive ? "#ffffff" : "rgba(255,255,255,0.14)" }}>
-                <div
-                  className="absolute top-0.5 h-[18px] w-[18px] rounded-full transition-[left,background-color]"
-                  style={{ left: isActive ? 20 : 2, background: isActive ? "#0a0a0a" : "rgba(255,255,255,0.4)" }}
-                />
-              </div>
-            </button>
-          </div>
-        );
-      })}
-    </div>
-  );
-});
 
 export type VideoGlowLightboxType = "url" | "youtube" | "vimeo" | "file";
 export type VideoGlowLightboxTransition = "morph" | "fade";
@@ -113,19 +76,6 @@ export interface VideoGlowLightboxProps {
   hoverPreviewDelay?: number;
   soundReactiveGlow?: boolean;
   soundReactiveIntensity?: number;
-  /**
-   * Shows a floating control bar so people can flip between YouTube/Vimeo/
-   * Upload demo sources live, with a muted autoplay preview per source.
-   * It's a showcase affordance, not required — delete this prop and the
-   * demo* props below once you've picked your final video source.
-   */
-  showDemoSwitcher?: boolean;
-  demoYoutubeUrl?: string;
-  demoVimeoUrl?: string;
-  demoFileUrl?: string;
-  demoYoutubeThumbnail?: string;
-  demoVimeoThumbnail?: string;
-  demoFileThumbnail?: string;
   className?: string;
 }
 
@@ -170,13 +120,6 @@ export function VideoGlowLightbox({
   hoverPreviewDelay = 400,
   soundReactiveGlow = false,
   soundReactiveIntensity = 3.5,
-  showDemoSwitcher = false,
-  demoYoutubeUrl = "",
-  demoVimeoUrl = "",
-  demoFileUrl = "",
-  demoYoutubeThumbnail,
-  demoVimeoThumbnail,
-  demoFileThumbnail,
   className,
 }: VideoGlowLightboxProps) {
   const [prefersReduced, setPrefersReduced] = React.useState(false);
@@ -202,7 +145,6 @@ export function VideoGlowLightbox({
   const [isOpen, setIsOpen] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
   const [previewActive, setPreviewActive] = React.useState(false);
-  const [demoActiveType, setDemoActiveType] = React.useState<DemoSourceType>(videoType === "vimeo" ? "vimeo" : videoType === "file" ? "file" : "youtube");
 
   const cursorX = useMotionValue(0);
   const cursorY = useMotionValue(0);
@@ -211,21 +153,9 @@ export function VideoGlowLightbox({
 
   const audioLevel = useMotionValue(0);
 
-  const thumbSrc = showDemoSwitcher
-    ? demoActiveType === "file"
-      ? demoFileThumbnail
-      : demoActiveType === "youtube"
-        ? demoYoutubeThumbnail
-        : demoVimeoThumbnail
-    : thumbnailImage;
+  const thumbSrc = thumbnailImage;
 
-  const rawSrc = showDemoSwitcher
-    ? demoActiveType === "file"
-      ? demoFileUrl
-      : demoActiveType === "youtube"
-        ? demoYoutubeUrl
-        : demoVimeoUrl
-    : videoType === "file"
+  const rawSrc = videoType === "file"
       ? videoFile
       : videoUrl;
 
@@ -312,8 +242,8 @@ export function VideoGlowLightbox({
 
   const ytId = getYouTubeId(rawSrc || "");
   const vimeoId = getVimeoId(rawSrc || "");
-  const isYouTube = showDemoSwitcher ? demoActiveType === "youtube" : videoType === "youtube" || (videoType === "url" && !!ytId);
-  const isVimeo = showDemoSwitcher ? demoActiveType === "vimeo" : videoType === "vimeo" || (videoType === "url" && !isYouTube && !!vimeoId);
+  const isYouTube = videoType === "youtube" || (videoType === "url" && !!ytId);
+  const isVimeo = videoType === "vimeo" || (videoType === "url" && !isYouTube && !!vimeoId);
   const isEmbed = isYouTube || isVimeo;
 
   const playbackSrc = isYouTube
@@ -330,7 +260,6 @@ export function VideoGlowLightbox({
 
   const glowAlpha = Math.max(0, Math.min(1, glowIntensity / 100));
   const showPreview = previewActive && !isOpen && !!rawSrc;
-  const demoPreviewActive = showDemoSwitcher && !!rawSrc;
   const useMorph = lightboxTransition === "morph";
   const frameLayoutId = `vgl-frame-${reactId}`;
 
@@ -377,13 +306,7 @@ export function VideoGlowLightbox({
   }, [isOpen, soundReactiveGlow, isEmbed, soundReactiveIntensity, audioLevel]);
 
   return (
-    <div className={cn("relative flex h-full w-full flex-col", className)} style={{ gap: showDemoSwitcher ? 16 : 0 }}>
-      {showDemoSwitcher && (
-        <div className="flex shrink-0 justify-center">
-          <DemoSwitcher active={demoActiveType} onChange={setDemoActiveType} />
-        </div>
-      )}
-
+    <div className={cn("relative flex h-full w-full flex-col", className)}>
       <div
         ref={triggerRef}
         className="relative w-full flex-1"
@@ -433,17 +356,11 @@ export function VideoGlowLightbox({
               animate={{ scale: hovered ? 1.04 : 1 }}
               transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
             />
-          ) : demoPreviewActive ? (
-            isEmbed ? (
-              <iframe key={demoActiveType} src={previewSrc} className="pointer-events-none block h-full w-full border-none" allow="autoplay; fullscreen" title="Demo preview" />
-            ) : (
-              <video key={demoActiveType} src={previewSrc} muted autoPlay loop playsInline className="block h-full w-full object-cover" />
-            )
           ) : (
             <div aria-hidden="true" className="h-full w-full" style={{ background: "linear-gradient(145deg, #0e0e1c 0%, #1a0f30 45%, #0c1a38 100%)" }} />
           )}
 
-          {enableHoverPreview && !showDemoSwitcher && (
+          {enableHoverPreview && (
             <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1] bg-black" animate={{ opacity: showPreview ? 1 : 0 }} transition={{ duration: 0.4, ease: "easeOut" }}>
               {showPreview &&
                 (isEmbed ? (
@@ -582,7 +499,7 @@ export function VideoGlowLightbox({
                   ref={videoRef}
                   src={playbackSrc}
                   title="Video"
-                  crossOrigin={soundReactiveGlow && (showDemoSwitcher ? demoActiveType === "file" : videoType === "file") ? "anonymous" : undefined}
+                  crossOrigin={soundReactiveGlow && videoType === "file" ? "anonymous" : undefined}
                   autoPlay
                   controls
                   playsInline

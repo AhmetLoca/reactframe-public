@@ -26,4 +26,3 @@ export function isCheckoutLive(checkout: CheckoutLink | undefined): boolean {
 // component's real Lemon Squeezy checkout link is ready. Swap "#" for the
 // real URL as each product goes live; nothing else needs to change.
 export const checkoutLinks: Record<string, CheckoutLink> = {
-// Case Study Section

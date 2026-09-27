@@ -280,7 +280,7 @@ function MacBrowser(p: BrowserMockupProps) {
           <div className="flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-full px-3.5 py-1" style={{ background: t.urlPillBg }}>
             {p.showLock !== false && <IconLock c={t.iconStrong} />}
             <span className="overflow-hidden text-[12.5px] text-ellipsis whitespace-nowrap" style={{ color: t.urlText }}>
-              {cleanDomain(url)}
+              {activeTab === 0 ? cleanDomain(url) : <span style={{ opacity: 0.5 }}>Search or type a URL</span>}
             </span>
           </div>
           <div className="shrink-0">
@@ -290,8 +290,18 @@ function MacBrowser(p: BrowserMockupProps) {
       </div>
 
       <div className="relative min-h-0 flex-1">
-        <BrowserContent {...p} />
+        {activeTab === 0 ? <BrowserContent {...p} /> : <NewTabPage dark={dark} />}
       </div>
+    </div>
+  );
+}
+
+/** What a tab other than the first shows: an empty new-tab page, so switching tabs reads as real
+ * (before, every tab showed the same page and address). */
+function NewTabPage({ dark }: { dark: boolean }) {
+  return (
+    <div className="flex h-full w-full items-center justify-center" style={{ background: dark ? "#1c1c1f" : "#ffffff" }}>
+      <div className="h-9 w-[min(60%,420px)] rounded-full" style={{ background: dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)" }} />
     </div>
   );
 }
@@ -341,14 +351,14 @@ function WinBrowser(p: BrowserMockupProps) {
         <div className="flex min-w-0 flex-1 items-center gap-1.5 rounded-full px-3.5 py-1" style={{ background: t.urlPillBg }}>
           {p.showLock !== false && <IconLock c={t.iconStrong} />}
           <span className="overflow-hidden text-[12.5px] text-ellipsis whitespace-nowrap" style={{ color: t.urlText }}>
-            {cleanDomain(url)}
+            {activeTab === 0 ? cleanDomain(url) : <span style={{ opacity: 0.5 }}>Search or type a URL</span>}
           </span>
         </div>
         <IconMenuDots c={t.iconStrong} />
       </div>
 
       <div className="relative min-h-0 flex-1">
-        <BrowserContent {...p} />
+        {activeTab === 0 ? <BrowserContent {...p} /> : <NewTabPage dark={dark} />}
       </div>
     </div>
   );

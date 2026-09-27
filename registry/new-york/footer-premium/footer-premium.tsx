@@ -36,7 +36,7 @@ export interface FooterPremiumProps extends Omit<React.ComponentPropsWithoutRef<
   logoImage?: string;
   logoUrl?: string;
   logoLabel?: string;
-  /** Shows a circular "Framer Partner"-style SVG seal next to the logo. */
+  /** Shows a circular award-style SVG seal next to the logo. */
   showBadge?: boolean;
   badgeColorStart?: string;
   badgeColorEnd?: string;
@@ -194,6 +194,8 @@ function SocialIcon({ platform, size = 15 }: { platform: FooterPlatform; size?: 
   }
 }
 
+const SOCIAL_LABEL: Record<FooterPlatform, string> = { x: "X", youtube: "YouTube", instagram: "Instagram", linkedin: "LinkedIn", tiktok: "TikTok", facebook: "Facebook", discord: "Discord", github: "GitHub" };
+
 const DEFAULT_SOCIALS: FooterSocialLink[] = [
   { platform: "x", url: "https://x.com" },
   { platform: "youtube", url: "https://youtube.com" },
@@ -214,14 +216,14 @@ export function FooterPremium({
   accentColor = "#7C5CFF",
   logoImage,
   logoUrl = "#",
-  logoLabel = "Loca",
+  logoLabel = "Studio",
   showBadge = false,
   badgeColorStart = "#8A6CFF",
   badgeColorEnd = "#5B3DEB",
-  badgeTopText = "FRAMER",
-  badgeBottomText = "PARTNER",
+  badgeTopText = "AWARD",
+  badgeBottomText = "WINNER",
   showPill = false,
-  pillText = "Official Framer Creator",
+  pillText = "Available for new projects",
   pillUrl = "#",
   description = "Premium, shadcn-compatible components for your next project.",
   socials = DEFAULT_SOCIALS,
@@ -291,6 +293,7 @@ export function FooterPremium({
                 <a
                   key={i}
                   href={s.url}
+                  aria-label={SOCIAL_LABEL[s.platform]}
                   className={cn("flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full transition-colors", socialBg)}
                   style={{ color: fg }}
                 >

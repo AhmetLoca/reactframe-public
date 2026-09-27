@@ -34,10 +34,12 @@ export interface PhoneMockupProps extends Omit<React.ComponentPropsWithoutRef<"d
   background?: string;
 }
 
+// The same clips the site preview uses. (The video used to be a Big Buck Bunny test file on a
+// third-party test host, which a real project shouldn't depend on.)
 const DEFAULT_MEDIA: PhoneMockupMediaItem[] = [
-  { type: "image", src: "https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=800&q=80" },
-  { type: "image", src: "https://images.unsplash.com/photo-1526178613658-3f1622045557?w=800&q=80" },
-  { type: "video", src: "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4" },
+  { type: "video", src: "/demo/SocialMedia05.mp4" },
+  { type: "video", src: "/demo/SocialMedia03.mp4" },
+  { type: "video", src: "/demo/SocialMedia06.mp4" },
 ];
 
 function IPhoneFrame({

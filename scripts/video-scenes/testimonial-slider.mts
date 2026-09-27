@@ -1,0 +1,29 @@
+import { defineScene, hideCursor, path, stepWebAnimations } from "./_lib.mts";
+
+const prev = { x: 300, y: 380 };
+const next = { x: 334, y: 380 };
+
+// Step forward twice with the arrow (quote, photo and author change together), then back twice to the
+// slide the clip opened on.
+export default defineScene({
+  viewport: { width: 800, height: 600 },
+  duration: 6.4,
+  async frame({ fps, page, t, at }) {
+    await stepWebAnimations(page, fps);
+    const p = path(t, [
+      [0.3, { x: 780, y: 590 }],
+      [0.9, next],
+      [2.4, next],
+      [2.8, prev],
+      [4.45, prev],
+      [5.0, { x: 620, y: 580 }],
+      [5.2, { x: 800, y: 660 }],
+    ]);
+    if (p) await page.mouse.move(p.x, p.y);
+    if (at(1.0) || at(2.05) || at(3.0) || at(4.2)) {
+      await page.mouse.down();
+      await page.mouse.up();
+    }
+    if (at(5.25)) await hideCursor(page);
+  },
+});

@@ -181,6 +181,9 @@ export function TiltedCarousel({
         }}
       >
         <button
+          type="button"
+          aria-label="Previous slide"
+          disabled={activeIndex === 0}
           onClick={toPrev}
           className="flex items-center justify-center rounded-md border-none bg-transparent px-2.5 py-1.5"
           style={{ color: fg, opacity: activeIndex === 0 ? 0.3 : 1, transition: "opacity 200ms ease" }}
@@ -192,10 +195,13 @@ export function TiltedCarousel({
 
         <div className="flex items-center justify-center px-1" style={{ gap: 5 }}>
           {effectiveSlides.map((_, i) => (
-            <div
+            <button
               key={i}
+              type="button"
+              aria-label={`Go to slide ${i + 1}`}
+              aria-current={activeIndex === i}
               onClick={() => toSlide(i)}
-              className="h-1.75 shrink-0 cursor-pointer rounded-full"
+              className="h-1.75 shrink-0 cursor-pointer rounded-full border-none p-0"
               style={{
                 width: activeIndex === i ? 24 : 7,
                 backgroundColor: activeIndex === i ? fg : fgFaint,
@@ -206,6 +212,9 @@ export function TiltedCarousel({
         </div>
 
         <button
+          type="button"
+          aria-label="Next slide"
+          disabled={activeIndex === effectiveSlides.length - 1}
           onClick={toNext}
           className="flex items-center justify-center rounded-md border-none bg-transparent px-2.5 py-1.5"
           style={{ color: fg, opacity: activeIndex === effectiveSlides.length - 1 ? 0.3 : 1, transition: "opacity 200ms ease" }}

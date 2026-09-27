@@ -2339,7 +2339,7 @@ export const registryPreviews: Record<string, () => React.ReactNode> = {
   "qr-code-widget": () => (
     <div className="flex w-full items-center justify-center rounded-xl border border-border bg-card p-8">
       <div className="w-full max-w-[380px]">
-        <QrCodeWidget />
+        <QrCodeWidget qrImage="/demo/qr-reactframe.svg" linkUrl="https://reactframe.com" />
       </div>
     </div>
   ),
@@ -2886,7 +2886,7 @@ export const registryPreviews: Record<string, () => React.ReactNode> = {
   ),
   "x-post-mockup": () => (
     <div className="w-[420px]">
-      <XPostMockup mediaImage="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=1000&q=80" />
+      <XPostMockup mediaImage="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=1000&q=80" userAvatar="/demo/51.webp" />
     </div>
   ),
   "tiktok-post-mockup": () => (
@@ -2903,7 +2903,7 @@ export const registryPreviews: Record<string, () => React.ReactNode> = {
   "linkedin-post-mockup": () => (
     <div className="flex w-full items-center justify-center py-10">
       <div className="w-[420px] max-w-full">
-        <LinkedInPostMockup mediaImage="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000&q=80" />
+        <LinkedInPostMockup mediaImage="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000&q=80" userAvatar="/demo/53.webp" />
       </div>
     </div>
   ),
@@ -3015,26 +3015,26 @@ export const registryPreviews: Record<string, () => React.ReactNode> = {
       <ExpandCardGrid
         items={[
           {
-            title: "Mountains",
-            description: "Alpine ridgelines at first light.",
+            title: "Uphill",
+            description: "One more switchback before the summit.",
             buttonText: "View",
             src: "/demo/105.webp",
           },
           {
-            title: "Forest",
-            description: "Deep green canopy, quiet trails.",
+            title: "Still Water",
+            description: "A single scull cutting through the morning.",
             buttonText: "View",
             src: "/demo/102.webp",
           },
           {
-            title: "Coast",
-            description: "Where the cliffs meet the sea.",
+            title: "Sprint",
+            description: "Every stride pushing a little harder.",
             buttonText: "View",
             src: "/demo/109.webp",
           },
           {
-            title: "Desert",
-            description: "Dunes shaped by wind and time.",
+            title: "Downhill",
+            description: "Carving fast lines through fresh snow.",
             buttonText: "View",
             src: "/demo/111.webp",
           },
@@ -3711,10 +3711,6 @@ export const registryPreviews: Record<string, () => React.ReactNode> = {
         videoType="url"
         videoUrl="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
         thumbnailImage="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=900&q=80"
-        showDemoSwitcher
-        demoYoutubeUrl="https://www.youtube.com/watch?v=aqz-KE-bpKQ"
-        demoVimeoUrl="https://vimeo.com/76979871"
-        demoFileUrl="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
       />
     </div>
   ),
@@ -4079,6 +4075,14 @@ const LINEAR_BARS_COLORS: Record<string, [string, string]> = {
 
 // Glass Navigation previews: a solid black "Get in touch" button on the light glass, and a white one on the
 // dark glass so it stays visible.
+// The Playground's Source switch for Video Glow Lightbox (the component takes one source; this
+// only picks which one the demo passes in).
+const VIDEO_GLOW_LIGHTBOX_SOURCES = {
+  file: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+  youtube: "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+  vimeo: "https://vimeo.com/76979871",
+};
+
 const GLASS_NAV_DEMO_CTA = {
   light: {
     text: "Get in touch",
@@ -6244,6 +6248,7 @@ export const registryPlaygroundPreviews: Partial<
           <XPostMockup
             theme={v.theme as "dark" | "light"}
             mediaImage="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=1000&q=80"
+            userAvatar="/demo/51.webp"
           />
         </div>
       )}
@@ -6268,6 +6273,7 @@ export const registryPlaygroundPreviews: Partial<
             <LinkedInPostMockup
               theme={v.theme as "light" | "dark"}
               mediaImage="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000&q=80"
+              userAvatar="/demo/53.webp"
             />
           </div>
         </div>
@@ -6986,7 +6992,7 @@ export const registryPlaygroundPreviews: Partial<
       ]}
     >
       {(v) => (
-        <div className="h-[700px] w-full overflow-hidden rounded-xl bg-[#080808]">
+        <div className="h-[400px] w-full overflow-hidden rounded-xl bg-[#080808]">
           <AuraCursor
             theme={v.theme as "dark" | "light"}
             triggerMode={v.triggerMode as "always" | "click" | "hover"}
@@ -7078,26 +7084,26 @@ export const registryPlaygroundPreviews: Partial<
             showIndex={Boolean(v.showIndex)}
             items={[
               {
-                title: "Mountains",
-                description: "Alpine ridgelines at first light.",
+                title: "Uphill",
+                description: "One more switchback before the summit.",
                 buttonText: "View",
                 src: "/demo/105.webp",
               },
               {
-                title: "Forest",
-                description: "Deep green canopy, quiet trails.",
+                title: "Still Water",
+                description: "A single scull cutting through the morning.",
                 buttonText: "View",
                 src: "/demo/102.webp",
               },
               {
-                title: "Coast",
-                description: "Where the cliffs meet the sea.",
+                title: "Sprint",
+                description: "Every stride pushing a little harder.",
                 buttonText: "View",
                 src: "/demo/109.webp",
               },
               {
-                title: "Desert",
-                description: "Dunes shaped by wind and time.",
+                title: "Downhill",
+                description: "Carving fast lines through fresh snow.",
                 buttonText: "View",
                 src: "/demo/111.webp",
               },
@@ -8303,6 +8309,14 @@ export const registryPlaygroundPreviews: Partial<
     <Playground
       controls={[
         {
+          type: "select",
+          key: "source",
+          label: "Source",
+          options: ["file", "youtube", "vimeo"],
+          optionLabels: ["Video file", "YouTube", "Vimeo"],
+          defaultValue: "file",
+        },
+        {
           type: "toggle",
           key: "soundReactiveGlow",
           label: "Sound Reactive",
@@ -8313,14 +8327,11 @@ export const registryPlaygroundPreviews: Partial<
       {(v) => (
         <div className="h-[700px] w-full overflow-hidden rounded-xl bg-[#080808]">
           <VideoGlowLightbox
+            key={String(v.source)}
             videoType="url"
-            videoUrl="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            videoUrl={VIDEO_GLOW_LIGHTBOX_SOURCES[v.source as keyof typeof VIDEO_GLOW_LIGHTBOX_SOURCES] ?? VIDEO_GLOW_LIGHTBOX_SOURCES.file}
             thumbnailImage="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=900&q=80"
             soundReactiveGlow={Boolean(v.soundReactiveGlow)}
-            showDemoSwitcher
-            demoYoutubeUrl="https://www.youtube.com/watch?v=aqz-KE-bpKQ"
-            demoVimeoUrl="https://vimeo.com/76979871"
-            demoFileUrl="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
           />
         </div>
       )}
@@ -9453,7 +9464,7 @@ export const registryPlaygroundPreviews: Partial<
   "youtube-gallery": () => (
     <Playground
       controls={[
-        { type: "toggle", key: "darkMode", label: "Dark", defaultValue: false },
+        { type: "toggle", key: "darkMode", label: "Dark", defaultValue: true },
       ]}
     >
       {(v) => (
@@ -14581,7 +14592,7 @@ export const registryPlaygroundPreviews: Partial<
           label: "Theme",
           options: ["light", "dark"],
           optionLabels: ["Light", "Dark"],
-          defaultValue: "light",
+          defaultValue: "dark",
         },
         {
           type: "select",

@@ -135,8 +135,11 @@ export function GlideCarousel({
       if (!canvas) return;
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
-      const W = canvas.width,
-        H = canvas.height;
+      // Draw in CSS px; the backing store is at the device pixel ratio (see resize below).
+      const W = canvas.clientWidth,
+        H = canvas.clientHeight;
+      const dpr = W ? canvas.width / W : 1;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
       const { cardWidth, cardHeight, cardRadius, waveStrength, gap, windStrength } = propsRef.current;
       const { windMode: activeWindMode, parallax: activeParallax } = activeRef.current;
@@ -330,11 +333,13 @@ export function GlideCarousel({
     const canvas = canvasRef.current;
     if (!canvas) return -1;
     const rect = canvas.getBoundingClientRect();
-    const mx = clientX - rect.left,
-      my = clientY - rect.top;
-    const W = canvas.width,
-      H = canvas.height,
-      cx = W / 2,
+    const W = canvas.clientWidth,
+      H = canvas.clientHeight,
+      sx = rect.width ? W / rect.width : 1,
+      sy = rect.height ? H / rect.height : 1;
+    const mx = (clientX - rect.left) * sx,
+      my = (clientY - rect.top) * sy;
+    const cx = W / 2,
       cy = H / 2;
     const { cardWidth, cardHeight, gap, waveStrength, windStrength } = propsRef.current;
     const count = countRef.current;
@@ -366,8 +371,12 @@ export function GlideCarousel({
       const dt = Math.min(time - lastTimeRef.current, 32);
       lastTimeRef.current = time;
       timeRef.current = time;
-      smoothMouseRef.current.x += (rawMouseRef.current.x - smoothMouseRef.current.x) * 0.06;
-      smoothMouseRef.current.y += (rawMouseRef.current.y - smoothMouseRef.current.y) * 0.06;
+      // Per-frame easing, scaled by elapsed time (k = 60 Hz frames) so it feels the same on 60 Hz
+      // and 120 Hz screens.
+      const k = dt / (1000 / 60);
+      const ease = (a: number) => 1 - Math.pow(1 - a, k);
+      smoothMouseRef.current.x += (rawMouseRef.current.x - smoothMouseRef.current.x) * ease(0.06);
+      smoothMouseRef.current.y += (rawMouseRef.current.y - smoothMouseRef.current.y) * ease(0.06);
       const { cardWidth, gap, autoPlaySpeed } = propsRef.current;
       const { autoPlay, autoPlayDir } = activeRef.current;
       const count = countRef.current;
@@ -378,8 +387,8 @@ export function GlideCarousel({
           targetXRef.current += dir * autoPlaySpeed * dt * 0.05;
         }
         if (Math.abs(velocityRef.current) > 0.1) {
-          targetXRef.current += velocityRef.current;
-          velocityRef.current *= 0.92;
+          targetXRef.current += velocityRef.current * k;
+          velocityRef.current *= Math.pow(0.92, k);
         }
       }
       if (loopW > 0) {
@@ -388,7 +397,7 @@ export function GlideCarousel({
         let diff = targetXRef.current - scrollXRef.current;
         if (diff > loopW / 2) diff -= loopW;
         if (diff < -loopW / 2) diff += loopW;
-        scrollXRef.current += diff * 0.09;
+        scrollXRef.current += diff * ease(0.09);
         if (scrollXRef.current > loopW) scrollXRef.current -= loopW;
         if (scrollXRef.current < 0) scrollXRef.current += loopW;
       }
@@ -406,8 +415,10 @@ export function GlideCarousel({
       const el = containerRef.current,
         canvas = canvasRef.current;
       if (!el || !canvas) return;
-      canvas.width = el.clientWidth;
-      canvas.height = el.clientHeight;
+      // Backing store at the device pixel ratio, so the cards are sharp on high-density screens.
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(el.clientWidth * dpr);
+      canvas.height = Math.round(el.clientHeight * dpr);
     };
     resize();
     const ro = new ResizeObserver(resize);
@@ -434,7 +445,7 @@ export function GlideCarousel({
       if (!canvas) return;
       const { cardWidth, gap } = propsRef.current;
       const count = countRef.current;
-      const W = canvas.width,
+      const W = canvas.clientWidth,
         cx = W / 2;
       const slotW = cardWidth + gap,
         loopW = count * slotW;

@@ -41,7 +41,7 @@ const VARIANTS: Record<MotionGalleryAnimation, Variants> = {
 };
 
 const DEFAULT_ITEMS: MotionGalleryItem[] = [
-  "101", "102", "104", "105", "108", "109", "110", "111", "11", "12", "23", "109",
+  "101", "102", "104", "105", "108", "109", "110", "111", "11", "12", "23", "103",
 ].map((n) => ({ image: `/demo/${n}.webp` }));
 
 const NOISE_BG = `url("data:image/svg+xml,${encodeURIComponent(

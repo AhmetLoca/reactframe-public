@@ -218,6 +218,10 @@ export function CosmicBackground({
         className="pointer-events-none absolute left-1/2 top-0 h-[65%] w-[110%] -translate-x-1/2"
         style={{
           background: `conic-gradient(from 270deg at 50% 0%, transparent ${(coneStart * 100).toFixed(1)}%, rgba(${lr},${lg},${lb},0.11) 50%, transparent ${(coneEnd * 100).toFixed(1)}%)`,
+          // Fade the beam out before the box ends; without it the cone stopped in a hard horizontal
+          // line at 65% of the height, clearly visible on anything taller than a short banner.
+          maskImage: "linear-gradient(to bottom, black 0%, black 45%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 45%, transparent 100%)",
         }}
       />
 

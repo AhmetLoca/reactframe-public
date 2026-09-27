@@ -218,11 +218,15 @@ export function CatalogCard({
   component,
   filterQueryString = "",
   returnPath,
+  mediaClassName = "h-[168px]",
 }: {
   component: ComponentMeta;
   filterQueryString?: string;
   /** Set when this card is rendered outside /components (e.g. "/blocks", "/elements") — cross-listed components still link to /components/[slug], but "back" from there should return here, not to /components. */
   returnPath?: string;
+  /** Sizes the media box. Dense grids use the default fixed height; roomier grids (the homepage's
+   * three columns) pass `aspect-[4/3]` so the 4:3 thumbnail shows uncropped. */
+  mediaClassName?: string;
 }) {
   // Owns hover state itself (rather than each ComponentCardMedia tracking
   // its own mouseenter/mouseleave) because the click-through overlay <Link>
@@ -254,7 +258,7 @@ export function CatalogCard({
         className="absolute inset-0 z-10"
         aria-label={component.name}
       />
-      <div className="relative m-3 h-[168px] overflow-hidden rounded-xl bg-background/60">
+      <div className={cn("relative m-3 overflow-hidden rounded-xl bg-background/60", mediaClassName)}>
         {/* {component.free ? (
           <span className="pointer-events-none absolute top-2.5 right-2.5 z-20 rounded-full border border-[#00A92A]/50 bg-black/70 px-3 py-0.5 text-[11px] font-bold tracking-wide text-[#00A92A] uppercase shadow-[0_0_14px_rgba(0,169,42,0.3)] backdrop-blur-sm [text-shadow:0_0_8px_rgba(0,169,42,0.65)]">
             Free

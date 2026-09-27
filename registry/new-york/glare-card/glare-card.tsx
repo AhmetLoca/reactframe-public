@@ -149,7 +149,12 @@ export function GlareCard({
     [tiltIntensity, reflexMode, reflexIntensity, spotRadius],
   );
 
-  const onEnter = React.useCallback(() => scale.set(1.03), [scale]);
+  const onEnter = React.useCallback(() => {
+    // Re-measure on entry: the rect cached at mount goes stale once the page scrolls, which threw
+    // the tilt and glare off towards the wrong corner.
+    if (wrapRef.current) rectRef.current = wrapRef.current.getBoundingClientRect();
+    scale.set(1.03);
+  }, [scale]);
   const onLeave = React.useCallback(() => {
     rawX.set(0);
     rawY.set(0);

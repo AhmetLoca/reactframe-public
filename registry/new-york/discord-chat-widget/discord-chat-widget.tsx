@@ -345,7 +345,7 @@ export function DiscordChatWidget({
               </div>
             </div>
             <button
-              onClick={handleDismissPopup}
+              aria-label="Dismiss notification" onClick={handleDismissPopup}
               className="flex h-7 w-7 shrink-0 items-center justify-center rounded transition-colors"
               style={{ background: "none", transitionTimingFunction: "ease" }}
               onMouseEnter={(e) => (e.currentTarget.style.background = hoverBg)}
@@ -418,7 +418,7 @@ export function DiscordChatWidget({
               </div>
             </div>
             <button
-              onClick={handleClose}
+              aria-label="Close chat" onClick={handleClose}
               className="flex h-8 w-8 shrink-0 items-center justify-center rounded transition-all hover:scale-110"
               style={{ transitionTimingFunction: "ease" }}
               onMouseEnter={(e) => (e.currentTarget.style.background = hoverBg)}
@@ -504,7 +504,7 @@ export function DiscordChatWidget({
               ))}
 
               <button
-                onClick={openDiscord}
+                aria-label="Open in Discord" onClick={openDiscord}
                 className="mt-1 flex items-center justify-center gap-2 rounded px-3.5 py-2.5 text-center font-bold text-white transition-all"
                 style={{ background: accentColor, boxShadow: `0 4px 16px ${accentColor}55`, fontSize: quickReplyFontSize, fontFamily, transitionTimingFunction: "ease" }}
                 onMouseEnter={(e) => {
@@ -527,7 +527,7 @@ export function DiscordChatWidget({
 
         <div className="border-t px-4 py-3" style={{ background: inputAreaBg, borderColor: border }}>
           <div className="flex items-center gap-2 rounded-lg px-2.5" style={{ background: inputBg }}>
-            <input
+            <input aria-label="Type a message"
               ref={inputRef}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
@@ -537,7 +537,7 @@ export function DiscordChatWidget({
               style={{ color: textPrimary, fontSize: inputFontSize, fontFamily }}
             />
             <button
-              onClick={handleSend}
+              aria-label="Send message" onClick={handleSend}
               className="flex h-8 w-8 shrink-0 items-center justify-center rounded transition-all"
               style={{ background: inputValue.trim() ? accentColor : "transparent", cursor: inputValue.trim() ? "pointer" : "default", transitionTimingFunction: "ease" }}
               onMouseEnter={(e) => {
@@ -558,7 +558,7 @@ export function DiscordChatWidget({
 
       <div className="relative inline-flex">
         <button
-          onClick={isOpen ? handleClose : handleOpen}
+          aria-label={isOpen ? "Close chat" : "Open chat"} onClick={isOpen ? handleClose : handleOpen}
           className="relative flex h-[60px] w-[60px] items-center justify-center overflow-hidden rounded-full"
           style={{
             background: isOpen ? "linear-gradient(135deg, #ff6b6b, #ee5a24)" : isOffline ? "linear-gradient(135deg, #4e5058, #36393f)" : `linear-gradient(135deg, ${accentColor}, #7289da)`,

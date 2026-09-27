@@ -232,7 +232,7 @@ export function StatFeature({
               )}
               {(chartCaption || chartSubcaption) && (
                 <p className="m-0 text-[13px] leading-[1.4]" style={{ color: t.subcaption }}>
-                  {chartCaption} {chartSubcaption}
+                  {[chartCaption, chartSubcaption].filter(Boolean).join(" \u00b7 ")}
                 </p>
               )}
             </figcaption>

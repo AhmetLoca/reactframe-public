@@ -9,6 +9,7 @@ import { PriceFilter } from "@/components/ui/price-filter";
 import { CatalogSearchBox } from "@/components/ui/catalog-search-box";
 import { CategoryHeading, slugifyLabel } from "@/components/ui/category-heading";
 import { cn } from "@/lib/utils";
+import { hasThumbnailVideo } from "@/lib/thumbnails";
 import { PAGE_GROUPS, REAL_PAGES, type RealPage } from "@/lib/pages-data";
 import { pageCheckoutLinks } from "@/lib/checkout-links";
 
@@ -173,9 +174,29 @@ function PagesPageView({ searchParams }: { searchParams: SearchParamsLike }) {
 }
 
 function PageCard({ page }: { page: RealPage }) {
+  // Hover clip recorded by scripts/record-video.mts (scene page-<slug>) into public/thumbnails/;
+  // like the component cards, it only loads metadata until the card is hovered.
+  const videoSlug = `page-${page.slug}`;
+  const hasVideo = hasThumbnailVideo(videoSlug);
+  const [hovering, setHovering] = React.useState(false);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+
+  React.useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (hovering) {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  }, [hovering]);
+
   return (
     <Link
       href={`/pages/preview/${page.slug}`}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
       className="group block overflow-hidden rounded-2xl border border-border bg-card transition-colors duration-300 ease-signature hover:border-foreground/20"
     >
       <div className="relative m-3 h-[168px] overflow-hidden rounded-xl bg-background/60">
@@ -184,8 +205,24 @@ function PageCard({ page }: { page: RealPage }) {
           alt={page.name}
           fill
           sizes="(min-width: 768px) 320px, 90vw"
-          className="object-cover object-top transition-transform duration-500 ease-signature group-hover:scale-[1.03]"
+          className={cn("object-cover object-top", !hasVideo && "transition-transform duration-500 ease-signature group-hover:scale-[1.03]")}
         />
+        {hasVideo && (
+          <video
+            ref={videoRef}
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+            className={cn(
+              "absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-200",
+              hovering ? "opacity-100" : "opacity-0",
+            )}
+          >
+            <source src={`/thumbnails/${videoSlug}.mp4`} type="video/mp4" />
+          </video>
+        )}
       </div>
       <div className="flex items-center justify-between gap-3 px-4 pt-1 pb-4">
         <div className="truncate font-mono text-sm font-semibold">{page.name}</div>

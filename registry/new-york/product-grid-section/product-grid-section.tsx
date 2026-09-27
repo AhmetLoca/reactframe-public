@@ -171,7 +171,9 @@ export function ProductGridSection({
       }).replace(/</g, "\\u003c");
 
   return (
-    <div className={cn("box-border flex w-full flex-col", className)} style={{ backgroundColor, padding: "60px 80px" }}>
+    // Container queries, not media queries: the column count follows this section's own width, so it
+    // still steps down when the section sits in a narrow column of a wide page (or a scaled preview).
+    <div className={cn("box-border flex w-full flex-col", className)} style={{ backgroundColor, padding: "60px 80px", containerType: "inline-size" }}>
       {jsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />}
       <style>{`
         .pgs-card-image-${gridId} { transition: transform 0.35s ease; }
@@ -181,10 +183,10 @@ export function ProductGridSection({
         .pgs-overlay-text-${gridId} { transform: translateY(8px); transition: transform 0.3s ease; }
         .pgs-card-${gridId}:hover .pgs-overlay-text-${gridId} { transform: translateY(0); }
         .pgs-grid-${gridId} { display: grid; grid-template-columns: repeat(${columns}, 1fr); gap: ${gap}px; width: 100%; }
-        @media (max-width: 900px) {
+        @container (max-width: 900px) {
           .pgs-grid-${gridId} { grid-template-columns: repeat(${tabletColumns}, 1fr); }
         }
-        @media (max-width: 600px) {
+        @container (max-width: 600px) {
           .pgs-grid-${gridId} { grid-template-columns: repeat(${mobileColumns}, 1fr); }
         }
       `}</style>

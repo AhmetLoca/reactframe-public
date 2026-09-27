@@ -266,7 +266,7 @@ export function TestimonialSpotlight({
           </span>
           {showCounter && (
             <span className="text-white/40 tabular-nums" style={{ fontSize: isMobile ? 10 : 11, letterSpacing: "0.1em", fontFamily: "'Helvetica Neue', Arial, sans-serif" }}>
-              {String(active + 1).padStart(2, "0")} {String(count).padStart(2, "0")}
+              {String(active + 1).padStart(2, "0")} — {String(count).padStart(2, "0")}
             </span>
           )}
         </div>

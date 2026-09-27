@@ -338,8 +338,8 @@ export function DiceRollDiscountPopup({
       };
 
   const suffix = storageKey.trim() ? `-${storageKey.trim()}` : "";
-  const rollsKey = `dice-rolls-left${suffix}`;
-  const rewardsKey = `dice-rewards${suffix}`;
+  const rollsKey = `dice-roll-rolls-left${suffix}`;
+  const rewardsKey = `dice-roll-rewards${suffix}`;
 
   React.useEffect(() => {
     const savedRolls = localStorage.getItem(rollsKey);

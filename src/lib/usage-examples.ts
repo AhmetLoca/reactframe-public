@@ -47,12 +47,6 @@ export const usageExamples: Record<string, string> = {
   <XTwitterWidget agentHandle="reactframe" fixed={false} popupDelay={0} />
 </div>
 `,
-  "wheel-spin-discount-popup": `import { WheelSpinDiscountPopup } from "@/components/wheel-spin-discount-popup";
-
-<div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-xl">
-  <WheelSpinDiscountPopup />
-</div>
-`,
   "word-reveal": `import { WordReveal } from "@/components/word-reveal";
 
 <div className="flex h-[400px] w-full items-center justify-center overflow-hidden rounded-xl bg-black">

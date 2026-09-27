@@ -122,7 +122,7 @@ export const KITS: Kit[] = [
     cover: ["spin-to-win-wheel", "announcement-banner", "countdown-timer"],
     sections: [
       { role: "Announcement", slugs: ["announcement-banner", "countdown-timer"] },
-      { role: "Discount popup", slugs: ["spin-to-win-wheel", "wheel-spin-discount-popup", "scratch-card-popup", "dice-roll-discount-popup", "dice-discount-popup", "sales-ticket-popup"] },
+      { role: "Discount popup", slugs: ["spin-to-win-wheel", "scratch-card-popup", "dice-roll-discount-popup", "dice-discount-popup", "sales-ticket-popup"] },
     ],
   },
   {

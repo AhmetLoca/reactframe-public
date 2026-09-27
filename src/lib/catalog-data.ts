@@ -2766,6 +2766,9 @@ export const allComponents: ComponentMeta[] = [
       "A gamified discount-capture widget where visitors spin a weighted SVG prize wheel for a reward, with a themed reveal modal and code copy, rendered inline or as a corner-launched popup with manual/delay/scroll triggers.",
     category: "Widget",
     free: true,
+    // Same component as spin-to-win-wheel apart from a flat background; hidden in favour of that one,
+    // and /components/wheel-spin-discount-popup redirects there (next.config.ts).
+    hidden: true,
   },
   {
     slug: "error-404-page-section",

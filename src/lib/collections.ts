@@ -402,7 +402,7 @@ export const COLLECTIONS: Collection[] = [
     intro:
       "ReactFrame has {count} React components for offers and lead capture ({free} free): spin-to-win wheels, scratch cards, dice-roll discount popups and a ticket-shaped promo popup, plus an announcement bar and a countdown timer for urgency.",
     howToChoose: [
-      "Collect emails with a game: spin-to-win-wheel or wheel-spin-discount-popup, scratch-card-popup, dice-roll-discount-popup.",
+      "Collect emails with a game: spin-to-win-wheel, scratch-card-popup, dice-roll-discount-popup.",
       "A simple promo in the corner: sales-ticket-popup.",
       "Site-wide sale messaging: announcement-banner with countdown-timer.",
       "Show one popup per visit at most, and never before the visitor has seen the page.",
@@ -413,7 +413,7 @@ export const COLLECTIONS: Collection[] = [
         a: "Yes. Each theme's prize list, with a weight per prize for its odds and the discount code it reveals, lives in the component source you install, so edit it to your own offers. Validate codes on your server before applying a discount.",
       },
     ],
-    slugs: ["spin-to-win-wheel", "wheel-spin-discount-popup", "scratch-card-popup", "dice-roll-discount-popup", "dice-discount-popup", "sales-ticket-popup", "announcement-banner", "countdown-timer"],
+    slugs: ["spin-to-win-wheel", "scratch-card-popup", "dice-roll-discount-popup", "dice-discount-popup", "sales-ticket-popup", "announcement-banner", "countdown-timer"],
     kit: "growth",
     related: ["react-review-widgets", "react-chat-widgets", "react-mini-games"],
   },

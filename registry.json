@@ -2661,22 +2661,6 @@
       ]
     },
     {
-      "name": "wheel-spin-discount-popup",
-      "type": "registry:component",
-      "title": "Wheel Spin Discount Popup",
-      "description": "A gamified discount-capture widget where visitors spin a weighted SVG prize wheel for a reward, with a themed reveal modal and code copy, rendered inline or as a corner-launched popup with manual/delay/scroll triggers.",
-      "files": [
-        {
-          "path": "registry/new-york/wheel-spin-discount-popup/wheel-spin-discount-popup.tsx",
-          "type": "registry:component"
-        }
-      ],
-      "dependencies": [
-        "clsx",
-        "tailwind-merge"
-      ]
-    },
-    {
       "name": "error-404-page-section",
       "type": "registry:component",
       "title": "404 Page Section",

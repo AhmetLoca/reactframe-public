@@ -239,8 +239,17 @@ export function DiceDiscountPopup({
   React.useEffect(() => {
     const savedRolls = localStorage.getItem(rollsKey);
     const savedRewards = localStorage.getItem(rewardsKey);
+    // Restored after mount on purpose: reading storage during render would not match the
+    // server-rendered HTML.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (savedRolls !== null) setRollsLeft(parseInt(savedRolls, 10));
-    if (savedRewards) setRewards(JSON.parse(savedRewards));
+    if (savedRewards) {
+      try {
+        setRewards(JSON.parse(savedRewards));
+      } catch {
+        setRewards([]);
+      }
+    }
     if (savedRolls === "0") setMessage("All rolls used");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -272,7 +281,12 @@ export function DiceDiscountPopup({
     rewardModalRef.current?.focus();
   }, [showReward]);
 
-  React.useEffect(() => setPopupOpen(!asPopup), [asPopup]);
+  // Follow asPopup changes during render instead of in an effect (no extra render pass).
+  const [prevAsPopup, setPrevAsPopup] = React.useState(asPopup);
+  if (asPopup !== prevAsPopup) {
+    setPrevAsPopup(asPopup);
+    setPopupOpen(!asPopup);
+  }
 
   React.useEffect(() => {
     if (!asPopup || trigger !== "delay") return;

@@ -1497,11 +1497,6 @@ const DiceRollDiscountPopup = dynamic(() =>
     (m) => m.DiceRollDiscountPopup,
   ),
 );
-const WheelSpinDiscountPopup = dynamic(() =>
-  import("../../registry/new-york/wheel-spin-discount-popup/wheel-spin-discount-popup").then(
-    (m) => m.WheelSpinDiscountPopup,
-  ),
-);
 
 // Maps a registry item slug to a rendered preview. Kept separate from
 // catalog-data.ts (plain metadata, safe for server components) because this
@@ -3891,11 +3886,6 @@ export const registryPreviews: Record<string, () => React.ReactNode> = {
         </div>
       )}
     </Playground>
-  ),
-  "wheel-spin-discount-popup": () => (
-    <div className="w-full max-w-[420px] mx-auto overflow-hidden rounded-xl bg-[#080808]">
-      <WheelSpinDiscountPopup />
-    </div>
   ),
 };
 
